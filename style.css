@@ -33,6 +33,29 @@
       opacity: 0.4;
     }
 
+    /* ── FONDO ANIMADO ── */
+    .bg-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2; /* Lo colocamos al fondo, detrás de todo */
+      /* Creamos un gradiente con los colores de tu paleta y unos tonos azules extra */
+      background: linear-gradient(45deg, var(--bg), #0a1128, var(--surface2), var(--bg));
+      background-size: 400% 400%; /* Hacemos el fondo enorme para poder moverlo */
+      animation: gradientMove 15s ease infinite; /* Animación infinita de 15 segundos */
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #services, #contact { background: transparent; }
+
+
     /* ── NAV ── */
     nav {
       position: fixed;

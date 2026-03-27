@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="style.css?v=1.2">
 </head>
 <body>
+
+<!-- Fondo animado -->
+<div class="bg-gradient"></div>
 <!-- NAV -->
 <nav>
   <a href="#home" class="nav-logo">Aphernzz</a>
@@ -256,6 +259,9 @@
   <p style="color:var(--muted);font-size:0.75rem">San Luis Potosí, México</p>
 </footer>
 
+<!-- Librería para el efecto 3D en las tarjetas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
 <script>
   // Hamburger
   const hamburger = document.getElementById('hamburger');
@@ -283,6 +289,17 @@
     btn.style.background = '#00c896';
     setTimeout(() => { btn.textContent = 'Enviar mensaje →'; btn.style.background = ''; e.target.reset(); }, 3000);
   }
+
+  // ── EFECTO TILT (3D) PARA TARJETAS ──
+  // Seleccionamos todas las tarjetas a las que queremos darles el efecto
+  VanillaTilt.init(document.querySelectorAll(".service-card, .project-card, .stat-card"), {
+    max: 10,           // Ángulo máximo de inclinación
+    speed: 400,        // Velocidad de la transición al entrar/salir
+    glare: true,       // Agrega un efecto de brillo tipo cristal
+    "max-glare": 0.2,  // Opacidad máxima del brillo
+    scale: 1.02        // Hace que la tarjeta crezca un 2% al pasar el mouse
+  });
 </script>
+
 </body>
 </html>
