@@ -213,33 +213,41 @@
     <h2 class="section-title">¿Tienes un proyecto en mente?</h2>
     <p class="section-body">Cuéntame en qué trabajas y cómo puedo ayudarte. Respondo en menos de 24 horas.</p>
 
-    <form class="contact-form" onsubmit="handleSubmit(event)">
+    <form class="contact-form" action="https://formsubmit.co/aphernzz@gmail.com" method="POST">
+      <!-- Campos ocultos útiles de FormSubmit -->
+      <input type="hidden" name="_subject" value="¡Nuevo mensaje de tu Portafolio!">
+      <input type="hidden" name="_captcha" value="false">
+
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" placeholder="Tu nombre" required />
+          <!-- Agregamos name="Nombre" -->
+          <input type="text" name="Nombre" id="nombre" placeholder="Tu nombre" required />
         </div>
         <div class="form-group">
           <label for="email">Correo</label>
-          <input type="email" id="email" placeholder="tu@correo.com" required />
+          <!-- Agregamos name="Email" -->
+          <input type="email" name="Email" id="email" placeholder="tu@correo.com" required />
         </div>
       </div>
       <div class="form-group">
         <label for="servicio">Servicio de interés</label>
-        <select id="servicio">
+        <!-- Agregamos name="Servicio" -->
+        <select name="Servicio" id="servicio" required>
           <option value="">Selecciona una opción</option>
-          <option>Análisis de Datos</option>
-          <option>Automatización de Procesos</option>
-          <option>Integración de Herramientas</option>
-          <option>Diseño & Marca Digital</option>
-          <option>Desarrollo Web</option>
-          <option>Soluciones con IA</option>
-          <option>Otro</option>
+          <option value="Análisis de Datos">Análisis de Datos</option>
+          <option value="Automatización de Procesos">Automatización de Procesos</option>
+          <option value="Integración de Herramientas">Integración de Herramientas</option>
+          <option value="Diseño & Marca Digital">Diseño & Marca Digital</option>
+          <option value="Desarrollo Web">Desarrollo Web</option>
+          <option value="Soluciones con IA">Soluciones con IA</option>
+          <option value="Otro">Otro</option>
         </select>
       </div>
       <div class="form-group">
         <label for="mensaje">Mensaje</label>
-        <textarea id="mensaje" placeholder="Cuéntame sobre tu proyecto o necesidad..." required></textarea>
+        <!-- Agregamos name="Mensaje" -->
+        <textarea name="Mensaje" id="mensaje" placeholder="Cuéntame sobre tu proyecto o necesidad..." required></textarea>
       </div>
       <button type="submit" class="btn-primary">Enviar mensaje →</button>
     </form>
