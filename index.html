@@ -1,69 +1,287 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aphernzz | Automatiza. Escala. Crece.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css' rel='stylesheet'>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aphernzz | Automatiza. Escala. Crece.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <link href="script.js" rel="stylesheet" />
 </head>
 <body>
-  <header class="header">
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Inicio</a></li>
+    <li><a href="#about">Acerca de mí</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-    <a href="#home" class="logo">
-        Aphern<span>zz</span>
-    </a>
+<!-- HERO -->
+<section id="home">
+  <div class="hero-content">
+    <div class="hero-badge">Disponible para proyectos</div>
+    <h1 class="hero-title">
+      Hola, soy<br>
+      <span class="highlight">Ángel Hernández</span>
+    </h1>
+    <p class="hero-sub">
+      Analista de datos, programador y diseñador. Construyo sistemas digitales que reemplazan tareas manuales, conectan herramientas y optimizan flujos de trabajo.
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Optimiza tu negocio →</a>
+      <a href="#projects" class="btn-ghost">Ver proyectos</a>
+    </div>
+  </div>
 
-    <i class="bx bx-menu" id="menu-icon"></i>
+  <div class="hero-img">
+    <div class="hero-img-frame">
+      <img src="https://aphernzz.com/angel.png" alt="Ángel Hernández" />
+    </div>
+    <div class="hero-float-card">
+      <div class="hero-float-icon">📊</div>
+      <div class="hero-float-text">
+        <strong>Data-Driven</strong>
+        <span>Decisiones basadas en datos</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <nav class="navbar">
-        <a href="#home">Home</a>
-        <a href="#about">Acerca de mi</a>
-        <a href="#services">Servicios</a>
-        <a href="#projects">Proyectos</a>
-        <a href="#contact">Contacto</a>
-    </nav>
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="fade-up">
+      <p class="section-label">Acerca de mí</p>
+      <h2 class="section-title">Tecnología que impulsa negocios reales</h2>
+      <p class="section-body">
+        Soy un perfil híbrido apasionado por la intersección entre tecnología y negocios. Mi enfoque no se limita a escribir código, sino a construir soluciones visuales y funcionales que transformen la operatividad de un proyecto.
+      </p>
+      <p class="section-body" style="margin-top:1rem;">
+        Trabajo con datos, automatizaciones y diseño para que tu negocio funcione mejor, más rápido y con menos fricción.
+      </p>
+      <div class="about-tags">
+        <span class="tag">Python</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Automatización</span>
+        <span class="tag">Diseño Gráfico</span>
+        <span class="tag">Machine Learning</span>
+        <span class="tag">APIs</span>
+        <span class="tag">No-code / Low-code</span>
+      </div>
+    </div>
+    <div class="about-stats fade-up">
+      <div class="stat-card">
+        <div class="num">3+</div>
+        <div class="label">Años de experiencia</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">20+</div>
+        <div class="label">Proyectos entregados</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">100%</div>
+        <div class="label">Enfoque en resultados</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">3</div>
+        <div class="label">Disciplinas integradas</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <button class="gradient-btn">Contáctame </button>
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header fade-up">
+    <div>
+      <p class="section-label">Servicios</p>
+      <h2 class="section-title">¿En qué te puedo ayudar?</h2>
+    </div>
+    <a href="#contact" class="btn-ghost">Hablemos →</a>
+  </div>
+  <div class="services-grid">
+    <div class="service-card fade-up">
+      <div class="service-icon">📊</div>
+      <h3>Análisis de Datos</h3>
+      <p>Transformo tus datos en insights claros y accionables. Dashboards, reportes automatizados y visualizaciones que te ayudan a tomar mejores decisiones.</p>
+    </div>
+    <div class="service-card fade-up">
+      <div class="service-icon">⚡</div>
+      <h3>Automatización de Procesos</h3>
+      <p>Elimino tareas repetitivas de tu negocio. Desde flujos de trabajo con Make o Zapier hasta scripts personalizados que corren solos.</p>
+    </div>
+    <div class="service-card fade-up">
+      <div class="service-icon">🔗</div>
+      <h3>Integración de Herramientas</h3>
+      <p>Conecto las aplicaciones que ya usas: CRMs, hojas de cálculo, APIs, e-commerce. Todo hablando entre sí sin fricción.</p>
+    </div>
+    <div class="service-card fade-up">
+      <div class="service-icon">🎨</div>
+      <h3>Diseño & Marca Digital</h3>
+      <p>Identidad visual coherente y funcional. Diseño gráfico, landing pages y materiales que comunican profesionalismo.</p>
+    </div>
+    <div class="service-card fade-up">
+      <div class="service-icon">🌐</div>
+      <h3>Desarrollo Web</h3>
+      <p>Sitios y aplicaciones web a medida. Desde landing pages de alto impacto hasta sistemas con lógica de negocio compleja.</p>
+    </div>
+    <div class="service-card fade-up">
+      <div class="service-icon">🤖</div>
+      <h3>Soluciones con IA</h3>
+      <p>Implemento modelos y flujos de inteligencia artificial adaptados a tu industria: predicciones, clasificación, chatbots y más.</p>
+    </div>
+  </div>
+</section>
 
-  </header>
-
-  <section class="home" id="home">
-        <div class="home-content">
-            <h1>Hola, soy <span>Angel</span></h1>
-            <h3>
-             Soy <span>Desarrollador web</span>
-             </h3>
-             <p>Construyo sistemas digitales que reemplazan tareas manuales, conectan herramientas y optimizan flujos de trabajo. El objetivo: que tu negocio funcione mejor, más rápido y con menos fricción.</p>
-             <div class="social-icons">
-                <a href="#">
-                    <i class="bx bxl-linkedin-square"></i>
-                </a>
-                <a href="#">
-                    <i class="bx bxl-instagram-alt"></i>
-                </a>
-            </div>
-
-            <div class="btn-group">
-                <a href="#" class="btn">Optimiza tu negocio hoy</a>
-                <a href="#contact" class="btn">Contacto</a>
-            </div>
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="projects-header fade-up">
+    <p class="section-label">Proyectos</p>
+    <h2 class="section-title">Trabajo reciente</h2>
+    <p class="section-body">Algunos de los sistemas y soluciones que he construido para distintas industrias.</p>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card fade-up">
+      <div class="project-thumb">📈</div>
+      <div class="project-body">
+        <h3>Dashboard de Ventas en Tiempo Real</h3>
+        <p>Sistema de reporteo automatizado con KPIs clave, comparativas y alertas para equipo comercial.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Power BI</span>
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">SQL Server</span>
         </div>
-
-        <div class="home-img">
-            <img src="angel.png" alt="">
-
+      </div>
+    </div>
+    <div class="project-card fade-up">
+      <div class="project-thumb">⚙️</div>
+      <div class="project-body">
+        <h3>Automatización de Reportes Semanales</h3>
+        <p>Flujo que extrae, procesa y envía reportes por correo cada lunes sin intervención manual.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">Make</span>
+          <span class="tech-chip">Google Sheets</span>
         </div>
+      </div>
+    </div>
+    <div class="project-card fade-up">
+      <div class="project-thumb">🛒</div>
+      <div class="project-body">
+        <h3>Integración CRM + E-commerce</h3>
+        <p>Sincronización automática de pedidos, clientes y seguimiento entre Shopify y HubSpot.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Zapier</span>
+          <span class="tech-chip">Shopify API</span>
+          <span class="tech-chip">HubSpot</span>
+        </div>
+      </div>
+    </div>
+    <div class="project-card fade-up">
+      <div class="project-thumb">🤖</div>
+      <div class="project-body">
+        <h3>Modelo Predictivo de Churn</h3>
+        <p>Clasificador que predice qué clientes están en riesgo de abandono con 2 semanas de anticipación.</p>
+        <div class="project-tech">
+          <span class="tech-chip">Python</span>
+          <span class="tech-chip">scikit-learn</span>
+          <span class="tech-chip">Pandas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  </section>
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner fade-up">
+    <p class="section-label">Contacto</p>
+    <h2 class="section-title">¿Tienes un proyecto en mente?</h2>
+    <p class="section-body">Cuéntame en qué trabajas y cómo puedo ayudarte. Respondo en menos de 24 horas.</p>
 
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" placeholder="Tu nombre" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Correo</label>
+          <input type="email" id="email" placeholder="tu@correo.com" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="servicio">Servicio de interés</label>
+        <select id="servicio">
+          <option value="">Selecciona una opción</option>
+          <option>Análisis de Datos</option>
+          <option>Automatización de Procesos</option>
+          <option>Integración de Herramientas</option>
+          <option>Diseño & Marca Digital</option>
+          <option>Desarrollo Web</option>
+          <option>Soluciones con IA</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" placeholder="Cuéntame sobre tu proyecto o necesidad..." required></textarea>
+      </div>
+      <button type="submit" class="btn-primary">Enviar mensaje →</button>
+    </form>
 
-  <script src="script.js"></script>
+    <div class="contact-links">
+      <a href="mailto:contacto@aphernzz.com" class="contact-link">✉️ contacto@aphernzz.com</a>
+      <a href="https://linkedin.com/in/aphernzz" class="contact-link" target="_blank">💼 LinkedIn</a>
+      <a href="https://aphernzz.com" class="contact-link" target="_blank">🌐 aphernzz.com</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Aphernzz</div>
+  <p>© 2025 Ángel Hernández · Automatiza. Escala. Crece.</p>
+  <p style="color:var(--muted);font-size:0.75rem">San Luis Potosí, México</p>
+</footer>
+
+<script>
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (Array.from(e.target.parentElement.children).indexOf(e.target) * 0.08) + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '¡Mensaje enviado! ✓';
+    btn.style.background = '#00c896';
+    setTimeout(() => { btn.textContent = 'Enviar mensaje →'; btn.style.background = ''; e.target.reset(); }, 3000);
+  }
+</script>
 </body>
 </html>
