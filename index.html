@@ -23,6 +23,7 @@
     <li><a href="#about">Acerca de mí</a></li>
     <li><a href="#services">Servicios</a></li>
     <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#articles">Artículos y Cursos</a></li>
     <li><a href="#contact" class="nav-cta">Contáctame</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -157,7 +158,9 @@
   </div>
   <div class="projects-grid">
     <div class="project-card fade-up">
-      <div class="project-thumb">📈</div>
+      <div class="project-thumb">
+
+      </div>
       <div class="project-body">
         <h3>Dashboard de Ventas en Tiempo Real</h3>
         <p>Sistema de reporteo automatizado con KPIs clave, comparativas y alertas para equipo comercial.</p>
@@ -202,6 +205,63 @@
           <span class="tech-chip">scikit-learn</span>
           <span class="tech-chip">Pandas</span>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES / NEWS -->
+<section id="articles">
+  <div class="articles-header fade-up">
+    <p class="section-label">Recursos y Aprendizaje</p>
+    <h2 class="section-title">Artículos y Talleres</h2>
+    <p class="section-body">Ideas, estrategias de automatización y próximos cursos diseñados para ayudarte a escalar tus habilidades tecnológicas.</p>
+  </div>
+
+  <div class="articles-grid">
+    <!-- Tarjeta 1: Artículo Normal -->
+    <div class="article-card fade-up">
+      <div class="article-thumb">
+        📝
+      </div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span>Octubre 2026</span> • <span>Automatización</span>
+        </div>
+        <h3>5 tareas que debes automatizar hoy mismo con Zapier</h3>
+        <p>Descubre los flujos de trabajo más efectivos para recuperar hasta 10 horas a la semana en tu negocio.</p>
+        <a href="#" class="article-link">Leer artículo →</a>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2: Taller / Curso (Con Insignia) -->
+    <div class="article-card fade-up">
+      <div class="article-thumb">
+        <span class="article-badge course">Próximo Taller</span>
+        🎓
+      </div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span>Lista de espera abierta</span> • <span>Low-code</span>
+        </div>
+        <h3>Bootcamp: De cero a experto creando Dashboards en Power BI</h3>
+        <p>Aprende a conectar bases de datos, modelar información y construir visualizaciones que impacten la toma de decisiones.</p>
+        <a href="#" class="article-link">Ver temario →</a>
+      </div>
+    </div>
+
+    <!-- Tarjeta 3: Artículo Técnico -->
+    <div class="article-card fade-up">
+      <div class="article-thumb">
+        🐍
+      </div>
+      <div class="article-body">
+        <div class="article-meta">
+          <span>Marzo 2026</span> • <span>Python</span>
+        </div>
+        <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
+        <p>Una guía paso a paso sobre web scraping utilizando BeautifulSoup y Pandas de forma ética y eficiente.</p>
+        <a href="#" class="article-link">Leer artículo →</a>
       </div>
     </div>
   </div>
@@ -343,7 +403,7 @@
 
   // ── EFECTO TILT (3D) PARA TARJETAS ──
   // Seleccionamos todas las tarjetas a las que queremos darles el efecto
-  VanillaTilt.init(document.querySelectorAll(".service-card, .project-card, .stat-card"), {
+  VanillaTilt.init(document.querySelectorAll(".service-card, .project-card, .stat-card, .article-card"), {
     max: 10,           // Ángulo máximo de inclinación
     speed: 400,        // Velocidad de la transición al entrar/salir
     glare: true,       // Agrega un efecto de brillo tipo cristal

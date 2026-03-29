@@ -551,6 +551,127 @@
       font-weight: 500;
     }
 
+    /* ── ARTICLES ── */
+    #articles {
+      background: transparent;
+    }
+
+    .articles-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card:hover {
+      border-color: rgba(0,229,255,0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), var(--glow);
+    }
+
+    .article-thumb {
+      height: 180px;
+      background: linear-gradient(135deg, var(--surface2), #1a2535);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Insignia para vender cursos a futuro */
+    .article-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(123, 97, 255, 0.15);
+      border: 1px solid var(--accent2);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Variante de color para la insignia del taller */
+    .article-badge.course {
+      background: rgba(0, 229, 255, 0.12);
+      border-color: rgba(0, 229, 255, 0.3);
+      color: var(--accent);
+    }
+
+    .article-body {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .article-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .article-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .article-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .article-link {
+      margin-top: auto;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: gap 0.2s, opacity 0.2s;
+    }
+
+    .article-link:hover {
+      gap: 0.6rem;
+      opacity: 0.8;
+    }
+
+    /* Ajustes Responsive (Agrégalos a tus @media existentes o al final) */
+    @media (max-width: 900px) {
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .articles-grid { grid-template-columns: 1fr; }
+    }
+
     /* ── CONTACT ── */
     #contact { background: transparent; }
 
