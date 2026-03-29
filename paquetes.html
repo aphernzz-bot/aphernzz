@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Paquetes & Precios | Aphernzz</title>
+  <link rel="icon" href="favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b10;
+      --surface: #0e1318;
+      --surface2: #141c24;
+      --accent: #00e5ff;
+      --accent2: #7b61ff;
+      --accent3: #ff6b6b;
+      --text: #e8edf2;
+      --muted: #6b7a8d;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,229,255,0.2);
+      --glow: 0 0 40px rgba(0,229,255,0.15);
+      --radius: 1.5rem;
+      --radius-sm: 0.75rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+    .bg-gradient {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -2;
+      background: linear-gradient(45deg, var(--bg), #0a1128, var(--surface2), var(--bg));
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .bg-orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: -1; filter: blur(80px); opacity: 0.1; }
+    .bg-orb-1 { width: 500px; height: 500px; background: var(--accent2); top: -100px; right: -150px; }
+    .bg-orb-2 { width: 350px; height: 350px; background: var(--accent); bottom: 15%; left: -100px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 6vw;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(8,11,16,0.8);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--accent); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-cta { background: linear-gradient(135deg, var(--accent), #00b8cc) !important; color: #080b10 !important; padding: 0.5rem 1.4rem !important; border-radius: 999px !important; font-weight: 700 !important; transition: box-shadow 0.3s !important; text-transform: none !important; letter-spacing: 0 !important; }
+    .nav-cta:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 9rem 6vw 5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      text-align: center;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; justify-content: center; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.1; position: relative; }
+    .page-title span { background: linear-gradient(120deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-sub { color: var(--muted); font-size: 1rem; font-weight: 300; line-height: 1.8; max-width: 540px; margin: 0 auto; position: relative; }
+
+    /* CATEGORY TABS */
+    .category-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      padding: 3rem 6vw 0;
+      flex-wrap: wrap;
+    }
+    .cat-tab {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      min-width: 160px;
+      text-decoration: none;
+    }
+    .cat-tab:hover, .cat-tab.active {
+      border-color: var(--border-accent);
+      background: rgba(0,229,255,0.05);
+    }
+    .cat-tab.active { box-shadow: var(--glow); }
+    .cat-icon { font-size: 1.75rem; margin-bottom: 0.5rem; display: block; }
+    .cat-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .cat-count { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* PACKAGES SECTION */
+    .packages-section {
+      padding: 4rem 6vw 2rem;
+    }
+    .packages-section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .packages-section-title .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .packages-section-title h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .packages-section-title p { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* PRICING CARDS */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+      align-items: start;
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .pricing-card:hover { transform: translateY(-5px); box-shadow: 0 25px 70px rgba(0,0,0,0.4); }
+    .pricing-card.featured {
+      border-color: var(--border-accent);
+      box-shadow: var(--glow);
+    }
+    .popular-badge {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #080b10;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.35rem 1.25rem;
+      border-radius: 0 0 999px 999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .card-header {
+      padding: 2.25rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-card.featured .card-header {
+      background: linear-gradient(135deg, rgba(0,229,255,0.05), rgba(123,97,255,0.05));
+    }
+    .plan-icon {
+      width: 48px; height: 48px;
+      border-radius: 0.85rem;
+      background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(123,97,255,0.12));
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .plan-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+    .price-block { margin-top: 1.5rem; }
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .price-amount .currency { font-size: 1.1rem; vertical-align: top; margin-top: 0.3rem; display: inline-block; }
+    .price-note { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+
+    .card-features { padding: 1.75rem 2rem; }
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2rem; }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+    .feature-list li .check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(0,229,255,0.12);
+      border: 1px solid rgba(0,229,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .feature-list li .x-mark {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .feature-list li span:last-child { color: var(--text); }
+    .feature-list li.muted span:last-child { color: var(--muted); text-decoration: line-through; }
+    .feature-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 0.75rem; }
+
+    .btn-plan {
+      display: block;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .btn-plan-primary {
+      background: linear-gradient(135deg, var(--accent), #00b8cc);
+      color: #080b10;
+    }
+    .btn-plan-primary:hover { box-shadow: 0 0 30px rgba(0,229,255,0.4); transform: translateY(-1px); }
+    .btn-plan-ghost {
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-plan-ghost:hover { border-color: var(--border-accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+
+    /* DIVIDER */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+      margin: 1rem 6vw 4rem;
+      opacity: 0.5;
+    }
+
+    /* ADD-ONS */
+    .addons-section {
+      padding: 0 6vw 4rem;
+    }
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .addon-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .addon-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+    .addon-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .addon-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem; margin-bottom: 0.35rem; }
+    .addon-price { color: var(--accent); font-weight: 700; font-size: 0.88rem; margin-bottom: 0.5rem; }
+    .addon-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* PROCESS */
+    .process-section {
+      padding: 4rem 6vw;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+    .process-step {
+      position: relative;
+    }
+    .process-step::after {
+      content: '→';
+      position: absolute;
+      right: -1.25rem;
+      top: 1rem;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .process-step:last-child::after { display: none; }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(0,229,255,0.15);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin-bottom: 0.4rem;
+    }
+    .step-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.65; }
+
+    /* FAQ */
+    .faq-section { padding: 4rem 6vw 6rem; }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .faq-item:hover { border-color: var(--border-accent); }
+    .faq-q {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .faq-q::after { content: '+'; color: var(--accent); font-size: 1.2rem; flex-shrink: 0; }
+    .faq-a { font-size: 0.85rem; color: var(--muted); line-height: 1.7; display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-item.open .faq-a { display: block; }
+
+    /* CTA */
+    .cta-section {
+      margin: 0 6vw 6rem;
+      background: linear-gradient(135deg, rgba(0,229,255,0.07), rgba(123,97,255,0.07));
+      border: 1px solid var(--border-accent);
+      border-radius: 2rem;
+      padding: 4rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; top: -50%; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,255,0.07), transparent 70%);
+    }
+    .cta-section h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; position: relative; }
+    .cta-section p { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; position: relative; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), #00b8cc); color: #080b10; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 0.9rem 2.2rem; border-radius: 999px; text-decoration: none; transition: box-shadow 0.3s, transform 0.2s; display: inline-block; }
+    .btn-primary:hover { box-shadow: 0 0 35px rgba(0,229,255,0.45); transform: translateY(-2px); }
+    .btn-ghost { border: 1px solid var(--border); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem; padding: 0.9rem 2.2rem; border-radius: 999px; text-decoration: none; transition: border-color 0.2s, color 0.2s; display: inline-block; }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--bg); }
+    footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); font-size: 1rem; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .addons-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin-left: auto; margin-right: auto; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .category-tabs { gap: 0.75rem; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1rem 5vw; }
+      .nav-links { display: none; flex-direction: column; gap: 1rem; background: var(--surface); position: absolute; top: 100%; left: 0; right: 0; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .page-hero { padding: 7rem 5vw 3.5rem; }
+      .packages-section, .addons-section, .faq-section { padding-left: 5vw; padding-right: 5vw; }
+      .process-grid { grid-template-columns: 1fr; }
+      .process-step::after { display: none; }
+      .addons-grid { grid-template-columns: 1fr; }
+      .cta-section { margin: 0 5vw 4rem; padding: 2.5rem 1.75rem; }
+      .cta-section h2 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="index.html#about">Acerca de mí</a></li>
+    <li><a href="index.html#services">Servicios</a></li>
+    <li><a href="index.html#projects">Proyectos</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html" class="active">Paquetes</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="index.html">Inicio</a>
+    <span>/</span>
+    <span>Paquetes & Precios</span>
+  </div>
+  <h1 class="page-title" style="position:relative;">
+    Inversión clara,<br><span>resultados concretos</span>
+  </h1>
+  <p class="page-sub">
+    Paquetes diseñados para distintas etapas del negocio. Elige el que mejor se adapte a tu proyecto o contáctame para una propuesta personalizada.
+  </p>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="category-tabs fade-up">
+  <a href="#branding" class="cat-tab active">
+    <span class="cat-icon">🎨</span>
+    <div class="cat-name">Branding</div>
+    <div class="cat-count">3 paquetes</div>
+  </a>
+  <a href="#web" class="cat-tab">
+    <span class="cat-icon">🌐</span>
+    <div class="cat-name">Diseño Web</div>
+    <div class="cat-count">3 paquetes</div>
+  </a>
+  <a href="#automatizacion" class="cat-tab">
+    <span class="cat-icon">⚡</span>
+    <div class="cat-name">Automatización</div>
+    <div class="cat-count">3 paquetes</div>
+  </a>
+  <a href="#datos" class="cat-tab">
+    <span class="cat-icon">📊</span>
+    <div class="cat-name">Datos & BI</div>
+    <div class="cat-count">3 paquetes</div>
+  </a>
+</div>
+
+<!-- ══════════ BRANDING ══════════ -->
+<div id="branding" class="packages-section">
+  <div class="packages-section-title fade-up">
+    <div class="label">🎨 Branding</div>
+    <h2>Identidad Visual & Marca Digital</h2>
+    <p>Desde logotipos hasta manuales completos de marca que comunican quién eres.</p>
+  </div>
+  <div class="pricing-grid">
+    <!-- BÁSICO -->
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">✏️</div>
+        <div class="plan-name">Esencial</div>
+        <div class="plan-desc">Para emprendedores y proyectos nuevos que necesitan una identidad básica y funcional.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>299 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 7–10 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Logotipo en 2 variantes (color y mono)</span></li>
+          <li><span class="check">✓</span><span>Paleta de colores primaria (3 colores)</span></li>
+          <li><span class="check">✓</span><span>Tipografía recomendada</span></li>
+          <li><span class="check">✓</span><span>Archivos en SVG, PNG y PDF</span></li>
+          <li><span class="check">✓</span><span>2 rondas de revisión</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>Manual de marca</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>Aplicaciones en mockups</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Solicitar →</a>
+      </div>
+    </div>
+    <!-- PROFESIONAL -->
+    <div class="pricing-card featured fade-up">
+      <div class="popular-badge">⭐ Más popular</div>
+      <div class="card-header">
+        <div class="plan-icon">🎯</div>
+        <div class="plan-name">Profesional</div>
+        <div class="plan-desc">Para negocios que necesitan una identidad sólida y coherente en todos sus canales.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>699 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 15–18 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Todo en Esencial, más</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Logotipo en 4 variantes</span></li>
+          <li><span class="check">✓</span><span>Paleta extendida (6 colores + escala)</span></li>
+          <li><span class="check">✓</span><span>Manual de marca (15 páginas PDF)</span></li>
+          <li><span class="check">✓</span><span>Íconos y elementos gráficos de marca</span></li>
+          <li><span class="check">✓</span><span>Aplicación en 3 mockups realistas</span></li>
+          <li><span class="check">✓</span><span>Plantillas de redes sociales (Canva/Figma)</span></li>
+          <li><span class="check">✓</span><span>4 rondas de revisión</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-primary">Solicitar →</a>
+      </div>
+    </div>
+    <!-- PREMIUM -->
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">💎</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-desc">Identidad de marca completa con estrategia y aplicaciones en todos los puntos de contacto.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>1,499 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 25–30 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Todo en Profesional, más</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Naming y estrategia de marca</span></li>
+          <li><span class="check">✓</span><span>Manual completo (30+ páginas)</span></li>
+          <li><span class="check">✓</span><span>Papelería corporativa (tarjetas, hoja membretada)</span></li>
+          <li><span class="check">✓</span><span>Pack de redes sociales (12 templates)</span></li>
+          <li><span class="check">✓</span><span>Mockup en empaques o merch</span></li>
+          <li><span class="check">✓</span><span>Revisiones ilimitadas</span></li>
+          <li><span class="check">✓</span><span>Soporte post-entrega 30 días</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Solicitar →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ WEB ══════════ -->
+<div id="web" class="packages-section">
+  <div class="packages-section-title fade-up">
+    <div class="label">🌐 Diseño Web</div>
+    <h2>Sitios y Aplicaciones Web</h2>
+    <p>Desde landing pages de alto impacto hasta plataformas web con lógica de negocio.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">🚀</div>
+        <div class="plan-name">Landing Page</div>
+        <div class="plan-desc">Una página optimizada para convertir visitantes en clientes o leads.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>499 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 10–14 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Diseño en Figma + desarrollo</span></li>
+          <li><span class="check">✓</span><span>Responsive (móvil y escritorio)</span></li>
+          <li><span class="check">✓</span><span>Formulario de contacto integrado</span></li>
+          <li><span class="check">✓</span><span>Optimización básica de velocidad</span></li>
+          <li><span class="check">✓</span><span>Google Analytics configurado</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>CMS o blog</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>Backend o base de datos</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card featured fade-up">
+      <div class="popular-badge">⭐ Más popular</div>
+      <div class="card-header">
+        <div class="plan-icon">🌐</div>
+        <div class="plan-name">Sitio Web Completo</div>
+        <div class="plan-desc">Sitio multi-página profesional con diseño personalizado y CMS fácil de gestionar.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>1,199 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 21–28 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Todo en Landing, más</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Hasta 6 páginas personalizadas</span></li>
+          <li><span class="check">✓</span><span>Blog / CMS integrado</span></li>
+          <li><span class="check">✓</span><span>SEO on-page (meta tags, sitemaps)</span></li>
+          <li><span class="check">✓</span><span>Chat o WhatsApp integrado</span></li>
+          <li><span class="check">✓</span><span>Capacitación para gestionar el sitio</span></li>
+          <li><span class="check">✓</span><span>3 meses de soporte técnico</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-primary">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">⚙️</div>
+        <div class="plan-name">Aplicación Web</div>
+        <div class="plan-desc">Sistema web con lógica de negocio, base de datos y funcionalidades avanzadas.</div>
+        <div class="price-block">
+          <div class="price-amount" style="font-size:1.8rem;">Desde <span class="currency" style="font-size:0.9rem;">$</span>2,500 <span style="font-size:0.85rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Cotización personalizada</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Diseño UI/UX completo</span></li>
+          <li><span class="check">✓</span><span>Backend + base de datos</span></li>
+          <li><span class="check">✓</span><span>Autenticación y roles de usuario</span></li>
+          <li><span class="check">✓</span><span>Integraciones con APIs externas</span></li>
+          <li><span class="check">✓</span><span>Panel de administración</span></li>
+          <li><span class="check">✓</span><span>Despliegue en producción</span></li>
+          <li><span class="check">✓</span><span>Soporte extendido 6 meses</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Cotizar proyecto →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ AUTOMATIZACIÓN ══════════ -->
+<div id="automatizacion" class="packages-section">
+  <div class="packages-section-title fade-up">
+    <div class="label">⚡ Automatización</div>
+    <h2>Automatización de Procesos</h2>
+    <p>Elimina las tareas repetitivas y conecta tus herramientas para que trabajen solas.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">⚡</div>
+        <div class="plan-name">Flujo Starter</div>
+        <div class="plan-desc">Un flujo de automatización listo para implementar en tu negocio.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>249 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 5–7 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>1 flujo de trabajo (Make o Zapier)</span></li>
+          <li><span class="check">✓</span><span>Hasta 3 herramientas conectadas</span></li>
+          <li><span class="check">✓</span><span>Documentación del flujo</span></li>
+          <li><span class="check">✓</span><span>Pruebas y ajustes</span></li>
+          <li><span class="check">✓</span><span>1 semana de soporte post-entrega</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>Scripts Python personalizados</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card featured fade-up">
+      <div class="popular-badge">⭐ Más popular</div>
+      <div class="card-header">
+        <div class="plan-icon">🔗</div>
+        <div class="plan-name">Sistema de Automatización</div>
+        <div class="plan-desc">Múltiples flujos interconectados que transforman la operación de tu área o empresa.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>799 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 15–20 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Todo en Starter, más</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Hasta 5 flujos de trabajo</span></li>
+          <li><span class="check">✓</span><span>Integración con CRM, e-mail y e-commerce</span></li>
+          <li><span class="check">✓</span><span>Scripts Python o JS para lógica avanzada</span></li>
+          <li><span class="check">✓</span><span>Panel de monitoreo de ejecuciones</span></li>
+          <li><span class="check">✓</span><span>Manejo de errores y alertas automáticas</span></li>
+          <li><span class="check">✓</span><span>1 mes de soporte post-entrega</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-primary">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">🤖</div>
+        <div class="plan-name">IA + Automatización</div>
+        <div class="plan-desc">Automatización potenciada con inteligencia artificial para flujos complejos y decisiones inteligentes.</div>
+        <div class="price-block">
+          <div class="price-amount" style="font-size:1.8rem;">Desde <span class="currency" style="font-size:0.9rem;">$</span>1,499 <span style="font-size:0.85rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Cotización según complejidad</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Flujos de automatización avanzados</span></li>
+          <li><span class="check">✓</span><span>Integración con modelos de IA (Claude, GPT)</span></li>
+          <li><span class="check">✓</span><span>Chatbot inteligente para atención al cliente</span></li>
+          <li><span class="check">✓</span><span>Clasificación y análisis automático de datos</span></li>
+          <li><span class="check">✓</span><span>Reportes generados automáticamente por IA</span></li>
+          <li><span class="check">✓</span><span>Soporte 3 meses + mantenimiento</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Cotizar →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════ DATOS ══════════ -->
+<div id="datos" class="packages-section">
+  <div class="packages-section-title fade-up">
+    <div class="label">📊 Datos & BI</div>
+    <h2>Análisis de Datos e Inteligencia de Negocio</h2>
+    <p>Convierte tus datos en decisiones. Dashboards, reportes y análisis accionables.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">📊</div>
+        <div class="plan-name">Dashboard Básico</div>
+        <div class="plan-desc">Un dashboard interactivo con tus métricas más importantes, listo para compartir.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>349 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 7–10 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Dashboard en Power BI o Looker Studio</span></li>
+          <li><span class="check">✓</span><span>Hasta 2 fuentes de datos conectadas</span></li>
+          <li><span class="check">✓</span><span>8–10 visualizaciones clave</span></li>
+          <li><span class="check">✓</span><span>Filtros dinámicos por fecha y categoría</span></li>
+          <li><span class="check">✓</span><span>Capacitación de 1 hora para uso</span></li>
+          <li class="muted"><span class="x-mark">✗</span><span>Actualización automática de datos</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card featured fade-up">
+      <div class="popular-badge">⭐ Más popular</div>
+      <div class="card-header">
+        <div class="plan-icon">📈</div>
+        <div class="plan-name">Análisis Operativo</div>
+        <div class="plan-desc">Sistema de BI completo con pipelines de datos automáticos y reportes periódicos.</div>
+        <div class="price-block">
+          <div class="price-amount"><span class="currency">$</span>999 <span style="font-size:1rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Entrega en 20–25 días hábiles</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Todo en Básico, más</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Hasta 5 fuentes de datos</span></li>
+          <li><span class="check">✓</span><span>Modelado y limpieza de datos (Python/SQL)</span></li>
+          <li><span class="check">✓</span><span>Actualización automática de datos</span></li>
+          <li><span class="check">✓</span><span>Reportes automáticos por e-mail</span></li>
+          <li><span class="check">✓</span><span>Alertas cuando los KPIs salen del rango</span></li>
+          <li><span class="check">✓</span><span>1 mes de soporte y ajustes</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-primary">Solicitar →</a>
+      </div>
+    </div>
+    <div class="pricing-card fade-up">
+      <div class="card-header">
+        <div class="plan-icon">🧠</div>
+        <div class="plan-name">Analytics Avanzado</div>
+        <div class="plan-desc">Análisis predictivo y modelos de ML para anticipar tendencias y automatizar decisiones.</div>
+        <div class="price-block">
+          <div class="price-amount" style="font-size:1.8rem;">Desde <span class="currency" style="font-size:0.9rem;">$</span>2,000 <span style="font-size:0.85rem;color:var(--muted);font-weight:400;">USD</span></div>
+          <div class="price-note">Cotización personalizada</div>
+        </div>
+      </div>
+      <div class="card-features">
+        <div class="feature-label">Incluye</div>
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>Modelo de predicción o clasificación (ML)</span></li>
+          <li><span class="check">✓</span><span>Segmentación de clientes o productos</span></li>
+          <li><span class="check">✓</span><span>Análisis de cohortes y churn</span></li>
+          <li><span class="check">✓</span><span>Pipeline de datos en producción</span></li>
+          <li><span class="check">✓</span><span>Dashboard ejecutivo con predicciones</span></li>
+          <li><span class="check">✓</span><span>Documentación técnica completa</span></li>
+        </ul>
+        <a href="index.html#contact" class="btn-plan btn-plan-ghost">Cotizar →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD-ONS -->
+<div class="addons-section">
+  <div class="packages-section-title fade-up" style="text-align:left; margin-bottom:1.75rem;">
+    <div class="label">Extras</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;letter-spacing:-0.02em;">Servicios adicionales</h2>
+  </div>
+  <div class="addons-grid">
+    <div class="addon-card fade-up">
+      <div class="addon-icon">⚡</div>
+      <div class="addon-name">Entrega Express</div>
+      <div class="addon-price">+50% del paquete</div>
+      <div class="addon-desc">Reduce el tiempo de entrega a la mitad. Sujeto a disponibilidad.</div>
+    </div>
+    <div class="addon-card fade-up">
+      <div class="addon-icon">🌐</div>
+      <div class="addon-name">Dominio + Hosting (1 año)</div>
+      <div class="addon-price">desde $80 USD</div>
+      <div class="addon-desc">Configuro y gestiono tu dominio y servidor para que no te preocupes por nada.</div>
+    </div>
+    <div class="addon-card fade-up">
+      <div class="addon-icon">📱</div>
+      <div class="addon-name">Pack Redes Sociales</div>
+      <div class="addon-price">desde $150 USD</div>
+      <div class="addon-desc">12 plantillas editables en Canva o Figma coherentes con tu identidad de marca.</div>
+    </div>
+    <div class="addon-card fade-up">
+      <div class="addon-icon">🔒</div>
+      <div class="addon-name">Mantenimiento Mensual</div>
+      <div class="addon-price">desde $99 USD/mes</div>
+      <div class="addon-desc">Actualizaciones, backups, monitoreo y ajustes recurrentes de tu proyecto.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<div class="process-section">
+  <div class="packages-section-title fade-up" style="text-align:left; margin-bottom:0;">
+    <div class="label">Proceso de trabajo</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;">Así trabajamos juntos</h2>
+  </div>
+  <div class="process-grid">
+    <div class="process-step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-title">Diagnóstico inicial</div>
+      <div class="step-desc">Hablamos sobre tu proyecto, objetivos y necesidades. Sin costo ni compromiso.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-title">Propuesta y acuerdo</div>
+      <div class="step-desc">Te envío una propuesta detallada con alcance, tiempos y precio final.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-title">Desarrollo y revisiones</div>
+      <div class="step-desc">Trabajo en tu proyecto con rondas de revisión para asegurar que supere tus expectativas.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">04</div>
+      <div class="step-title">Entrega y soporte</div>
+      <div class="step-desc">Entrego todos los archivos, capacitación y soporte post-entrega según el paquete.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="packages-section-title fade-up" style="text-align:left;">
+    <div class="label">FAQ</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.02em;">Preguntas frecuentes</h2>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Cómo es el proceso de pago?</div>
+      <div class="faq-a">Se solicita un anticipo del 50% para iniciar el proyecto y el 50% restante al momento de la entrega. Acepto transferencia bancaria, PayPal y criptomonedas.</div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Puedo combinar servicios de distintas categorías?</div>
+      <div class="faq-a">Sí, muchos clientes contratan branding + web o web + automatización. Ofrezco descuentos cuando los paquetes se combinan. Contáctame para una propuesta integral.</div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Qué pasa si necesito algo que no está en los paquetes?</div>
+      <div class="faq-a">Los paquetes son una guía de referencia. Cada proyecto es único y puedo adaptar el alcance a tus necesidades específicas. Escríbeme y armamos una propuesta a medida.</div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Trabajas con clientes fuera de México?</div>
+      <div class="faq-a">Sí, trabajo de forma remota con clientes de toda Latinoamérica, España y Estados Unidos. La comunicación es 100% digital y sin diferencias de servicio.</div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Cuánto tiempo tarda el proceso de diagnóstico inicial?</div>
+      <div class="faq-a">La llamada inicial dura entre 30 y 60 minutos. En 24–48 horas después recibes la propuesta formal con alcance y precio.</div>
+    </div>
+    <div class="faq-item fade-up">
+      <div class="faq-q">¿Qué ocurre si no quedo satisfecho con el resultado?</div>
+      <div class="faq-a">Todos los paquetes incluyen rondas de revisión para asegurar que el resultado se ajuste a lo acordado. Mi objetivo es que quedes 100% satisfecho con la entrega.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section fade-up">
+  <h2>¿No sabes qué paquete elegir?</h2>
+  <p>Platicamos 30 minutos sin costo y te digo exactamente qué necesitas según tu situación actual.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn-primary">Agendar llamada gratuita →</a>
+    <a href="articulos.html" class="btn-ghost">Ver artículos</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Aphernzz</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="index.html#contact">Contacto</a></li>
+  </ul>
+  <div>
+    <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
+    <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (Array.from(e.target.parentElement.children).indexOf(e.target) * 0.07) + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Category tabs highlight on scroll
+  const tabs = document.querySelectorAll('.cat-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

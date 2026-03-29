@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artículos & Cursos | Aphernzz</title>
+  <link rel="icon" href="favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b10;
+      --surface: #0e1318;
+      --surface2: #141c24;
+      --accent: #00e5ff;
+      --accent2: #7b61ff;
+      --text: #e8edf2;
+      --muted: #6b7a8d;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,229,255,0.2);
+      --glow: 0 0 40px rgba(0,229,255,0.15);
+      --radius: 1.5rem;
+      --radius-sm: 0.75rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+    .bg-gradient {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -2;
+      background: linear-gradient(45deg, var(--bg), #0a1128, var(--surface2), var(--bg));
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 6vw;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(8,11,16,0.8);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a {
+      font-size: 0.85rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--accent), #00b8cc) !important;
+      color: #080b10 !important;
+      padding: 0.5rem 1.4rem !important;
+      border-radius: 999px !important;
+      font-weight: 700 !important;
+      transition: box-shadow 0.3s !important;
+      text-transform: none !important;
+      letter-spacing: 0 !important;
+    }
+    .nav-cta:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* HERO PAGE */
+    .page-hero {
+      padding: 9rem 6vw 5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black 30%, transparent 100%);
+    }
+    .page-hero-inner {
+      max-width: 780px;
+      position: relative;
+    }
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .breadcrumb span { color: var(--muted); }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+    .page-title span {
+      background: linear-gradient(120deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 560px;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      padding: 2rem 6vw;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 72px;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.45rem 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--border-accent);
+      color: var(--accent);
+      background: rgba(0,229,255,0.06);
+    }
+
+    /* MAIN CONTENT */
+    .content-area {
+      padding: 4rem 6vw 6rem;
+    }
+
+    /* FEATURED ARTICLE */
+    .featured-article {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 3rem;
+      background: var(--surface);
+      transition: border-color 0.3s;
+    }
+    .featured-article:hover {
+      border-color: var(--border-accent);
+    }
+    .featured-thumb {
+      height: 100%;
+      min-height: 280px;
+      background: linear-gradient(135deg, #0a1a2e, #1a2535);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .featured-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 50%, rgba(0,229,255,0.1), transparent 60%);
+    }
+    .featured-badge {
+      position: absolute;
+      top: 1.25rem; left: 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #080b10;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .featured-body {
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .featured-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .cat-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .featured-body h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+      line-height: 1.25;
+    }
+    .featured-body p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.75;
+      margin-bottom: 1.75rem;
+    }
+    .article-link {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.2s;
+    }
+    .article-link:hover { gap: 0.7rem; }
+
+    /* SECTION HEADER */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .section-title-sm {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ARTICLES GRID */
+    .articles-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3.5rem;
+    }
+    .article-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35), var(--glow);
+    }
+    .article-thumb {
+      height: 160px;
+      background: linear-gradient(135deg, var(--surface2), #1a2535);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .article-tag {
+      position: absolute;
+      bottom: 0.75rem; left: 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .tag-auto { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); }
+    .tag-python { background: rgba(123,97,255,0.12); border: 1px solid rgba(123,97,255,0.25); color: #a78bfa; }
+    .tag-datos { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); }
+    .tag-ia { background: rgba(255,107,107,0.12); border: 1px solid rgba(255,107,107,0.25); color: #ff6b6b; }
+    .tag-taller { background: rgba(123,97,255,0.12); border: 1px solid rgba(123,97,255,0.25); color: #a78bfa; }
+    .tag-diseno { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); }
+    .article-badge-overlay {
+      position: absolute;
+      top: 0.75rem; right: 0.75rem;
+      background: linear-gradient(135deg, var(--accent2), #5b41e0);
+      color: white;
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .article-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .article-meta {
+      font-size: 0.73rem;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+    .article-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.98rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.35;
+    }
+    .article-body p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.65;
+      flex-grow: 1;
+    }
+
+    /* COURSES SECTION */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 3.5rem;
+    }
+    .course-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      display: flex;
+    }
+    .course-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-3px);
+    }
+    .course-accent {
+      width: 6px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+    .course-body {
+      padding: 1.75rem;
+      flex-grow: 1;
+    }
+    .course-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .course-status::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    .course-body h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+      line-height: 1.25;
+    }
+    .course-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+    .course-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .course-tag {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 0.2rem 0.6rem;
+    }
+    .btn-course {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #080b10;
+      background: linear-gradient(135deg, var(--accent), #00b8cc);
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+    .btn-course:hover {
+      box-shadow: 0 0 24px rgba(0,229,255,0.4);
+      transform: translateY(-1px);
+    }
+    .btn-waitlist {
+      background: transparent;
+      border: 1px solid var(--border-accent);
+      color: var(--accent);
+    }
+    .btn-waitlist:hover {
+      background: rgba(0,229,255,0.07);
+    }
+
+    /* NEWSLETTER */
+    .newsletter-box {
+      background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(123,97,255,0.06));
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius);
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .newsletter-box::before {
+      content: '';
+      position: absolute; top: -50%; left: 50%;
+      transform: translateX(-50%);
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,229,255,0.08), transparent 70%);
+    }
+    .newsletter-box h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+    .newsletter-box p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 420px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .newsletter-form input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.75rem 1.25rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-form input:focus { border-color: var(--border-accent); }
+    .newsletter-form button {
+      background: linear-gradient(135deg, var(--accent), #00b8cc);
+      color: #080b10;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+      white-space: nowrap;
+    }
+    .newsletter-form button:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--bg);
+    }
+    footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); font-size: 1rem; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .featured-article { grid-template-columns: 1fr; }
+      .featured-thumb { min-height: 200px; }
+      .articles-grid-3 { grid-template-columns: 1fr 1fr; }
+      .courses-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1rem 5vw; }
+      .nav-links { display: none; flex-direction: column; gap: 1rem; background: var(--surface); position: absolute; top: 100%; left: 0; right: 0; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .page-hero { padding: 7rem 5vw 3.5rem; }
+      .content-area { padding: 3rem 5vw; }
+      .filter-bar { padding: 1.25rem 5vw; top: 64px; }
+      .articles-grid-3 { grid-template-columns: 1fr; }
+      .newsletter-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="index.html#about">Acerca de mí</a></li>
+    <li><a href="index.html#services">Servicios</a></li>
+    <li><a href="index.html#projects">Proyectos</a></li>
+    <li><a href="articulos.html" class="active">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Inicio</a>
+      <span>/</span>
+      <span>Artículos & Cursos</span>
+    </div>
+    <h1 class="page-title">
+      Ideas que te ayudan a<br><span>automatizar y crecer</span>
+    </h1>
+    <p class="page-sub">
+      Artículos prácticos, guías técnicas y talleres diseñados para que implementes tecnología real en tu negocio. Sin rodeos, con resultados.
+    </p>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="automatizacion">Automatización</button>
+  <button class="filter-btn" data-filter="datos">Datos & BI</button>
+  <button class="filter-btn" data-filter="python">Python</button>
+  <button class="filter-btn" data-filter="ia">IA & ML</button>
+  <button class="filter-btn" data-filter="diseno">Diseño</button>
+  <button class="filter-btn" data-filter="taller">Talleres</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content-area">
+
+  <!-- ARTÍCULO DESTACADO -->
+  <div class="featured-article fade-up">
+    <div class="featured-thumb">
+      <span class="featured-badge">⭐ Destacado</span>
+      ⚡
+    </div>
+    <div class="featured-body">
+      <div class="featured-meta">
+        <span class="cat-dot"></span>
+        <span>Automatización</span>
+        <span>·</span>
+        <span>8 min de lectura</span>
+      </div>
+      <h2>5 tareas que debes automatizar hoy mismo con Zapier</h2>
+      <p>Descubre los flujos de trabajo más efectivos para recuperar hasta 10 horas a la semana en tu negocio. Desde notificaciones automáticas hasta sincronización de CRM, esta guía cubre casos reales.</p>
+      <a href="#" class="article-link">Leer artículo completo →</a>
+    </div>
+  </div>
+
+  <!-- ARTÍCULOS -->
+  <div class="section-header fade-up">
+    <div>
+      <p class="section-label">Publicaciones</p>
+      <h2 class="section-title-sm">Artículos recientes</h2>
+    </div>
+  </div>
+
+  <div class="articles-grid-3">
+    <div class="article-card fade-up" data-category="python">
+      <div class="article-thumb">
+        🐍
+        <span class="article-tag tag-python">Python</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Marzo 2026 · 6 min</div>
+        <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
+        <p>Guía paso a paso sobre web scraping con BeautifulSoup y Pandas de forma ética y eficiente.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+
+    <div class="article-card fade-up" data-category="datos">
+      <div class="article-thumb">
+        📊
+        <span class="article-tag tag-datos">Power BI</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Febrero 2026 · 5 min</div>
+        <h3>Métricas que todo negocio debería medir en un dashboard</h3>
+        <p>Un repaso por los KPIs más accionables y cómo visualizarlos en Power BI sin complicarte la vida.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+
+    <div class="article-card fade-up" data-category="automatizacion">
+      <div class="article-thumb">
+        🔗
+        <span class="article-tag tag-auto">Automatización</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Enero 2026 · 7 min</div>
+        <h3>Make vs Zapier: ¿Cuál elegir según tu caso de uso?</h3>
+        <p>Comparativa honesta de las dos plataformas más populares de automatización no-code en 2026.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+
+    <div class="article-card fade-up" data-category="ia">
+      <div class="article-thumb">
+        🤖
+        <span class="article-tag tag-ia">IA</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Enero 2026 · 9 min</div>
+        <h3>Cómo usar Claude API para automatizar respuestas de clientes</h3>
+        <p>Implementa un asistente de atención al cliente inteligente conectado a tu CRM con menos de 100 líneas de Python.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+
+    <div class="article-card fade-up" data-category="diseno">
+      <div class="article-thumb">
+        🎨
+        <span class="article-tag tag-diseno">Diseño</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Diciembre 2025 · 4 min</div>
+        <h3>Los 5 errores más comunes en identidad visual de startups</h3>
+        <p>Una revisión de los errores que hacen perder credibilidad y cómo corregirlos antes de salir al mercado.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+
+    <div class="article-card fade-up" data-category="python">
+      <div class="article-thumb">
+        📈
+        <span class="article-tag tag-python">Python</span>
+      </div>
+      <div class="article-body">
+        <div class="article-meta">Noviembre 2025 · 10 min</div>
+        <h3>Análisis exploratorio de datos con Pandas desde cero</h3>
+        <p>Todo lo que necesitas saber para limpiar, explorar y entender cualquier dataset antes de modelarlo.</p>
+        <a href="#" class="article-link">Leer →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TALLERES Y CURSOS -->
+  <div class="section-header fade-up">
+    <div>
+      <p class="section-label">Formación</p>
+      <h2 class="section-title-sm">Talleres y Cursos</h2>
+    </div>
+  </div>
+
+  <div class="courses-grid">
+    <div class="course-card fade-up">
+      <div class="course-accent"></div>
+      <div class="course-body">
+        <div class="course-status">Lista de espera abierta</div>
+        <h3>Bootcamp: De cero a experto creando Dashboards en Power BI</h3>
+        <p>Aprende a conectar bases de datos, modelar información y construir visualizaciones que impacten la toma de decisiones de tu empresa.</p>
+        <div class="course-tags">
+          <span class="course-tag">Power BI</span>
+          <span class="course-tag">SQL</span>
+          <span class="course-tag">DAX</span>
+          <span class="course-tag">8 semanas</span>
+        </div>
+        <a href="index.html#contact" class="btn-course btn-waitlist">Unirme a la lista →</a>
+      </div>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-accent" style="background: linear-gradient(180deg, var(--accent2), #5b41e0);"></div>
+      <div class="course-body">
+        <div class="course-status" style="color: #a78bfa;">Próximamente</div>
+        <h3>Automatización de Negocios con Make y Python</h3>
+        <p>Domina la automatización no-code y low-code para digitalizar procesos completos en tu empresa sin necesidad de un equipo de IT.</p>
+        <div class="course-tags">
+          <span class="course-tag">Make</span>
+          <span class="course-tag">Python</span>
+          <span class="course-tag">APIs</span>
+          <span class="course-tag">6 semanas</span>
+        </div>
+        <a href="index.html#contact" class="btn-course btn-waitlist" style="border-color: rgba(123,97,255,0.3); color: #a78bfa;">Notifícame →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter-box fade-up">
+    <h3>Recibe los artículos antes que nadie</h3>
+    <p>Una publicación cada dos semanas. Sin spam, solo contenido de valor sobre tecnología aplicada al negocio.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="tu@correo.com" />
+      <button type="button">Suscribirme →</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Aphernzz</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="index.html#contact">Contacto</a></li>
+  </ul>
+  <div>
+    <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
+    <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (Array.from(e.target.parentElement.children).indexOf(e.target) * 0.07) + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Filter buttons
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const articleCards = document.querySelectorAll('.article-card[data-category]');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      articleCards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

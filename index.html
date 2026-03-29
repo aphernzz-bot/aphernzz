@@ -5,16 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aphernzz | Automatiza. Escala. Crece.</title>
   <link rel="icon" href="favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <link href="style.css" rel="stylesheet" />
   <link href="script.js" rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=1.3">
 </head>
+
 <body>
 
-<!-- Fondo animado -->
 <div class="bg-gradient"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
 <!-- NAV -->
 <nav>
   <a href="#home" class="nav-logo">Aphernzz</a>
@@ -23,7 +27,8 @@
     <li><a href="#about">Acerca de mí</a></li>
     <li><a href="#services">Servicios</a></li>
     <li><a href="#projects">Proyectos</a></li>
-    <li><a href="#articles">Artículos y Cursos</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
     <li><a href="#contact" class="nav-cta">Contáctame</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -44,7 +49,21 @@
     </p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Optimiza tu negocio →</a>
-      <a href="#projects" class="btn-ghost">Ver proyectos</a>
+      <a href="paquetes.html" class="btn-ghost">Ver paquetes</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">3+</div>
+        <div class="lbl">Años de experiencia</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">20+</div>
+        <div class="lbl">Proyectos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">100%</div>
+        <div class="lbl">Enfoque en resultados</div>
+      </div>
     </div>
   </div>
 
@@ -89,7 +108,7 @@
       <div class="stat-card">
         <div class="num">3+</div>
         <div class="label">Años de experiencia</div>
-<!--       </div> -->
+      </div>
       <div class="stat-card">
         <div class="num">20+</div>
         <div class="label">Proyectos entregados</div>
@@ -148,6 +167,7 @@
     </div>
   </div>
 </section>
+
 <!-- PROJECTS -->
 <section id="projects">
   <div class="projects-header fade-up">
@@ -155,10 +175,7 @@
     <h2 class="section-title">Trabajo reciente</h2>
     <p class="section-body">Algunos de los sistemas y soluciones que he construido para distintas industrias.</p>
   </div>
-
   <div class="projects-grid">
-
-    <!-- PROYECTO 1: Hospital -->
     <div class="project-card fade-up">
       <div class="project-thumb">
         <img src="dashboard-hospital.png" alt="Dashboard en tiempo real de pacientes" />
@@ -173,8 +190,6 @@
         </div>
       </div>
     </div>
-
-    <!-- PROYECTO 2: Logística -->
     <div class="project-card fade-up">
       <div class="project-thumb">
         <img src="webpage-logistic.png" alt="Plataforma Web LogisticGolfo" />
@@ -189,11 +204,8 @@
         </div>
       </div>
     </div>
-
-    <!-- PROYECTO 3: E-commerce Ropa -->
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <!-- Recuerda subir esta imagen a tu carpeta -->
         <img src="crm+ecommerce.png" alt="Tienda en línea y CRM" />
       </div>
       <div class="project-body">
@@ -206,11 +218,8 @@
         </div>
       </div>
     </div>
-
-    <!-- PROYECTO 4: Branding -->
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <!-- Recuerda subir esta imagen a tu carpeta -->
         <img src="branding.png" alt="Proyectos de Identidad Visual" />
       </div>
       <div class="project-body">
@@ -223,66 +232,61 @@
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ARTICLES / NEWS -->
-<section id="articles">
-  <div class="articles-header fade-up">
-    <p class="section-label">Recursos y Aprendizaje</p>
-    <h2 class="section-title">Artículos y Talleres</h2>
-    <p class="section-body">Ideas, estrategias de automatización y próximos cursos diseñados para ayudarte a escalar tus habilidades tecnológicas.</p>
+<!-- ARTICLES PREVIEW -->
+<section id="articles-preview">
+  <div class="articles-cta-row fade-up">
+    <div>
+      <p class="section-label">Recursos y Aprendizaje</p>
+      <h2 class="section-title">Artículos y Talleres</h2>
+      <p class="section-body">Ideas, estrategias y cursos para que escales tus habilidades tecnológicas.</p>
+    </div>
+    <a href="articulos.html" class="btn-ghost">Ver todos los artículos →</a>
   </div>
-
   <div class="articles-grid">
-    <!-- Tarjeta 1: Artículo Normal -->
     <div class="article-card fade-up">
-      <div class="article-thumb">
-        📝
-      </div>
+      <div class="article-thumb">📝</div>
       <div class="article-body">
-        <div class="article-meta">
-          <span>Octubre 2026</span> • <span>Automatización</span>
-        </div>
+        <div class="article-meta"><span>Automatización</span></div>
         <h3>5 tareas que debes automatizar hoy mismo con Zapier</h3>
-        <p>Descubre los flujos de trabajo más efectivos para recuperar hasta 10 horas a la semana en tu negocio.</p>
-        <a href="#" class="article-link">Leer artículo →</a>
+        <p>Recupera hasta 10 horas a la semana con los flujos de trabajo más efectivos.</p>
+        <a href="articulos.html" class="article-link">Leer artículo →</a>
       </div>
     </div>
-
-    <!-- Tarjeta 2: Taller / Curso (Con Insignia) -->
     <div class="article-card fade-up">
       <div class="article-thumb">
         <span class="article-badge course">Próximo Taller</span>
         🎓
       </div>
       <div class="article-body">
-        <div class="article-meta">
-          <span>Lista de espera abierta</span> • <span>Low-code</span>
-        </div>
-        <h3>Bootcamp: De cero a experto creando Dashboards en Power BI</h3>
-        <p>Aprende a conectar bases de datos, modelar información y construir visualizaciones que impacten la toma de decisiones.</p>
-        <a href="#" class="article-link">Ver temario →</a>
+        <div class="article-meta"><span>Lista de espera abierta</span></div>
+        <h3>Bootcamp: De cero a experto en Power BI</h3>
+        <p>Conecta bases de datos, modela información y construye visualizaciones de impacto.</p>
+        <a href="articulos.html" class="article-link">Ver temario →</a>
       </div>
     </div>
-
-    <!-- Tarjeta 3: Artículo Técnico -->
     <div class="article-card fade-up">
-      <div class="article-thumb">
-        🐍
-      </div>
+      <div class="article-thumb">🐍</div>
       <div class="article-body">
-        <div class="article-meta">
-          <span>Marzo 2026</span> • <span>Python</span>
-        </div>
+        <div class="article-meta"><span>Python</span></div>
         <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
-        <p>Una guía paso a paso sobre web scraping utilizando BeautifulSoup y Pandas de forma ética y eficiente.</p>
-        <a href="#" class="article-link">Leer artículo →</a>
+        <p>Guía paso a paso de web scraping con BeautifulSoup y Pandas.</p>
+        <a href="articulos.html" class="article-link">Leer artículo →</a>
       </div>
     </div>
   </div>
 </section>
+
+<!-- CTA BANNER PAQUETES -->
+<div class="cta-banner fade-up">
+  <div class="cta-banner-text">
+    <h3>¿Listo para llevar tu negocio al siguiente nivel?</h3>
+    <p>Revisa los paquetes disponibles de branding, web y automatización.</p>
+  </div>
+  <a href="paquetes.html" class="btn-primary">Ver paquetes y precios →</a>
+</div>
 
 <!-- CONTACT -->
 <section id="contact">
@@ -292,25 +296,20 @@
     <p class="section-body">Cuéntame en qué trabajas y cómo puedo ayudarte. Respondo en menos de 24 horas.</p>
 
     <form class="contact-form" action="https://formsubmit.co/aphernzz@gmail.com" method="POST" onsubmit="handleSubmit(event)">
-      <!-- Campos ocultos útiles de FormSubmit -->
       <input type="hidden" name="_subject" value="¡Nuevo mensaje de tu Portafolio!">
       <input type="hidden" name="_captcha" value="false">
-
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Nombre</label>
-          <!-- Agregamos name="Nombre" -->
           <input type="text" name="Nombre" id="nombre" placeholder="Tu nombre" required />
         </div>
         <div class="form-group">
           <label for="email">Correo</label>
-          <!-- Agregamos name="Email" -->
           <input type="email" name="Email" id="email" placeholder="tu@correo.com" required />
         </div>
       </div>
       <div class="form-group">
         <label for="servicio">Servicio de interés</label>
-        <!-- Agregamos name="Servicio" -->
         <select name="Servicio" id="servicio" required>
           <option value="">Selecciona una opción</option>
           <option value="Análisis de Datos">Análisis de Datos</option>
@@ -324,7 +323,6 @@
       </div>
       <div class="form-group">
         <label for="mensaje">Mensaje</label>
-        <!-- Agregamos name="Mensaje" -->
         <textarea name="Mensaje" id="mensaje" placeholder="Cuéntame sobre tu proyecto o necesidad..." required></textarea>
       </div>
       <button type="submit" class="btn-primary">Enviar mensaje →</button>
@@ -341,93 +339,73 @@
 <!-- FOOTER -->
 <footer>
   <div class="logo">Aphernzz</div>
-  <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
-  <p style="color:var(--muted);font-size:0.75rem">San Luis Potosí, México</p>
+  <ul class="footer-links">
+    <li><a href="#home">Inicio</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="#contact">Contacto</a></li>
+  </ul>
+  <div>
+    <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
+    <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
+  </div>
 </footer>
 
-<!-- Librería para el efecto 3D en las tarjetas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-
 <script>
-  // Hamburger
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.getElementById('navLinks');
   hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
-  // Scroll animations
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
+    entries.forEach((e) => {
       if (e.isIntersecting) {
         e.target.style.transitionDelay = (Array.from(e.target.parentElement.children).indexOf(e.target) * 0.08) + 's';
         e.target.classList.add('visible');
       }
     });
-  }, { threshold: 0.12 });
-
+  }, { threshold: 0.1 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-// Form submit con Fetch API (AJAX)
   function handleSubmit(e) {
-    // Evita que la página recargue o te mande a la web de FormSubmit
     e.preventDefault();
-
     const form = e.target;
     const btn = form.querySelector('button');
     const originalText = btn.textContent;
-
-    // Cambiamos el texto para que el usuario sepa que está cargando
     btn.textContent = 'Enviando...';
     btn.style.opacity = '0.7';
-
-    // Enviamos los datos a la URL de FormSubmit
     fetch(form.action, {
       method: 'POST',
       body: new FormData(form),
-      headers: {
-        // Este header es el truco para que FormSubmit no redirija y responda en silencio
-        'Accept': 'application/json'
-      }
+      headers: { 'Accept': 'application/json' }
     })
     .then(response => {
       if (response.ok) {
-        // ¡Éxito! Aplicamos tu estilo original de éxito
         btn.textContent = '¡Mensaje enviado! ✓';
-        btn.style.background = '#00c896'; // Verde
-        btn.style.color = '#fff';
+        btn.style.background = 'linear-gradient(135deg, #00c896, #00a880)';
         btn.style.opacity = '1';
-        form.reset(); // Limpiamos los campos
-
-        // Regresamos el botón a la normalidad después de 3 segundos
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '';
-          btn.style.color = '';
-        }, 3000);
+        form.reset();
+        setTimeout(() => { btn.textContent = originalText; btn.style.background = ''; }, 3000);
       } else {
-        // Si hay un error por parte del servidor
         btn.textContent = 'Error al enviar ❌';
         btn.style.background = '#ff3366';
         setTimeout(() => { btn.textContent = originalText; btn.style.background = ''; }, 3000);
       }
     })
     .catch(error => {
-      console.error(error);
       btn.textContent = 'Error de red ❌';
       setTimeout(() => { btn.textContent = originalText; }, 3000);
     });
   }
 
-  // ── EFECTO TILT (3D) PARA TARJETAS ──
-  // Seleccionamos todas las tarjetas a las que queremos darles el efecto
   VanillaTilt.init(document.querySelectorAll(".service-card, .project-card, .stat-card, .article-card"), {
-    max: 10,           // Ángulo máximo de inclinación
-    speed: 400,        // Velocidad de la transición al entrar/salir
-    glare: true,       // Agrega un efecto de brillo tipo cristal
-    "max-glare": 0.2,  // Opacidad máxima del brillo
-    scale: 1.02        // Hace que la tarjeta crezca un 2% al pasar el mouse
+    max: 8,
+    speed: 400,
+    glare: true,
+    "max-glare": 0.15,
+    scale: 1.02
   });
 </script>
-
 </body>
 </html>
