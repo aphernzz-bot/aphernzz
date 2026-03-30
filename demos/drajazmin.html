@@ -472,6 +472,7 @@
     .fade-up.visible { opacity: 1; transform: none; }
 
     /* ─── RESPONSIVE ─── */
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 1024px) {
       .servicios-grid { grid-template-columns: repeat(2,1fr); }
       .testimonios-grid { grid-template-columns: repeat(2,1fr); }
@@ -486,9 +487,12 @@
       .hero-sub { margin: 0 auto 2rem; }
       .hero-stats { justify-content: center; }
       .hero-image { order: -1; }
+      
       .hero-photo-wrap { width: 280px; height: 340px; }
       .hero-photo-bg { width: 240px; height: 310px; }
+      .hero-photo { width: 230px; height: 300px; } /* Faltaba esta línea */
       .hero-photo-placeholder { width: 230px; height: 300px; }
+
       .card-float-left { left: -10px; }
       .card-float-right { right: -10px; }
       .perfil-grid { grid-template-columns: 1fr; gap: 2.5rem; }
