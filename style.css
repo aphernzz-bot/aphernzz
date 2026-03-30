@@ -994,5 +994,5 @@
       .about-stats { grid-template-columns: 1fr 1fr; }
       .hero-img-frame { width: 75%; }
       .articles-grid { grid-template-columns: 1fr; }
-      .cta-banner { margin: 0 5vw 4rem; padding: 2.5rem; }
+      .cta-banner { margin: 4rem 5vw 4rem; padding: 2.5rem; }
     }
