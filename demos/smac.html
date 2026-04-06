@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMAC — Servicios de Mantenimiento Industrial</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:       #C8281A;
+    --red-dark:  #9C1F14;
+    --red-light: #E63B2C;
+    --ink:       #0D0F12;
+    --ink-soft:  #3A4050;
+    --muted:     #6B7480;
+    --border:    #E2E5EA;
+    --border-m:  #C8CDD6;
+    --bg:        #FFFFFF;
+    --bg-soft:   #F5F6F8;
+    --bg-mid:    #ECEEF2;
+    --display:   'Bebas Neue', sans-serif;
+    --mono:      'Share Tech Mono', monospace;
+    --body:      'Barlow', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--body); background:var(--bg); color:var(--ink); overflow-x:hidden; cursor:none; }
+
+  /* ── CURSOR ── */
+  .cur   { position:fixed; width:8px; height:8px; background:var(--red); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+  .cur-r { position:fixed; width:34px; height:34px; border:1px solid rgba(200,40,26,.4); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .2s,height .2s,border-color .2s; }
+  body:has(a:hover) .cur-r,
+  body:has(button:hover) .cur-r { width:52px; height:52px; border-color:var(--red); }
+
+  /* ── NAV ── */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 64px; height:68px;
+    background:rgba(255,255,255,0);
+    transition:background .35s,box-shadow .35s;
+  }
+  nav.scrolled { background:rgba(255,255,255,.97); box-shadow:0 1px 0 var(--border); backdrop-filter:blur(20px); }
+  .nav-logo { font-family:var(--display); font-size:27px; letter-spacing:6px; color:var(--ink); }
+  .nav-logo span { color:var(--red); }
+  .nav-links { display:flex; gap:40px; list-style:none; }
+  .nav-links a { font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-decoration:none; position:relative; padding-bottom:2px; transition:color .2s; }
+  .nav-links a::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--red); transition:width .25s; }
+  .nav-links a:hover { color:var(--ink); }
+  .nav-links a:hover::after { width:100%; }
+  .nav-cta { font-family:var(--mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--red); padding:9px 22px; border:1px solid var(--red); text-decoration:none; transition:background .2s,color .2s; }
+  .nav-cta:hover { background:var(--red); color:#fff; }
+
+  /* ── HERO ── */
+  .hero { min-height:100vh; background:var(--bg); position:relative; display:flex; align-items:center; overflow:hidden; padding-top:68px; }
+
+  .hero-grid {
+    position:absolute; inset:0; pointer-events:none;
+    background-image: linear-gradient(var(--border) 1px,transparent 1px), linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:72px 72px; opacity:.55;
+  }
+
+  .hero-panel {
+    position:absolute; right:0; top:0; bottom:0; width:44%;
+    background:var(--bg-soft);
+    clip-path:polygon(16% 0,100% 0,100% 100%,0% 100%);
+  }
+  .hero-panel::after { content:''; position:absolute; inset:0; background:url('https://www.macmantenimiento.com/images/index/car_1.jpg') center/cover; opacity:.75; }
+
+  .hero-rule {
+    position:absolute; left:64px; top:0; bottom:0; width:2px; background:var(--red); z-index:2;
+    transform:scaleY(0); transform-origin:top;
+    animation:ruleDown .9s cubic-bezier(.16,1,.3,1) .1s forwards;
+  }
+  @keyframes ruleDown { to { transform:scaleY(1); } }
+
+  .hero-matrix { position:absolute; right:6%; bottom:13%; z-index:2; display:grid; grid-template-columns:repeat(10,1fr); gap:9px; opacity:0; animation:gUp .5s ease .95s forwards; }
+  .hero-matrix i { display:block; width:2px; height:2px; background:var(--border-m); border-radius:50%; }
+  .hero-matrix i:nth-child(3n+1) { background:rgba(200,40,26,.35); }
+
+  @keyframes gUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+  .hero-content { position:relative; z-index:3; padding-left:96px; padding-right:5%; max-width:900px; }
+
+  .hero-eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:36px; opacity:0; animation:sIn .6s ease .3s forwards; }
+  .hero-eyebrow-bar { width:28px; height:1px; background:var(--red); }
+  .hero-eyebrow span { font-family:var(--mono); font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--red); }
+  @keyframes sIn { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
+
+  .hero-title { font-family:var(--display); line-height:.88; letter-spacing:1px; }
+  .hero-title .ln { display:block; overflow:hidden; }
+  .hero-title .ln em { display:block; font-style:normal; opacity:0; transform:translateY(105%); }
+  /* Reducción de tamaño: cambiado el clamp gigante por uno más mesurado */
+  .hero-title .ln:nth-child(1) em { font-size:clamp(60px,8vw,110px); animation:tRise .75s cubic-bezier(.16,1,.3,1) .28s forwards; color:var(--ink); }
+  .hero-title .ln:nth-child(2) em { font-size:clamp(60px,8vw,110px); animation:tRise .75s cubic-bezier(.16,1,.3,1) .42s forwards; color:var(--red); }
+  .hero-title .ln:nth-child(3) em { font-size:clamp(60px,8vw,110px); animation:tRise .75s cubic-bezier(.16,1,.3,1) .56s forwards; color:var(--ink); }
+  @keyframes tRise { to{opacity:1;transform:none} }
+
+  .hero-line { width:0; height:1px; background:var(--border-m); margin:32px 0; animation:lGrow .8s ease .8s forwards; }
+  @keyframes lGrow { to { width:100%; max-width:520px; } }
+
+  .hero-bottom { display:grid; grid-template-columns:1fr auto; gap:48px; align-items:end; opacity:0; animation:gUp .6s ease .9s forwards; }
+  .hero-desc { font-size:20px; font-weight:300; color:var(--muted); line-height:1.75; max-width:480px; }
+  .hero-btns { display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+
+  .btn-primary { background:var(--red); color:#fff; font-family:var(--mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; padding:14px 34px; text-decoration:none; white-space:nowrap; position:relative; overflow:hidden; display:inline-block; }
+  .btn-primary::before { content:''; position:absolute; inset:0; background:var(--red-dark); transform:translateX(-100%); transition:transform .25s; }
+  .btn-primary:hover::before { transform:none; }
+  .btn-primary span { position:relative; }
+  .btn-outline { background:transparent; color:var(--ink); font-family:var(--mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; padding:13px 34px; text-decoration:none; white-space:nowrap; border:1px solid var(--border-m); display:inline-block; transition:border-color .25s,color .25s; }
+  .btn-outline:hover { border-color:var(--ink); }
+
+  /* status strip */
+  .hero-strip { position:absolute; bottom:0; left:0; right:0; z-index:4; display:flex; border-top:1px solid var(--border); opacity:0; animation:gUp .4s ease 1.1s forwards; background:rgba(255,255,255,.88); backdrop-filter:blur(12px); }
+  .strip-item { flex:1; padding:16px 64px; display:flex; align-items:center; gap:14px; border-right:1px solid var(--border); }
+  .strip-item:last-child { border-right:none; }
+  .strip-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; animation:blink 2.2s ease infinite; }
+  .strip-dot.r { background:var(--red); }
+  .strip-dot.g { background:#16A34A; }
+  .strip-dot.y { background:#CA8A04; }
+  @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.6)} }
+  .strip-lbl { font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); }
+  .strip-val { font-family:var(--mono); font-size:12px; letter-spacing:1px; color:var(--ink); margin-top:2px; }
+
+  /* ── SHARED ── */
+  section { padding:108px 64px; }
+  .tag { font-family:var(--mono); font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--red); margin-bottom:20px; display:flex; align-items:center; gap:14px; }
+  .tag::before { content:''; width:24px; height:1px; background:var(--red); flex-shrink:0; }
+  .h2 { font-family:var(--display); font-size:clamp(54px,6.5vw,88px); line-height:.9; letter-spacing:2px; margin-bottom:28px; color:var(--ink); }
+  .h2 span { color:var(--red); }
+
+  /* Reveal */
+  .rv { opacity:0; transform:translateY(22px); transition:opacity .7s ease,transform .7s cubic-bezier(.16,1,.3,1); }
+  .rv.on { opacity:1; transform:none; }
+
+  /* ── ABOUT ── */
+  .about { background:var(--bg-soft); }
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .about-img-w { position:relative; }
+  .about-frame { position:absolute; top:-10px; left:-10px; right:20px; bottom:20px; border:1px solid rgba(200,40,26,.25); pointer-events:none; z-index:0; }
+  .about-img-w img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; position:relative; z-index:1; filter:brightness(.9) saturate(.75) contrast(1.05); }
+  .about-badge { position:absolute; bottom:-20px; right:-20px; z-index:2; background:var(--red); padding:22px 28px; }
+  .about-badge strong { font-family:var(--display); display:block; font-size:48px; letter-spacing:2px; line-height:1; color:#fff; }
+  .about-badge span { font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.8); }
+  .about-text p { color:var(--muted); line-height:1.8; margin-bottom:20px; font-size:15px; font-weight:300; }
+  .about-values { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin-top:40px; background:var(--border); }
+  .val-card { background:var(--bg-soft); padding:22px 24px; border-top:2px solid transparent; transition:border-color .25s,background .25s; }
+  .val-card:hover { border-color:var(--red); background:var(--bg); }
+  .val-card h4 { font-family:var(--mono); font-size:11px; letter-spacing:3px; text-transform:uppercase; margin-bottom:8px; color:var(--ink); }
+  .val-card p { font-size:13px; color:var(--muted); line-height:1.65; }
+
+  /* ── SERVICES ── */
+  .services { background:var(--bg); }
+  .svc-intro { max-width:540px; margin-bottom:64px; }
+  .svc-intro p { color:var(--muted); font-size:15px; line-height:1.8; font-weight:300; }
+  .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); }
+  .svc-card { background:var(--bg); padding:40px 32px 36px; position:relative; overflow:hidden; transition:background .25s; }
+  .svc-card::after { content:''; position:absolute; left:0; bottom:0; width:100%; height:2px; background:var(--red); transform:scaleX(0); transform-origin:left; transition:transform .4s cubic-bezier(.16,1,.3,1); }
+  .svc-card:hover::after { transform:scaleX(1); }
+  .svc-card:hover { background:var(--bg-soft); }
+  .svc-num { font-family:var(--mono); font-size:10px; letter-spacing:3px; color:var(--red); margin-bottom:28px; display:block; }
+  .svc-ico { width:40px; height:40px; margin-bottom:20px; border:1px solid var(--border-m); display:flex; align-items:center; justify-content:center; transition:background .25s,border-color .25s; }
+  .svc-card:hover .svc-ico { background:var(--red); border-color:var(--red); }
+  .svc-ico svg { width:18px; height:18px; fill:none; stroke:var(--red); stroke-width:1.5; transition:stroke .25s; }
+  .svc-card:hover .svc-ico svg { stroke:#fff; }
+  .svc-card h3 { font-family:var(--display); font-size:28px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; color:var(--ink); }
+  .svc-card p { font-size:13px; color:var(--muted); line-height:1.7; font-weight:300; }
+
+  /* ── REPSE ── */
+  .repse { background:var(--ink); color:#fff; padding:52px 64px; display:flex; align-items:center; justify-content:space-between; gap:40px; flex-wrap:wrap; position:relative; overflow:hidden; }
+  .repse::before { content:'REPSE'; font-family:var(--display); font-size:200px; letter-spacing:12px; color:rgba(255,255,255,.04); position:absolute; right:-30px; top:50%; transform:translateY(-50%); pointer-events:none; user-select:none; line-height:1; }
+  .repse-l { display:flex; align-items:center; gap:24px; }
+  .repse-ico { width:56px; height:56px; border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .repse-ico svg { width:26px; height:26px; stroke:#fff; fill:none; stroke-width:1.5; }
+  .repse-txt h3 { font-family:var(--display); font-size:28px; letter-spacing:3px; text-transform:uppercase; margin-bottom:4px; }
+  .repse-txt p { font-size:13px; opacity:.7; max-width:480px; line-height:1.6; font-weight:300; }
+  .repse-badges { display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+  .repse-badge { padding:8px 18px; border:1px solid rgba(255,255,255,.2); font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; transition:background .2s; }
+  .repse-badge:hover { background:rgba(255,255,255,.07); }
+
+  /* ── INDUSTRY ── */
+  .industry { background:var(--bg-soft); }
+  .ind-hdr { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:56px; flex-wrap:wrap; gap:24px; }
+  .ind-hdr p { max-width:360px; color:var(--muted); font-size:15px; line-height:1.7; font-weight:300; }
+  .clients-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+  .client-tile { background:var(--bg-soft); aspect-ratio:3/2; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; transition:background .25s; }
+  .client-tile::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--red); opacity:0; transition:opacity .25s; }
+  .client-tile:hover { background:var(--bg); }
+  .client-tile:hover::after { opacity:1; }
+  .client-tile span { font-family:var(--mono); font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); transition:color .25s; }
+  .client-tile:hover span { color:var(--ink); }
+  .img-row { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:1px; background:var(--border); }
+  .img-item { height:220px; overflow:hidden; position:relative; }
+  .img-item img { width:100%; height:100%; object-fit:cover; filter:brightness(.75) saturate(.7); transition:filter .4s,transform .55s; }
+  .img-item:hover img { filter:brightness(.9) saturate(.9); transform:scale(1.04); }
+  .img-lbl { position:absolute; bottom:0; left:0; right:0; padding:20px 20px 14px; background:linear-gradient(transparent,rgba(0,0,0,.5)); font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.85); }
+
+  /* ── KAIZEN ── */
+  .kaizen { background:var(--bg); display:grid; grid-template-columns:1fr 1fr; }
+  .kaizen-text { padding:108px 64px; }
+  .kaizen-vis { background:var(--bg-soft); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:520px; }
+  .kaizen-vis img { width:100%; height:100%; object-fit:cover; filter:brightness(.5) saturate(.5); position:absolute; inset:0; }
+  .kaizen-vis-c { position:relative; z-index:1; text-align:center; padding:60px; }
+  .k-word { font-family:var(--display); font-size:108px; letter-spacing:20px; color:rgba(255,255,255,.12); display:block; line-height:1; }
+  .k-sub { font-family:var(--mono); font-size:11px; letter-spacing:6px; text-transform:uppercase; color:rgba(255,255,255,.6); display:block; margin-top:14px; }
+  .kaizen-steps { display:flex; flex-direction:column; gap:0; margin-top:44px; }
+  .k-step { display:flex; gap:24px; align-items:flex-start; padding:20px 0; border-bottom:1px solid var(--border); transition:padding-left .25s; }
+  .k-step:first-child { border-top:1px solid var(--border); }
+  .k-step:hover { padding-left:8px; }
+  .k-num { font-family:var(--mono); font-size:10px; letter-spacing:2px; color:var(--red); line-height:1.7; flex-shrink:0; width:28px; }
+  .k-txt h4 { font-family:var(--display); font-size:22px; letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; color:var(--ink); }
+  .k-txt p { font-size:13px; color:var(--muted); line-height:1.65; font-weight:300; }
+
+  /* ── CONTACT ── */
+  .contact { background:var(--bg-soft); }
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; }
+  .c-item { display:flex; gap:18px; align-items:flex-start; margin-bottom:28px; }
+  .c-ico { width:40px; height:40px; border:1px solid var(--border-m); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:background .25s,border-color .25s; }
+  .c-item:hover .c-ico { background:var(--red); border-color:var(--red); }
+  .c-ico svg { width:16px; height:16px; stroke:var(--red); fill:none; stroke-width:1.5; transition:stroke .25s; }
+  .c-item:hover .c-ico svg { stroke:#fff; }
+  .c-txt label { font-family:var(--mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--red); display:block; margin-bottom:5px; }
+  .c-txt span { font-size:15px; color:var(--ink); }
+  .c-form { display:flex; flex-direction:column; gap:12px; }
+  .f-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .c-form input,.c-form select,.c-form textarea { background:var(--bg); border:1px solid var(--border); color:var(--ink); padding:13px 16px; font-family:var(--body); font-size:13px; width:100%; outline:none; transition:border-color .2s; }
+  .c-form input:focus,.c-form select:focus,.c-form textarea:focus { border-color:var(--red); }
+  .c-form input::placeholder,.c-form textarea::placeholder { color:var(--border-m); }
+  .c-form select { color:var(--muted); }
+  .c-form textarea { height:110px; resize:vertical; }
+  .c-form button { background:var(--red); color:#fff; border:none; cursor:none; font-family:var(--mono); font-size:11px; letter-spacing:4px; text-transform:uppercase; padding:15px; position:relative; overflow:hidden; }
+  .c-form button::before { content:''; position:absolute; inset:0; background:var(--red-dark); transform:translateX(-100%); transition:transform .25s; }
+  .c-form button:hover::before { transform:none; }
+  .c-form button span { position:relative; }
+
+  /* ── FOOTER ── */
+  <footer> { background:var(--ink); color:#fff; padding:52px 64px 32px; }
+  .foot-top { display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap; margin-bottom:44px; }
+  .foot-logo { font-family:var(--display); font-size:40px; letter-spacing:6px; }
+  .foot-logo span { color:var(--red); }
+  .foot-logo small { display:block; font-family:var(--mono); font-size:10px; letter-spacing:5px; color:rgba(255,255,255,.3); margin-top:6px; text-transform:uppercase; }
+  .foot-links { display:flex; gap:48px; flex-wrap:wrap; }
+  .foot-col h5 { font-family:var(--mono); font-size:10px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:18px; }
+  .foot-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .foot-col ul li a { color:rgba(255,255,255,.4); text-decoration:none; font-size:13px; transition:color .2s; }
+  .foot-col ul li a:hover { color:#fff; }
+  .foot-bottom { border-top:1px solid rgba(255,255,255,.08); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .foot-bottom p { font-family:var(--mono); font-size:11px; color:rgba(255,255,255,.3); letter-spacing:1px; }
+  .foot-repse { font-family:var(--mono); font-size:10px; color:rgba(255,255,255,.3); letter-spacing:3px; text-transform:uppercase; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width:900px) {
+    nav,section,.kaizen-text,.repse,footer { padding-left:24px; padding-right:24px; }
+    .about-grid,.kaizen,.contact-grid { grid-template-columns:1fr; }
+    .svc-grid { grid-template-columns:1fr 1fr; }
+    .clients-grid { grid-template-columns:repeat(2,1fr); }
+    .img-row { grid-template-columns:1fr; }
+    .f-row { grid-template-columns:1fr; }
+    .hero-content { padding-left:28px; }
+    .hero-rule { left:0; }
+    .hero-strip,.hero-matrix { display:none; }
+    .hero-bottom { grid-template-columns:1fr; }
+    .hero-btns { align-items:flex-start; }
+    .kaizen { display:block; }
+    .kaizen-vis { min-height:280px; }
+    .strip-item { padding-left:24px; }
+  }
+  @media (max-width:600px) {
+    .nav-links { display:none; }
+    .svc-grid { grid-template-columns:1fr; }
+    .about-values { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<nav id="nav">
+  <div class="nav-logo">SM<span>AC</span></div>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#industria">Industria 4.0</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a href="#contacto" class="nav-cta">Cotizar</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-panel" id="heroPanel"></div>
+  <div class="hero-rule"></div>
+  <div class="hero-matrix" id="matrix"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-bar"></div>
+      <span>Mantenimiento Industrial</span>
+    </div>
+    <h1 class="hero-title">
+      <span class="ln"><em>MANTENIMIENTO</em></span>
+      <span class="ln"><em>INDUSTRIAL</em></span>
+      <span class="ln"><em>INTELIGENTE</em></span>
+    </h1>
+    <div class="hero-line"></div>
+    <div class="hero-bottom">
+      <p class="hero-desc">Pensamos en el cliente actuando proactiva y responsablemente. Servicios eficaces con el más alto estándar de calidad industrial.</p>
+      <div class="hero-btns">
+        <a href="#servicios" class="btn-primary"><span>Ver Servicios →</span></a>
+        <a href="#contacto" class="btn-outline">Solicitar Cotización</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-strip">
+    <div class="strip-item"><div class="strip-dot r"></div><div><div class="strip-lbl">Registro</div><div class="strip-val">REPSE Activo</div></div></div>
+    <div class="strip-item"><div class="strip-dot g"></div><div><div class="strip-lbl">Cumplimiento</div><div class="strip-val">100% Legal</div></div></div>
+    <div class="strip-item"><div class="strip-dot y"></div><div><div class="strip-lbl">Metodología</div><div class="strip-val">Kaizen / Lean</div></div></div>
+    <div class="strip-item"><div class="strip-dot r"></div><div><div class="strip-lbl">Revolución</div><div class="strip-val">Industria 4.0</div></div></div>
+  </div>
+</section>
+
+<section class="about" id="nosotros">
+  <div class="about-grid">
+    <div class="about-img-w rv">
+      <div class="about-frame"></div>
+      <img src="https://www.macmantenimiento.com/images/index/car_3.jpg" alt="SMAC"/>
+      <div class="about-badge"><strong>+10</strong><span>Años de Experiencia</span></div>
+    </div>
+    <div class="rv" style="transition-delay:.15s">
+      <div class="tag">Nuestra Historia</div>
+      <h2 class="h2">QUIÉNES<br><span>SOMOS</span></h2>
+      <p>Somos una empresa que ofrece servicios eficaces y eficientes a precios competitivos. Nuestro compromiso está con el cliente y con el capital humano que es nuestro principal valor.</p>
+      <p>En SMAC estamos orgullosos de ser una empresa registrada en el REPSE, operando conforme a la nueva ley y con plena certeza de que cumplimos con todas nuestras responsabilidades legales y fiscales.</p>
+      <div class="about-values">
+        <div class="val-card"><h4>Misión</h4><p>Ofrecer soluciones prácticas a necesidades industriales mediante trabajo profesional aplicando Kaizen.</p></div>
+        <div class="val-card"><h4>Visión</h4><p>Ser una compañía reconocida en el ramo industrial satisfaciendo las necesidades del cliente.</p></div>
+        <div class="val-card"><h4>Compromiso</h4><p>Total discreción con la información confidencial y privada de nuestros clientes.</p></div>
+        <div class="val-card"><h4>Valores</h4><p>Responsabilidad, proactividad y enfoque total en la satisfacción del cliente.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="servicios">
+  <div class="svc-intro rv">
+    <div class="tag">Lo que hacemos</div>
+    <h2 class="h2">NUESTROS<br><span>SERVICIOS</span></h2>
+    <p>Ofrecemos soluciones integrales de mantenimiento industrial con los más altos estándares de calidad, seguridad y eficiencia.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card rv">
+      <span class="svc-num">01 / PREVENTIVO</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+      <h3>Mantenimiento Preventivo</h3>
+      <p>Programas sistemáticos que maximizan la vida útil de su maquinaria y minimizan paros no planificados.</p>
+    </div>
+    <div class="svc-card rv" style="transition-delay:.07s">
+      <span class="svc-num">02 / CORRECTIVO</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+      <h3>Mantenimiento Correctivo</h3>
+      <p>Respuesta rápida ante fallas imprevistas para restablecer la operación en el menor tiempo posible.</p>
+    </div>
+    <div class="svc-card rv" style="transition-delay:.14s">
+      <span class="svc-num">03 / ELÉCTRICO</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+      <h3>Instalaciones Eléctricas</h3>
+      <p>Diseño, instalación y mantenimiento de sistemas eléctricos industriales bajo normas vigentes.</p>
+    </div>
+    <div class="svc-card rv" style="transition-delay:.21s">
+      <span class="svc-num">04 / SEGURIDAD</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3>Seguridad Industrial</h3>
+      <p>Evaluación de riesgos, protocolos y capacitación para entornos industriales de alto riesgo.</p>
+    </div>
+    <div class="svc-card rv" style="transition-delay:.28s">
+      <span class="svc-num">05 / DIAGNÓSTICO</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+      <h3>Diagnóstico y Análisis</h3>
+      <p>Termografía, análisis de vibraciones y diagnóstico predictivo antes de que ocurran los fallos.</p>
+    </div>
+    <div class="svc-card rv" style="transition-delay:.35s">
+      <span class="svc-num">06 / MEJORA</span>
+      <div class="svc-ico"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+      <h3>Mejora Continua</h3>
+      <p>Metodologías Kaizen y Lean Manufacturing para optimizar procesos y reducir desperdicios.</p>
+    </div>
+  </div>
+</section>
+
+<div class="repse rv">
+  <div class="repse-l">
+    <div class="repse-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+    <div class="repse-txt">
+      <h3>Empresa Certificada REPSE</h3>
+      <p>Registrados ante el Registro de Prestadoras de Servicios Especializados, con total cumplimiento legal y fiscal.</p>
+    </div>
+  </div>
+  <div class="repse-badges">
+    <div class="repse-badge">REPSE Registrado</div>
+    <div class="repse-badge">100% Legal</div>
+    <div class="repse-badge">Responsabilidad Fiscal</div>
+  </div>
+</div>
+
+<section class="industry" id="industria">
+  <div class="ind-hdr rv">
+    <div>
+      <div class="tag">Industria del Futuro</div>
+      <h2 class="h2">ÚNETE A LA<br><span>INDUSTRIA 4.0</span></h2>
+    </div>
+    <p>Transformamos el mantenimiento tradicional integrando tecnologías de la cuarta revolución industrial.</p>
+  </div>
+  <div class="clients-grid rv">
+    <div class="client-tile"><span>Manufactura</span></div>
+    <div class="client-tile"><span>Automotriz</span></div>
+    <div class="client-tile"><span>Alimentos</span></div>
+    <div class="client-tile"><span>Farmacéutica</span></div>
+    <div class="client-tile"><span>Plásticos</span></div>
+    <div class="client-tile"><span>Metalurgia</span></div>
+    <div class="client-tile"><span>Logística</span></div>
+    <div class="client-tile"><span>Energía</span></div>
+  </div>
+  <div class="img-row">
+    <div class="img-item rv"><img src="https://www.macmantenimiento.com/images/index/car_4.jpg" alt="Planta"/><div class="img-lbl">Planta Industrial</div></div>
+    <div class="img-item rv" style="transition-delay:.1s"><img src="https://www.macmantenimiento.com/images/index/car_5.jpg" alt="Maquinaria"/><div class="img-lbl">Alta Tecnología</div></div>
+    <div class="img-item rv" style="transition-delay:.2s"><img src="https://www.macmantenimiento.com/images/index/car_1.jpg" alt="Mantenimiento"/><div class="img-lbl">Mantenimiento de Precisión</div></div>
+  </div>
+</section>
+
+<div class="kaizen">
+  <div class="kaizen-text">
+    <div class="tag rv">Nuestra Metodología</div>
+    <h2 class="h2 rv">MEJORA<br><span>CONTINUA</span></h2>
+    <p class="rv" style="color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:40px;font-weight:300;transition-delay:.1s">Aplicamos la filosofía Kaizen en cada proyecto: mejora continua, eliminando desperdicios y optimizando cada proceso para entregar resultados superiores.</p>
+    <div class="kaizen-steps rv" style="transition-delay:.2s">
+      <div class="k-step"><div class="k-num">01</div><div class="k-txt"><h4>Diagnóstico</h4><p>Evaluación profunda del estado actual de sus equipos para identificar áreas de oportunidad.</p></div></div>
+      <div class="k-step"><div class="k-num">02</div><div class="k-txt"><h4>Planificación</h4><p>Plan de mantenimiento a medida, alineado con los objetivos de producción de su empresa.</p></div></div>
+      <div class="k-step"><div class="k-num">03</div><div class="k-txt"><h4>Ejecución</h4><p>Implementación precisa por técnicos especializados con los más altos estándares de calidad.</p></div></div>
+      <div class="k-step"><div class="k-num">04</div><div class="k-txt"><h4>Optimización</h4><p>Análisis de resultados y mejora continua para incrementar progresivamente la eficiencia operativa.</p></div></div>
+    </div>
+  </div>
+  <div class="kaizen-vis">
+    <img src="https://www.macmantenimiento.com/images/index/car_3.jpg" alt="Kaizen"/>
+    <div class="kaizen-vis-c">
+      <span class="k-word">改善</span>
+      <span class="k-sub">Kaizen — Mejora Continua</span>
+    </div>
+  </div>
+</div>
+
+<section class="contact" id="contacto">
+  <div class="tag rv">Estamos para servirte</div>
+  <h2 class="h2 rv" style="margin-bottom:56px">CONTÁCTANOS<br><span>HOY MISMO</span></h2>
+  <div class="contact-grid">
+    <div class="rv">
+      <p style="color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:44px;font-weight:300">Cuéntanos sobre tus necesidades de mantenimiento industrial y te responderemos a la brevedad con una propuesta a medida.</p>
+      <div class="c-item"><div class="c-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 3.12h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 10.6a16 16 0 0 0 6 6l1.8-1.8a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div class="c-txt"><label>Teléfono Oficina</label><span>449 318 4652</span></div></div>
+      <div class="c-item"><div class="c-ico"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="c-txt"><label>Correo Electrónico</label><span>contacto@macmantenimiento.com</span></div></div>
+      <div class="c-item"><div class="c-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="c-txt"><label>Horario de Atención</label><span>Lunes a Viernes, 8:00 — 18:00 hrs</span></div></div>
+    </div>
+    <div class="rv" style="transition-delay:.15s">
+      <form class="c-form" onsubmit="return false;">
+        <div class="f-row"><input type="text" placeholder="Nombre completo"/><input type="text" placeholder="Empresa"/></div>
+        <div class="f-row"><input type="tel" placeholder="Teléfono"/><input type="email" placeholder="Correo electrónico"/></div>
+        <select><option value="" disabled selected>Tipo de servicio</option><option>Mantenimiento Preventivo</option><option>Mantenimiento Correctivo</option><option>Instalaciones Eléctricas</option><option>Seguridad Industrial</option><option>Diagnóstico y Análisis</option><option>Mejora Continua / Kaizen</option><option>Otro</option></select>
+        <textarea placeholder="Describe brevemente tus necesidades..."></textarea>
+        <button type="submit"><span>Enviar Solicitud →</span></button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-top">
+    <div><div class="foot-logo">SM<span>AC</span><small>Mantenimiento Industrial</small></div></div>
+    <div class="foot-links">
+      <div class="foot-col"><h5>Empresa</h5><ul><li><a href="#nosotros">Quiénes somos</a></li><li><a href="#nosotros">Misión y Visión</a></li><li><a href="#">Certificaciones</a></li><li><a href="#">REPSE</a></li></ul></div>
+      <div class="foot-col"><h5>Servicios</h5><ul><li><a href="#servicios">Mantenimiento Preventivo</a></li><li><a href="#servicios">Mantenimiento Correctivo</a></li><li><a href="#servicios">Instalaciones Eléctricas</a></li><li><a href="#servicios">Seguridad Industrial</a></li></ul></div>
+      <div class="foot-col"><h5>Contacto</h5><ul><li><a href="tel:4493184652">449 318 4652</a></li><li><a href="mailto:contacto@macmantenimiento.com">contacto@macmantenimiento.com</a></li><li><a href="#contacto">Solicitar cotización</a></li></ul></div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 SMAC — Todos los derechos reservados.</p>
+    <span class="foot-repse">Empresa Registrada REPSE</span>
+  </div>
+</footer>
+
+<script>
+  // Dot matrix fill
+  const mx = document.getElementById('matrix');
+  for(let i=0;i<50;i++){ const s=document.createElement('i'); mx.appendChild(s); }
+
+  // Cursor
+  const cur=document.getElementById('cur'), curR=document.getElementById('curR');
+  let cx=0,cy=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;});
+  (function loop(){ cur.style.left=cx+'px';cur.style.top=cy+'px'; rx+=(cx-rx)*.1;ry+=(cy-ry)*.1; curR.style.left=rx+'px';curR.style.top=ry+'px'; requestAnimationFrame(loop); })();
+  document.addEventListener('mouseleave',()=>{cur.style.opacity='0';curR.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{cur.style.opacity='1';curR.style.opacity='1';});
+
+  // Nav scroll
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+  // Scroll reveal
+  const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -28px 0px'});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+  // Hero panel parallax
+  document.addEventListener('mousemove',e=>{
+    const p=document.getElementById('heroPanel');
+    if(!p)return;
+    const dx=(e.clientX/innerWidth-.5)*10, dy=(e.clientY/innerHeight-.5)*6;
+    p.style.transform=`translateX(${dx}px) translateY(${dy}px)`;
+  });
+</script>
+</body>
+</html>
