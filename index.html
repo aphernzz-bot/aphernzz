@@ -27,9 +27,9 @@
     <li><a href="#about">Acerca de mí</a></li>
     <li><a href="#services">Servicios</a></li>
     <li><a href="#projects">Proyectos</a></li>
-    <li><a href="articulos.html">Artículos</a></li>
-    <li><a href="paquetes.html">Paquetes</a></li>
-    <li><a href="medico.html">Sector Salud</a></li>
+    <li><a href="articulos">Artículos</a></li>
+    <li><a href="paquetes">Paquetes</a></li>
+    <li><a href="medico">Sector Salud</a></li>
     <li><a href="#contact" class="nav-cta">Contáctame</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -50,7 +50,7 @@
     </p>
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Optimiza tu negocio →</a>
-      <a href="paquetes.html" class="btn-ghost">Ver paquetes</a>
+      <a href="paquetes" class="btn-ghost">Ver paquetes</a>
     </div>
   </div>
 
@@ -231,7 +231,7 @@
         <h2 class="section-title">Soluciones para el <span style="background:linear-gradient(120deg,#00d68f,#00e5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Sector Médico</span></h2>
         <p class="section-body">Sistemas digitales pensados para doctores, consultorios y farmacias. Sin complicaciones, listos para usar desde el primer día.</p>
       </div>
-      <a href="medico.html" class="btn-salud">Ver soluciones médicas →</a>
+      <a href="medico" class="btn-salud">Ver soluciones médicas →</a>
     </div>
     <div class="sector-salud-grid">
       <div class="salud-card fade-up">
@@ -266,7 +266,7 @@
       <h2 class="section-title">Artículos y Talleres</h2>
       <p class="section-body">Ideas, estrategias y cursos para que escales tus habilidades tecnológicas.</p>
     </div>
-    <a href="articulos.html" class="btn-ghost">Ver todos los artículos →</a>
+    <a href="articulos" class="btn-ghost">Ver todos los artículos →</a>
   </div>
   <div class="articles-grid">
     <div class="article-card fade-up">
@@ -275,7 +275,7 @@
         <div class="article-meta"><span>Automatización</span></div>
         <h3>5 tareas que debes automatizar hoy mismo con Zapier</h3>
         <p>Recupera hasta 10 horas a la semana con los flujos de trabajo más efectivos.</p>
-        <a href="articulos.html" class="article-link">Leer artículo →</a>
+        <a href="articulos" class="article-link">Leer artículo →</a>
       </div>
     </div>
     <div class="article-card fade-up">
@@ -287,7 +287,7 @@
         <div class="article-meta"><span>Lista de espera abierta</span></div>
         <h3>Bootcamp: De cero a experto en Power BI</h3>
         <p>Conecta bases de datos, modela información y construye visualizaciones de impacto.</p>
-        <a href="articulos.html" class="article-link">Ver temario →</a>
+        <a href="articulos" class="article-link">Ver temario →</a>
       </div>
     </div>
     <div class="article-card fade-up">
@@ -296,7 +296,7 @@
         <div class="article-meta"><span>Python</span></div>
         <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
         <p>Guía paso a paso de web scraping con BeautifulSoup y Pandas.</p>
-        <a href="articulos.html" class="article-link">Leer artículo →</a>
+        <a href="articulos" class="article-link">Leer artículo →</a>
       </div>
     </div>
   </div>
@@ -309,7 +309,7 @@
     <h3>¿Listo para llevar tu negocio al siguiente nivel?</h3>
     <p>Revisa los paquetes disponibles de branding, web y automatización.</p>
   </div>
-  <a href="paquetes.html" class="btn-primary">Ver paquetes y precios →</a>
+  <a href="paquetes" class="btn-primary">Ver paquetes y precios →</a>
 </div>
 
 <!-- CONTACT -->
@@ -319,9 +319,10 @@
     <h2 class="section-title">¿Tienes un proyecto en mente?</h2>
     <p class="section-body">Cuéntame en qué trabajas y cómo puedo ayudarte. Respondo en menos de 24 horas.</p>
 
-    <form class="contact-form" action="https://formsubmit.co/aphernzz@gmail.com" method="POST" onsubmit="handleSubmit(event)">
+    <form class="contact-form" action="#" method="POST" onsubmit="handleSubmit(event)">
       <input type="hidden" name="_subject" value="¡Nuevo mensaje de tu Portafolio!">
       <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
       <div class="form-row">
         <div class="form-group">
           <label for="nombre">Nombre</label>
@@ -354,10 +355,10 @@
     </form>
 
     <div class="contact-links">
-      <a href="https://wa.me/524446085005?text=Hola%2C%20me%20interesa%20tu%20servicio" class="contact-link" target="_blank"><i data-lucide="message-circle"></i> WhatsApp</a>
-      <a href="mailto:contacto@aphernzz.com" class="contact-link"><i data-lucide="mail"></i> contacto@aphernzz.com</a>
-      <a href="https://linkedin.com/in/aphernzz" class="contact-link" target="_blank"><i data-lucide="briefcase"></i> LinkedIn</a>
-      <a href="https://aphernzz.com" class="contact-link" target="_blank"><i data-lucide="globe"></i> aphernzz.com</a>
+      <a href="https://wa.me/524446085005?text=Hola%2C%20me%20interesa%20tu%20servicio" class="contact-link" target="_blank" rel="noopener noreferrer"><i data-lucide="message-circle"></i> WhatsApp</a>
+      <a id="email-link" href="#" class="contact-link"><i data-lucide="mail"></i> <span id="email-text">contacto[at]aphernzz.com</span></a>
+      <a href="https://linkedin.com/in/aphernzz" class="contact-link" target="_blank" rel="noopener noreferrer"><i data-lucide="briefcase"></i> LinkedIn</a>
+      <a href="https://aphernzz.com" class="contact-link" target="_blank" rel="noopener noreferrer"><i data-lucide="globe"></i> aphernzz.com</a>
     </div>
   </div>
 </section>
@@ -367,9 +368,9 @@
   <div class="logo">Aphernzz</div>
   <ul class="footer-links">
     <li><a href="#home">Inicio</a></li>
-    <li><a href="articulos.html">Artículos</a></li>
-    <li><a href="paquetes.html">Paquetes</a></li>
-    <li><a href="medico.html">Sector Salud</a></li>
+    <li><a href="articulos">Artículos</a></li>
+    <li><a href="paquetes">Paquetes</a></li>
+    <li><a href="medico">Sector Salud</a></li>
     <li><a href="#contact">Contacto</a></li>
   </ul>
   <div>
@@ -378,9 +379,19 @@
   </div>
 </footer>
 
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/lucide@1.16.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
 <script>
+  (function() {
+    var em = atob('Y29udGFjdG9AYXBoZXJuenouY29t');
+    var el = document.getElementById('email-link');
+    var sp = document.getElementById('email-text');
+    if (el) el.href = 'mailto:' + em;
+    if (sp) sp.textContent = em;
+    var cf = document.querySelector('.contact-form');
+    if (cf) cf.action = 'https://formsubmit.co/' + atob('YXBoZXJuenpAZ21haWwuY29t');
+  })();
+
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.getElementById('navLinks');
   hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
