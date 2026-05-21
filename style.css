@@ -994,6 +994,7 @@
       .about-stats { grid-template-columns: 1fr 1fr; }
       .hero-img-frame { width: 75%; }
       .articles-grid { grid-template-columns: 1fr; }
+<<<<<<< HEAD
       .cta-banner { margin: 0 5vw 4rem; padding: 2.5rem; }
       .sector-salud-section { padding: 4.5rem 5vw; }
       .sector-salud-grid { grid-template-columns: 1fr 1fr; }
@@ -1075,3 +1076,5 @@
 .x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
 .popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
 .hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }
+      .cta-banner { margin: 4rem 5vw 4rem; padding: 2.5rem; }
+    }
