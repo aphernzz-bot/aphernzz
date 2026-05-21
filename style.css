@@ -995,4 +995,83 @@
       .hero-img-frame { width: 75%; }
       .articles-grid { grid-template-columns: 1fr; }
       .cta-banner { margin: 0 5vw 4rem; padding: 2.5rem; }
+      .sector-salud-section { padding: 4.5rem 5vw; }
+      .sector-salud-grid { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── SECTOR SALUD (index callout) ── */
+    .sector-salud-section {
+      padding: 5rem 6vw;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .sector-salud-inner { max-width: 1200px; margin: 0 auto; }
+    .sector-salud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-salud {
+      background: linear-gradient(135deg, #00d68f, #00b87a);
+      color: #080b10;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: box-shadow 0.3s, transform 0.2s;
+      display: inline-block;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-salud:hover { box-shadow: 0 0 30px rgba(0,214,143,0.4); transform: translateY(-2px); }
+    .sector-salud-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .salud-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .salud-card:hover {
+      border-color: rgba(0,214,143,0.3);
+      transform: translateY(-3px);
+    }
+    .salud-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .salud-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .salud-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    @media (max-width: 900px) {
+      .sector-salud-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .sector-salud-grid { grid-template-columns: 1fr; }
+      .sector-salud-header { flex-direction: column; align-items: flex-start; }
+    }
+
+/* Lucide icon sizing */
+.plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
+.salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
+.contact-link svg, .case-type svg, .service-icon svg {
+  width: 1.5em; height: 1.5em;
+  stroke: currentColor;
+  vertical-align: middle;
+}
+.check svg { width: 10px; height: 10px; color: var(--accent); stroke-width: 3; }
+.x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
+.popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
+.hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }

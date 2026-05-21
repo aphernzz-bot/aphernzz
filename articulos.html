@@ -588,6 +588,21 @@
       .articles-grid-3 { grid-template-columns: 1fr; }
       .newsletter-form { flex-direction: column; }
     }
+
+    /* Lucide icon sizing */
+    .plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
+    .salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
+    .contact-link svg, .case-type svg {
+      width: 1.5em; height: 1.5em;
+      stroke: currentColor;
+      vertical-align: middle;
+    }
+    .check svg { width: 10px; height: 10px; color: var(--accent); stroke-width: 3; }
+    .x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
+    .popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
+    .featured-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
+    .hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }
+    .featured-thumb svg { width: 5rem; height: 5rem; stroke: currentColor; }
   </style>
 </head>
 <body>
@@ -603,6 +618,7 @@
     <li><a href="index.html#projects">Proyectos</a></li>
     <li><a href="articulos.html" class="active">Artículos</a></li>
     <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="medico.html">Sector Salud</a></li>
     <li><a href="index.html#contact" class="nav-cta">Contáctame</a></li>
   </ul>
   <button class="hamburger" id="hamburger" aria-label="Menú">
@@ -644,8 +660,8 @@
   <!-- ARTÍCULO DESTACADO -->
   <div class="featured-article fade-up">
     <div class="featured-thumb">
-      <span class="featured-badge">⭐ Destacado</span>
-      ⚡
+      <span class="featured-badge"><i data-lucide="star"></i> Destacado</span>
+      <i data-lucide="zap"></i>
     </div>
     <div class="featured-body">
       <div class="featured-meta">
@@ -671,7 +687,7 @@
   <div class="articles-grid-3">
     <div class="article-card fade-up" data-category="python">
       <div class="article-thumb">
-        🐍
+        <i data-lucide="code-2"></i>
         <span class="article-tag tag-python">Python</span>
       </div>
       <div class="article-body">
@@ -684,7 +700,7 @@
 
     <div class="article-card fade-up" data-category="datos">
       <div class="article-thumb">
-        📊
+        <i data-lucide="bar-chart-2"></i>
         <span class="article-tag tag-datos">Power BI</span>
       </div>
       <div class="article-body">
@@ -697,7 +713,7 @@
 
     <div class="article-card fade-up" data-category="automatizacion">
       <div class="article-thumb">
-        🔗
+        <i data-lucide="link"></i>
         <span class="article-tag tag-auto">Automatización</span>
       </div>
       <div class="article-body">
@@ -710,7 +726,7 @@
 
     <div class="article-card fade-up" data-category="ia">
       <div class="article-thumb">
-        🤖
+        <i data-lucide="bot"></i>
         <span class="article-tag tag-ia">IA</span>
       </div>
       <div class="article-body">
@@ -723,7 +739,7 @@
 
     <div class="article-card fade-up" data-category="diseno">
       <div class="article-thumb">
-        🎨
+        <i data-lucide="palette"></i>
         <span class="article-tag tag-diseno">Diseño</span>
       </div>
       <div class="article-body">
@@ -736,7 +752,7 @@
 
     <div class="article-card fade-up" data-category="python">
       <div class="article-thumb">
-        📈
+        <i data-lucide="trending-up"></i>
         <span class="article-tag tag-python">Python</span>
       </div>
       <div class="article-body">
@@ -809,6 +825,7 @@
     <li><a href="index.html">Inicio</a></li>
     <li><a href="articulos.html">Artículos</a></li>
     <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="medico.html">Sector Salud</a></li>
     <li><a href="index.html#contact">Contacto</a></li>
   </ul>
   <div>
@@ -817,6 +834,7 @@
   </div>
 </footer>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.getElementById('navLinks');
@@ -851,6 +869,7 @@
       });
     });
   });
+  lucide.createIcons();
 </script>
 </body>
 </html>

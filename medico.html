@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sector Salud | Aphernzz — Tecnología para Doctores, Consultorios y Farmacias</title>
+  <meta name="description" content="Sistemas digitales diseñados para el sector médico: expediente clínico, ERP para consultorios, perfil profesional con agenda, punto de venta para farmacias y más.">
+  <link rel="icon" href="favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b10;
+      --surface: #0e1318;
+      --surface2: #141c24;
+      --surface3: #1a2535;
+      --accent: #00d68f;
+      --accent-hover: #00b87a;
+      --accent2: #00e5ff;
+      --accent3: #7b61ff;
+      --text: #e8edf2;
+      --muted: #6b7a8d;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,214,143,0.22);
+      --glow: 0 0 40px rgba(0,214,143,0.15);
+      --glow-strong: 0 0 60px rgba(0,214,143,0.25);
+      --radius: 1.5rem;
+      --radius-sm: 0.75rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+    .bg-gradient {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -2;
+      background: linear-gradient(45deg, var(--bg), #081510, var(--surface2), var(--bg));
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .bg-orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: -1; filter: blur(80px); opacity: 0.1; }
+    .bg-orb-1 { width: 550px; height: 550px; background: var(--accent); top: -150px; right: -100px; }
+    .bg-orb-2 { width: 380px; height: 380px; background: var(--accent2); bottom: 15%; left: -120px; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 6vw;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      background: rgba(8,11,16,0.8);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--accent); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent-hover)) !important; color: #080b10 !important; padding: 0.5rem 1.4rem !important; border-radius: 999px !important; font-weight: 700 !important; transition: box-shadow 0.3s !important; text-transform: none !important; letter-spacing: 0 !important; }
+    .nav-cta:hover { box-shadow: 0 0 24px rgba(0,214,143,0.4) !important; color: #080b10 !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* HERO */
+    .page-hero {
+      padding: 9rem 6vw 5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      text-align: center;
+    }
+    .page-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,214,143,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,214,143,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,214,143,0.1);
+      border: 1px solid rgba(0,214,143,0.25);
+      border-radius: 999px;
+      padding: 0.4rem 1.1rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      position: relative;
+    }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; justify-content: center; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1.25rem; line-height: 1.1; position: relative; }
+    .page-title span { background: linear-gradient(120deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .page-sub { color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.8; max-width: 560px; margin: 0 auto 2.5rem; position: relative; }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+    /* STAT CHIPS */
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 3.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+    }
+    .stat-item { text-align: center; }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* SECTION COMMON */
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .section-body { color: var(--muted); font-size: 0.95rem; line-height: 1.8; max-width: 560px; }
+
+    /* SERVICES */
+    .services-section { padding: 6rem 6vw 4rem; }
+    .services-header { text-align: center; margin-bottom: 3.5rem; }
+    .services-header .section-body { margin: 0 auto; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.25rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .service-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .service-card.highlight {
+      border-color: var(--border-accent);
+      box-shadow: var(--glow);
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover::before, .service-card.highlight::before { opacity: 1; }
+    .service-icon {
+      width: 56px; height: 56px;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(0,214,143,0.12), rgba(0,229,255,0.08));
+      border: 1px solid rgba(0,214,143,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .service-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .service-target {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.85rem;
+    }
+    .service-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .service-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-bottom: 1.75rem;
+    }
+    .service-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.84rem;
+    }
+    .service-features li::before {
+      display: none;
+    }
+    .service-features li svg {
+      width: 10px; height: 10px;
+      color: var(--accent);
+      stroke-width: 3;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+    .service-tag {
+      display: inline-block;
+      background: rgba(0,214,143,0.08);
+      border: 1px solid rgba(0,214,143,0.15);
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      margin-top: 0.25rem;
+    }
+
+    /* PLUS SERVICES */
+    .plus-section {
+      padding: 0 6vw 5rem;
+    }
+    .plus-header { margin-bottom: 2.5rem; }
+    .plus-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .plus-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+    .plus-card:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+    .plus-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .plus-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.92rem; margin-bottom: 0.35rem; }
+    .plus-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .process-section {
+      padding: 5rem 6vw;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .process-header { text-align: center; margin-bottom: 3.5rem; }
+    .process-header .section-body { margin: 0 auto; }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .process-step { position: relative; }
+    .process-step::after {
+      content: '→';
+      position: absolute;
+      right: -1.25rem; top: 1rem;
+      color: var(--muted); font-size: 1rem;
+    }
+    .process-step:last-child::after { display: none; }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: rgba(0,214,143,0.15);
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+    .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.98rem; margin-bottom: 0.4rem; }
+    .step-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.65; }
+
+    /* CASES */
+    .cases-section { padding: 5rem 6vw; }
+    .cases-header { text-align: center; margin-bottom: 3rem; }
+    .cases-header .section-body { margin: 0 auto; }
+    .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .case-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.25rem;
+      transition: border-color 0.3s;
+    }
+    .case-card:hover { border-color: var(--border-accent); }
+    .case-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0,214,143,0.08);
+      border: 1px solid rgba(0,214,143,0.15);
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .case-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .case-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.5rem; }
+    .case-results { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .case-result-item { }
+    .case-result-num { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+    .case-result-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+
+    /* CTA */
+    .cta-section {
+      margin: 0 6vw 6rem;
+      background: linear-gradient(135deg, rgba(0,214,143,0.07), rgba(0,229,255,0.05));
+      border: 1px solid var(--border-accent);
+      border-radius: 2rem;
+      padding: 4.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; top: -50%; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,214,143,0.07), transparent 70%);
+    }
+    .cta-section h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 0.75rem; position: relative; }
+    .cta-section p { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; position: relative; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: #080b10;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem;
+      padding: 0.9rem 2.2rem; border-radius: 999px; text-decoration: none;
+      transition: box-shadow 0.3s, transform 0.2s; display: inline-block;
+    }
+    .btn-primary:hover { box-shadow: 0 0 35px rgba(0,214,143,0.45); transform: translateY(-2px); }
+    .btn-ghost {
+      border: 1px solid var(--border); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 0.9rem;
+      padding: 0.9rem 2.2rem; border-radius: 999px; text-decoration: none;
+      transition: border-color 0.2s, color 0.2s; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* DIVIDER */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+      margin: 0 6vw 4rem;
+      opacity: 0.5;
+    }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--bg); }
+    footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); font-size: 1rem; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .cases-grid { grid-template-columns: 1fr; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .plus-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1rem 5vw; }
+      .nav-links { display: none; flex-direction: column; gap: 1rem; background: var(--surface); position: absolute; top: 100%; left: 0; right: 0; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .page-hero { padding: 7rem 5vw 3.5rem; }
+      .services-section, .plus-section, .cases-section { padding-left: 5vw; padding-right: 5vw; }
+      .process-grid { grid-template-columns: 1fr; }
+      .process-step::after { display: none; }
+      .plus-grid { grid-template-columns: 1fr; }
+      .cta-section { margin: 0 5vw 4rem; padding: 2.5rem 1.75rem; }
+      .hero-stats { gap: 1.5rem; }
+    }
+
+    /* Lucide icon sizing */
+    .plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
+    .salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
+    .contact-link svg, .case-type svg {
+      width: 1.5em; height: 1.5em;
+      stroke: currentColor;
+      vertical-align: middle;
+    }
+    .check svg { width: 10px; height: 10px; color: var(--accent); stroke-width: 3; }
+    .x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
+    .popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
+    .hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="index.html#about">Acerca de mí</a></li>
+    <li><a href="index.html#services">Servicios</a></li>
+    <li><a href="index.html#projects">Proyectos</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="medico.html" class="active">Sector Salud</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="index.html">Inicio</a>
+    <span>/</span>
+    <span>Sector Salud</span>
+  </div>
+  <div class="hero-badge"><i data-lucide="hospital"></i> Especialidad médica</div>
+  <h1 class="page-title">
+    Tecnología hecha<br>para el <span>Sector Salud</span>
+  </h1>
+  <p class="page-sub">
+    Sistemas digitales diseñados específicamente para doctores, consultorios y farmacias. Sin tecnicismos, sin complicaciones — solo herramientas que funcionan desde el primer día.
+  </p>
+  <div class="hero-actions">
+    <a href="index.html#contact" class="btn-primary">Agendar diagnóstico gratuito →</a>
+    <a href="#servicios" class="btn-ghost">Ver soluciones</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">2+</div>
+      <div class="stat-label">Clientes en el sector salud</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Soluciones especializadas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">24h</div>
+      <div class="stat-label">Tiempo de respuesta</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Adaptado a tu flujo de trabajo</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="servicios" class="services-section">
+  <div class="services-header fade-up">
+    <p class="section-label">Soluciones</p>
+    <h2 class="section-title">Lo que necesitas, sin lo que no</h2>
+    <p class="section-body">Cada solución está pensada para el día a día de tu práctica médica, no para empresas corporativas.</p>
+  </div>
+  <div class="services-grid">
+
+    <!-- 1 EXPEDIENTE CRM -->
+    <div class="service-card highlight fade-up">
+      <div class="service-icon"><i data-lucide="folder-open"></i></div>
+      <div class="service-target">Para Doctores & Consultorios</div>
+      <div class="service-name">Expediente Clínico Digital (CRM)</div>
+      <div class="service-desc">Olvídate del papel. Un sistema organizado para gestionar tus pacientes, su historial clínico y sus citas — todo desde cualquier dispositivo.</div>
+      <ul class="service-features">
+        <li><i data-lucide="check"></i>Registro y búsqueda de pacientes en segundos</li>
+        <li><i data-lucide="check"></i>Historial clínico por consulta (notas, diagnósticos, recetas)</li>
+        <li><i data-lucide="check"></i>Agenda de citas con recordatorios automáticos por WhatsApp</li>
+        <li><i data-lucide="check"></i>Alertas de seguimiento y próximas citas</li>
+        <li><i data-lucide="check"></i>Acceso desde celular, tablet o computadora</li>
+        <li><i data-lucide="check"></i>Respaldo automático de datos</li>
+      </ul>
+      <span class="service-tag"><i data-lucide="star"></i> Más solicitado</span>
+    </div>
+
+    <!-- 2 ERP CONSULTORIOS -->
+    <div class="service-card fade-up">
+      <div class="service-icon"><i data-lucide="receipt"></i></div>
+      <div class="service-target">Para Consultorios</div>
+      <div class="service-name">ERP de Ventas y Facturación</div>
+      <div class="service-desc">Controla los ingresos de tu consultorio con un sistema sencillo de cobros y facturación. Sin contadores complicados, sin software caro.</div>
+      <ul class="service-features">
+        <li><i data-lucide="check"></i>Registro de consultas y cobros por servicio</li>
+        <li><i data-lucide="check"></i>Facturación electrónica (CFDI) integrada</li>
+        <li><i data-lucide="check"></i>Control de honorarios y gastos del consultorio</li>
+        <li><i data-lucide="check"></i>Reportes mensuales de ingresos</li>
+        <li><i data-lucide="check"></i>Múltiples formas de pago (efectivo, tarjeta, transferencia)</li>
+        <li><i data-lucide="check"></i>Panel de resumen financiero</li>
+      </ul>
+      <span class="service-tag">Cotización personalizada</span>
+    </div>
+
+    <!-- 3 PERFIL DOCTOR -->
+    <div class="service-card fade-up">
+      <div class="service-icon"><i data-lucide="user-check"></i></div>
+      <div class="service-target">Para Doctores</div>
+      <div class="service-name">Perfil Profesional + Agenda + Bot de WhatsApp</div>
+      <div class="service-desc">Tu presencia digital como médico: una página web que transmite confianza, con agenda online y un asistente de WhatsApp que responde automáticamente las 24/7.</div>
+      <ul class="service-features">
+        <li><i data-lucide="check"></i>Página web profesional con tu especialidad y CV</li>
+        <li><i data-lucide="check"></i>Formulario de citas o agenda integrada (Calendly/propia)</li>
+        <li><i data-lucide="check"></i>Bot de WhatsApp: confirmaciones, recordatorios, preguntas frecuentes</li>
+        <li><i data-lucide="check"></i>Google Maps y Google My Business configurado</li>
+        <li><i data-lucide="check"></i>Testimonios y galería de consultorio</li>
+        <li><i data-lucide="check"></i>Diseño de receta médica personalizada incluido</li>
+      </ul>
+      <span class="service-tag">Todo en uno</span>
+    </div>
+
+    <!-- 4 FARMACIA -->
+    <div class="service-card fade-up">
+      <div class="service-icon"><i data-lucide="pill"></i></div>
+      <div class="service-target">Para Farmacias</div>
+      <div class="service-name">Punto de Venta para Farmacia</div>
+      <div class="service-desc">Un POS ágil y confiable para tu farmacia: controla tu inventario, genera tickets, administra proveedores y ten tus reportes siempre al día.</div>
+      <ul class="service-features">
+        <li><i data-lucide="check"></i>Catálogo de medicamentos con código de barras</li>
+        <li><i data-lucide="check"></i>Control de inventario y alertas de stock bajo</li>
+        <li><i data-lucide="check"></i>Caja: ventas, devoluciones y cortes de caja</li>
+        <li><i data-lucide="check"></i>Registro de proveedores y compras</li>
+        <li><i data-lucide="check"></i>Reporte de ventas diario, semanal y mensual</li>
+        <li><i data-lucide="check"></i>Multiusuario con roles (cajero, administrador)</li>
+      </ul>
+      <span class="service-tag">Proyecto activo</span>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PLUS SERVICES -->
+<section class="plus-section">
+  <div class="plus-header fade-up">
+    <p class="section-label">Servicios adicionales</p>
+    <h2 class="section-title">El toque que te distingue</h2>
+    <p class="section-body" style="max-width:500px;">Más allá del software, te ayudo a construir una imagen médica que inspire confianza.</p>
+  </div>
+  <div class="plus-grid">
+    <div class="plus-card fade-up">
+      <div class="plus-icon"><i data-lucide="clipboard-list"></i></div>
+      <div class="plus-name">Diseño de Receta Médica</div>
+      <div class="plus-desc">Receta con membrete profesional, logo y datos oficiales. Formato imprimible y digital.</div>
+    </div>
+    <div class="plus-card fade-up">
+      <div class="plus-icon"><i data-lucide="id-card"></i></div>
+      <div class="plus-name">Tarjetas de Presentación</div>
+      <div class="plus-desc">Diseño profesional con tus datos de contacto, QR a tu perfil y tu logo.</div>
+    </div>
+    <div class="plus-card fade-up">
+      <div class="plus-icon"><i data-lucide="palette"></i></div>
+      <div class="plus-name">Branding Médico</div>
+      <div class="plus-desc">Logo, paleta de colores y tipografía que reflejan la seriedad y confianza de tu práctica.</div>
+    </div>
+    <div class="plus-card fade-up">
+      <div class="plus-icon"><i data-lucide="smartphone"></i></div>
+      <div class="plus-name">Marketing & Redes Sociales</div>
+      <div class="plus-desc">Manejo de redes sociales, contenido educativo, campañas y posicionamiento local en Google.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="process-section">
+  <div class="process-header fade-up">
+    <p class="section-label">Proceso</p>
+    <h2 class="section-title">Sin complicaciones. Así funciona.</h2>
+    <p class="section-body">De la primera llamada a tu sistema funcionando en 4 pasos.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-step fade-up">
+      <div class="step-num">01</div>
+      <div class="step-title">Diagnóstico gratuito</div>
+      <div class="step-desc">Me cuentas cómo funciona tu consultorio o farmacia hoy. Identificamos qué herramienta te conviene más. Sin costo ni compromiso.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">02</div>
+      <div class="step-title">Propuesta a medida</div>
+      <div class="step-desc">Te envío una propuesta con el alcance exacto, el tiempo de entrega y el precio. Todo claro antes de iniciar.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">03</div>
+      <div class="step-title">Desarrollo y ajustes</div>
+      <div class="step-desc">Construyo la solución y te muestro avances. Ajustamos juntos hasta que quede exactamente como lo necesitas.</div>
+    </div>
+    <div class="process-step fade-up">
+      <div class="step-num">04</div>
+      <div class="step-title">Entrega y capacitación</div>
+      <div class="step-desc">Te enseño a usar tu sistema en una sesión práctica. Te acompaño después de la entrega para resolver cualquier duda.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="cases-section">
+  <div class="cases-header fade-up">
+    <p class="section-label">Casos reales</p>
+    <h2 class="section-title">Resultados en el sector salud</h2>
+    <p class="section-body">Proyectos implementados con médicos y farmacias de la región.</p>
+  </div>
+  <div class="cases-grid">
+    <div class="case-card fade-up">
+      <div class="case-type"><i data-lucide="hospital"></i> Consultorio médico</div>
+      <div class="case-title">Expediente digital y agenda automatizada</div>
+      <div class="case-desc">Un médico general con más de 40 pacientes semanales gestionaba todo en papel y WhatsApp manual. Implementamos un CRM de expediente clínico con agenda integrada y bot de WhatsApp que confirma citas automáticamente.</div>
+      <div class="case-results">
+        <div class="case-result-item">
+          <div class="case-result-num">0</div>
+          <div class="case-result-label">Expedientes perdidos</div>
+        </div>
+        <div class="case-result-item">
+          <div class="case-result-num">80%</div>
+          <div class="case-result-label">Reducción de no-shows con recordatorios automáticos</div>
+        </div>
+        <div class="case-result-item">
+          <div class="case-result-num">-3h</div>
+          <div class="case-result-label">Ahorro diario en administración</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-card fade-up">
+      <div class="case-type" style="background:rgba(0,229,255,0.08);border-color:rgba(0,229,255,0.2);color:var(--accent2);"><i data-lucide="pill"></i> Farmacia — En proceso</div>
+      <div class="case-title">Punto de venta e inventario inteligente</div>
+      <div class="case-desc">Una farmacia local sin sistema digitalizado, manejando inventario en hojas de cálculo y sin control de caja formal. Estamos implementando un POS completo con catálogo de medicamentos, control de stock y reportes diarios.</div>
+      <div class="case-results">
+        <div class="case-result-item">
+          <div class="case-result-num" style="color:var(--accent2);">POS</div>
+          <div class="case-result-label">Sistema de punto de venta completo</div>
+        </div>
+        <div class="case-result-item">
+          <div class="case-result-num" style="color:var(--accent2);">Stock</div>
+          <div class="case-result-label">Control de inventario en tiempo real</div>
+        </div>
+        <div class="case-result-item">
+          <div class="case-result-num" style="color:var(--accent2);">CFDI</div>
+          <div class="case-result-label">Facturación electrónica integrada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section fade-up">
+  <h2>¿Tu consultorio o farmacia<br>todavía trabaja en papel?</h2>
+  <p>Platícame cómo funcionas hoy y te digo en 30 minutos qué herramienta te ayuda más — sin costo y sin compromiso.</p>
+  <div class="cta-actions">
+    <a href="index.html#contact" class="btn-primary">Agendar diagnóstico gratuito →</a>
+    <a href="paquetes.html" class="btn-ghost">Ver precios y paquetes</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Aphernzz</div>
+  <ul class="footer-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="articulos.html">Artículos</a></li>
+    <li><a href="paquetes.html">Paquetes</a></li>
+    <li><a href="medico.html">Sector Salud</a></li>
+    <li><a href="index.html#contact">Contacto</a></li>
+  </ul>
+  <div>
+    <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
+    <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const siblings = Array.from(e.target.parentElement.children);
+        e.target.style.transitionDelay = (siblings.indexOf(e.target) * 0.07) + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  lucide.createIcons();
+</script>
+</body>
+</html>
