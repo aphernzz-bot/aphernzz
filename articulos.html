@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Artículos & Cursos | Aphernzz</title>
   <link rel="icon" href="favicon.png" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" /></noscript>
   <style>
     :root {
       --bg: #080b10;
@@ -571,6 +574,10 @@
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
     /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .nav-links li:nth-child(2),
+      .nav-links li:nth-child(4) { display: none; }
+    }
     @media (max-width: 900px) {
       .featured-article { grid-template-columns: 1fr; }
       .featured-thumb { min-height: 200px; }
@@ -587,6 +594,17 @@
       .filter-bar { padding: 1.25rem 5vw; top: 64px; }
       .articles-grid-3 { grid-template-columns: 1fr; }
       .newsletter-form { flex-direction: column; }
+    }
+
+    /* Links próximamente */
+    .coming-soon {
+      opacity: 0.45;
+      cursor: default;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
 
     /* Lucide icon sizing */
@@ -672,7 +690,7 @@
       </div>
       <h2>5 tareas que debes automatizar hoy mismo con Zapier</h2>
       <p>Descubre los flujos de trabajo más efectivos para recuperar hasta 10 horas a la semana en tu negocio. Desde notificaciones automáticas hasta sincronización de CRM, esta guía cubre casos reales.</p>
-      <a href="#" class="article-link">Leer artículo completo →</a>
+      <span class="article-link coming-soon">Próximamente</span>
     </div>
   </div>
 
@@ -694,7 +712,7 @@
         <div class="article-meta">Marzo 2026 · 6 min</div>
         <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
         <p>Guía paso a paso sobre web scraping con BeautifulSoup y Pandas de forma ética y eficiente.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
 
@@ -707,7 +725,7 @@
         <div class="article-meta">Febrero 2026 · 5 min</div>
         <h3>Métricas que todo negocio debería medir en un dashboard</h3>
         <p>Un repaso por los KPIs más accionables y cómo visualizarlos en Power BI sin complicarte la vida.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
 
@@ -720,7 +738,7 @@
         <div class="article-meta">Enero 2026 · 7 min</div>
         <h3>Make vs Zapier: ¿Cuál elegir según tu caso de uso?</h3>
         <p>Comparativa honesta de las dos plataformas más populares de automatización no-code en 2026.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
 
@@ -733,7 +751,7 @@
         <div class="article-meta">Enero 2026 · 9 min</div>
         <h3>Cómo usar Claude API para automatizar respuestas de clientes</h3>
         <p>Implementa un asistente de atención al cliente inteligente conectado a tu CRM con menos de 100 líneas de Python.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
 
@@ -746,7 +764,7 @@
         <div class="article-meta">Diciembre 2025 · 4 min</div>
         <h3>Los 5 errores más comunes en identidad visual de startups</h3>
         <p>Una revisión de los errores que hacen perder credibilidad y cómo corregirlos antes de salir al mercado.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
 
@@ -759,7 +777,7 @@
         <div class="article-meta">Noviembre 2025 · 10 min</div>
         <h3>Análisis exploratorio de datos con Pandas desde cero</h3>
         <p>Todo lo que necesitas saber para limpiar, explorar y entender cualquier dataset antes de modelarlo.</p>
-        <a href="#" class="article-link">Leer →</a>
+        <span class="article-link coming-soon">Próximamente</span>
       </div>
     </div>
   </div>

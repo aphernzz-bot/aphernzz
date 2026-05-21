@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Aphernzz | Automatiza. Escala. Crece.</title>
   <link rel="icon" href="favicon.png" type="image/x-icon" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
-  <link href="style.css" rel="stylesheet" />
-  <link href="script.js" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1.3">
+  <link rel="stylesheet" href="style.css?v=1.4" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" /></noscript>
 </head>
 
 <body>
@@ -51,20 +51,6 @@
     <div class="hero-actions">
       <a href="#contact" class="btn-primary">Optimiza tu negocio →</a>
       <a href="paquetes.html" class="btn-ghost">Ver paquetes</a>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="num">3+</div>
-        <div class="lbl">Años de experiencia</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num">20+</div>
-        <div class="lbl">Proyectos</div>
-      </div>
-      <div class="hero-stat">
-        <div class="num">100%</div>
-        <div class="lbl">Enfoque en resultados</div>
-      </div>
     </div>
   </div>
 
@@ -179,7 +165,7 @@
   <div class="projects-grid">
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <img src="dashboard-hospital.png" alt="Dashboard en tiempo real de pacientes" />
+        <img src="dashboard-hospital.png" alt="Dashboard en tiempo real de pacientes" onerror="this.closest('.project-thumb').classList.add('no-img');this.remove()" />
       </div>
       <div class="project-body">
         <h3>Dashboard Operativo para Hospital</h3>
@@ -193,7 +179,7 @@
     </div>
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <img src="webpage-logistic.png" alt="Plataforma Web LogisticGolfo" />
+        <img src="webpage-logistic.png" alt="Plataforma Web LogisticGolfo" onerror="this.closest('.project-thumb').classList.add('no-img');this.remove()" />
       </div>
       <div class="project-body">
         <h3>Plataforma Web Logística</h3>
@@ -207,7 +193,7 @@
     </div>
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <img src="crm+ecommerce.png" alt="Tienda en línea y CRM" />
+        <img src="crm+ecommerce.png" alt="Tienda en línea y CRM" onerror="this.closest('.project-thumb').classList.add('no-img');this.remove()" />
       </div>
       <div class="project-body">
         <h3>E-commerce & CRM para Boutique</h3>
@@ -221,7 +207,7 @@
     </div>
     <div class="project-card fade-up">
       <div class="project-thumb">
-        <img src="branding.png" alt="Proyectos de Identidad Visual" />
+        <img src="branding.png" alt="Proyectos de Identidad Visual" onerror="this.closest('.project-thumb').classList.add('no-img');this.remove()" />
       </div>
       <div class="project-body">
         <h3>Identidad Visual y Branding</h3>
@@ -356,6 +342,7 @@
           <option value="Diseño & Marca Digital">Diseño & Marca Digital</option>
           <option value="Desarrollo Web">Desarrollo Web</option>
           <option value="Soluciones con IA">Soluciones con IA</option>
+          <option value="Sector Salud (Consultorio / Farmacia)">Sector Salud (Consultorio / Farmacia)</option>
           <option value="Otro">Otro</option>
         </select>
       </div>
@@ -367,6 +354,7 @@
     </form>
 
     <div class="contact-links">
+      <a href="https://wa.me/524446085005?text=Hola%2C%20me%20interesa%20tu%20servicio" class="contact-link" target="_blank"><i data-lucide="message-circle"></i> WhatsApp</a>
       <a href="mailto:contacto@aphernzz.com" class="contact-link"><i data-lucide="mail"></i> contacto@aphernzz.com</a>
       <a href="https://linkedin.com/in/aphernzz" class="contact-link" target="_blank"><i data-lucide="briefcase"></i> LinkedIn</a>
       <a href="https://aphernzz.com" class="contact-link" target="_blank"><i data-lucide="globe"></i> aphernzz.com</a>

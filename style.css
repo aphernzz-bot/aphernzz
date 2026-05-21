@@ -7,7 +7,7 @@
       --accent2: #7b61ff;
       --accent3: #ff6b6b;
       --text: #e8edf2;
-      --muted: #6b7a8d;
+      --muted: #8a9ab0;
       --border: rgba(255,255,255,0.07);
       --border-accent: rgba(0,229,255,0.2);
       --glow: 0 0 40px rgba(0,229,255,0.15);
@@ -994,10 +994,25 @@
       .about-stats { grid-template-columns: 1fr 1fr; }
       .hero-img-frame { width: 75%; }
       .articles-grid { grid-template-columns: 1fr; }
-<<<<<<< HEAD
       .cta-banner { margin: 0 5vw 4rem; padding: 2.5rem; }
       .sector-salud-section { padding: 4.5rem 5vw; }
       .sector-salud-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ── NAV: ocultar ítems secundarios en pantallas medias ── */
+    @media (max-width: 1100px) {
+      .nav-links li:nth-child(2),
+      .nav-links li:nth-child(4) { display: none; }
+    }
+
+    /* ── CTA BANNER mobile ── */
+    @media (max-width: 480px) {
+      .cta-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+      }
+      .cta-banner .btn-primary { width: 100%; text-align: center; }
     }
 
     /* ── SECTOR SALUD (index callout) ── */
@@ -1047,7 +1062,8 @@
       border-color: rgba(0,214,143,0.3);
       transform: translateY(-3px);
     }
-    .salud-icon { font-size: 1.6rem; margin-bottom: 0.75rem; }
+    .salud-icon { margin-bottom: 0.75rem; color: var(--accent); }
+    .salud-icon svg { width: 28px; height: 28px; stroke: var(--accent); }
     .salud-name {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
@@ -1064,17 +1080,25 @@
       .sector-salud-header { flex-direction: column; align-items: flex-start; }
     }
 
-/* Lucide icon sizing */
-.plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
-.salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
-.contact-link svg, .case-type svg, .service-icon svg {
-  width: 1.5em; height: 1.5em;
-  stroke: currentColor;
-  vertical-align: middle;
-}
-.check svg { width: 10px; height: 10px; color: var(--accent); stroke-width: 3; }
-.x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
-.popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
-.hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }
-      .cta-banner { margin: 4rem 5vw 4rem; padding: 2.5rem; }
+    /* ── PROJECT IMAGE FALLBACK ── */
+    .project-thumb { min-height: 180px; }
+    .project-thumb.no-img {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+    .project-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── LUCIDE icon sizing ── */
+    .plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
+    .salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
+    .contact-link svg, .case-type svg {
+      width: 1.5em; height: 1.5em;
+      stroke: currentColor;
+      vertical-align: middle;
+    }
+    .check svg { width: 10px; height: 10px; color: var(--accent); stroke-width: 3; }
+    .x-mark svg { width: 10px; height: 10px; color: var(--muted); stroke-width: 3; }
+    .popular-badge svg { width: 14px; height: 14px; vertical-align: middle; margin-right: 3px; }
+    .hero-badge svg { width: 16px; height: 16px; vertical-align: middle; }
