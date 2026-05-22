@@ -9,18 +9,8 @@ Options -Indexes
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com https://aphernzz.com data:; connect-src 'self' https://formsubmit.co;"
 </IfModule>
 
-# Clean URLs — rewrite /paquetes → /paquetes.html etc.
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-
-  # Skip if file or directory already exists
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-
-  # Rewrite clean URL to .html file
-  RewriteRule ^([a-z0-9-]+)/?$ $1.html [L]
-</IfModule>
+# DirectoryIndex — serve index.html from subdirectories
+DirectoryIndex index.html
 
 # Cache static assets
 <IfModule mod_expires.c>
