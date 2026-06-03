@@ -1,0 +1,783 @@
+@media print{
+  body > *{display:none!important}
+  #print-area{display:block!important;position:fixed;inset:0;background:#fff;z-index:9999;padding:0}
+  #print-content{padding:40px 48px;font-family:system-ui,sans-serif;color:#111;font-size:13px}
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aphernzz CRM</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,sans-serif;font-size:14px;color:#1a1a1a;background:#f5f5f3}
+  :root{
+    --bg-primary:#ffffff;--bg-secondary:#f5f5f3;--bg-tertiary:#eeede8;
+    --text-primary:#1a1a1a;--text-secondary:#6b6b67;--text-tertiary:#9b9b97;
+    --border-light:rgba(0,0,0,0.1);--border-mid:rgba(0,0,0,0.18);
+    --radius-md:8px;--radius-lg:12px;
+    --purple:#534AB7;--purple-dark:#3C3489;--purple-light:#EEEDFE;--purple-text:#534AB7;
+  }
+  .hidden{display:none!important}
+  .btn{background:transparent;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);padding:7px 16px;cursor:pointer;font-size:13px;color:var(--text-primary);transition:background .15s}
+  .btn:hover{background:var(--bg-secondary)}
+  .btn-primary{background:var(--purple);border-color:var(--purple);color:#fff}
+  .btn-primary:hover{background:var(--purple-dark);border-color:var(--purple-dark)}
+  .btn-success{background:#3B6D11;border-color:#3B6D11;color:#fff}
+  .btn-success:hover{background:#27500A}
+  .btn-danger{background:#A32D2D;border-color:#A32D2D;color:#fff}
+  .btn-danger:hover{background:#791F1F}
+  .btn-sm{padding:4px 10px;font-size:12px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+  .badge-green{background:#EAF3DE;color:#3B6D11}
+  .badge-amber{background:#FAEEDA;color:#854F0B}
+  .badge-red{background:#FCEBEB;color:#A32D2D}
+  .badge-blue{background:#E6F1FB;color:#185FA5}
+  .badge-purple{background:#EEEDFE;color:#534AB7}
+  .badge-gray{background:#F1EFE8;color:#5F5E5A}
+  .badge-teal{background:#E1F5EE;color:#0F6E56}
+  .card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:1rem 1.25rem}
+  .metric-card{background:var(--bg-secondary);border-radius:var(--radius-md);padding:1rem;flex:1;min-width:0}
+  .metric-label{font-size:12px;color:var(--text-secondary);margin-bottom:4px}
+  .metric-value{font-size:22px;font-weight:500}
+  .metric-sub{font-size:11px;color:var(--text-tertiary);margin-top:2px}
+  input,select,textarea{width:100%;background:var(--bg-secondary);border:0.5px solid var(--border-mid);border-radius:var(--radius-md);padding:7px 10px;font-size:13px;color:var(--text-primary);outline:none;font-family:inherit}
+  input:focus,select:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 2px rgba(83,74,183,.15)}
+  label{font-size:12px;color:var(--text-secondary);display:block;margin-bottom:4px}
+  .form-group{margin-bottom:12px}
+  .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+  .avatar-purple{background:#EEEDFE;color:#534AB7}
+  .avatar-teal{background:#E1F5EE;color:#0F6E56}
+  .avatar-blue{background:#E6F1FB;color:#185FA5}
+  .avatar-coral{background:#FAECE7;color:#993C1D}
+  /* Layout */
+  #app-screen{display:flex;min-height:100vh}
+  .sidebar{width:210px;flex-shrink:0;background:var(--bg-primary);border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh}
+  .sidebar-logo{padding:1.25rem 1rem 1rem;border-bottom:0.5px solid var(--border-light)}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:9px 1rem;cursor:pointer;font-size:13px;color:var(--text-secondary);border-left:2px solid transparent;transition:all .15s}
+  .nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
+  .nav-item.active{background:var(--bg-secondary);color:var(--purple);border-left-color:var(--purple);font-weight:500}
+  .nav-item i{font-size:16px}
+  .main-content{flex:1;overflow:auto;padding:1.5rem;min-width:0}
+  .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+  .page-title{font-size:18px;font-weight:500}
+  /* Tables */
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;padding:8px 12px;font-size:11px;font-weight:500;color:var(--text-secondary);border-bottom:0.5px solid var(--border-light);text-transform:uppercase;letter-spacing:.04em}
+  td{padding:10px 12px;border-bottom:0.5px solid var(--border-light);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--bg-secondary)}
+  /* Pipeline */
+  .pipeline-col{flex:1;min-width:0;background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px}
+  .pipeline-col-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);margin-bottom:12px;display:flex;justify-content:space-between}
+  .prospect-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px;margin-bottom:8px}
+  .prospect-card:hover{border-color:var(--border-mid)}
+  /* Modals */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200}
+  .modal{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:1.5rem;width:480px;max-width:95vw;max-height:88vh;overflow-y:auto}
+  .modal-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem}
+  .modal-title{font-size:16px;font-weight:500}
+  .close-btn{background:none;border:none;cursor:pointer;color:var(--text-secondary);font-size:22px;line-height:1;padding:0}
+  /* Progress */
+  .progress-bar{height:6px;background:var(--bg-secondary);border-radius:3px;overflow:hidden;margin-top:4px}
+  .progress-fill{height:100%;border-radius:3px;background:var(--purple)}
+  /* Empty */
+  .empty-state{text-align:center;padding:2rem;color:var(--text-secondary)}
+  .empty-state i{font-size:32px;display:block;margin-bottom:8px;color:var(--text-tertiary)}
+  /* Timeline */
+  .timeline-item{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border-light)}
+  .timeline-item:last-child{border-bottom:none}
+  .timeline-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);margin-top:5px;flex-shrink:0}
+  /* Login */
+  #login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary)}
+  .login-box{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:2rem;width:340px;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+  .login-logo{font-size:22px;font-weight:600;color:var(--purple);margin-bottom:4px}
+  .login-sub{font-size:13px;color:var(--text-secondary);margin-bottom:1.5rem}
+  .login-error{font-size:12px;color:#A32D2D;margin-top:6px}
+  /* Cot items */
+  #cot-items-body input{padding:5px 7px;font-size:12px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Aphernzz</div>
+    <div class="login-sub">CRM — acceso seguro</div>
+    <div class="form-group"><label>Usuario</label><input type="text" id="login-user" placeholder="admin" /></div>
+    <div class="form-group"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div id="login-err" class="login-error hidden">Usuario o contraseña incorrectos</div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Ingresar</button>
+    <div style="font-size:11px;color:var(--text-tertiary);margin-top:12px;text-align:center">demo: admin / aphernzz2024</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen" class="hidden">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div style="font-size:17px;font-weight:600;color:var(--purple)">Aphernzz</div>
+      <div style="font-size:11px;color:var(--text-tertiary)">CRM</div>
+    </div>
+    <nav style="flex:1;padding:8px 0;overflow-y:auto">
+      <div class="nav-item active" onclick="navTo('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
+      <div class="nav-item" onclick="navTo('clientes',this)"><i class="ti ti-users"></i>Clientes</div>
+      <div class="nav-item" onclick="navTo('prospectos',this)"><i class="ti ti-target"></i>Prospectos</div>
+      <div class="nav-item" onclick="navTo('cotizaciones',this)"><i class="ti ti-file-description"></i>Cotizaciones</div>
+      <div class="nav-item" onclick="navTo('ventas',this)"><i class="ti ti-currency-dollar"></i>Ventas</div>
+      <div class="nav-item" onclick="navTo('facturacion',this)"><i class="ti ti-file-invoice"></i>Facturación</div>
+      <div class="nav-item" onclick="navTo('actividades',this)"><i class="ti ti-checklist"></i>Actividades</div>
+    </nav>
+    <div style="padding:12px 1rem;border-top:0.5px solid var(--border-light)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="avatar avatar-purple" style="width:28px;height:28px;font-size:11px">AD</div>
+        <div><div style="font-size:12px;font-weight:500">Admin</div><div style="font-size:11px;color:var(--text-tertiary);cursor:pointer" onclick="logout()">Cerrar sesión</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Dashboard</div>
+        <div style="font-size:12px;color:var(--text-tertiary)" id="dash-date"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div class="metric-card"><div class="metric-label"><i class="ti ti-users" style="font-size:13px"></i> Clientes</div><div class="metric-value" id="kpi-clientes">0</div><div class="metric-sub">total registrados</div></div>
+        <div class="metric-card"><div class="metric-label"><i class="ti ti-target" style="font-size:13px"></i> Prospectos</div><div class="metric-value" id="kpi-prospectos">0</div><div class="metric-sub">en pipeline</div></div>
+        <div class="metric-card"><div class="metric-label"><i class="ti ti-currency-dollar" style="font-size:13px"></i> Ventas</div><div class="metric-value" id="kpi-ventas">$0</div><div class="metric-sub">este mes</div></div>
+        <div class="metric-card"><div class="metric-label"><i class="ti ti-file-description" style="font-size:13px"></i> Cotizaciones</div><div class="metric-value" id="kpi-conversion">0%</div><div class="metric-sub">tasa de cierre</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:1rem">Ventas por mes</div><div style="position:relative;height:200px"><canvas id="dash-chart"></canvas></div></div>
+        <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:1rem">Pipeline por etapa</div><div id="pipeline-summary"></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <div style="font-size:13px;font-weight:500">Cotizaciones recientes</div>
+            <button class="btn btn-sm" onclick="navTo('cotizaciones',document.querySelectorAll('.nav-item')[3])" style="font-size:11px">Ver todas</button>
+          </div>
+          <div id="dash-cot-list"></div>
+        </div>
+        <div class="card">
+          <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Estado de cotizaciones</div>
+          <div style="position:relative;height:160px"><canvas id="dash-cot-chart"></canvas></div>
+          <div id="dash-cot-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;color:var(--text-secondary)"></div>
+        </div>
+      </div>
+      <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:1rem">Actividades recientes</div><div id="dash-activities"></div></div>
+    </div>
+
+    <!-- CLIENTES -->
+    <div id="page-clientes" class="hidden">
+      <div class="page-header"><div class="page-title">Clientes</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-cliente')"><i class="ti ti-plus"></i> Nuevo cliente</button></div>
+      <div class="card">
+        <div style="margin-bottom:12px"><input type="text" placeholder="Buscar cliente..." id="search-clientes" oninput="renderClientes()" style="width:260px"/></div>
+        <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th>Segmento</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-clientes"></tbody></table>
+        <div id="empty-clientes" class="empty-state hidden"><i class="ti ti-users"></i>Sin clientes aún.</div></div>
+      </div>
+    </div>
+
+    <!-- PROSPECTOS -->
+    <div id="page-prospectos" class="hidden">
+      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-prospecto')"><i class="ti ti-plus"></i> Nuevo prospecto</button></div>
+      <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px" id="pipeline-board"></div>
+    </div>
+
+    <!-- COTIZACIONES -->
+    <div id="page-cotizaciones" class="hidden">
+      <div class="page-header"><div class="page-title">Cotizaciones</div><button class="btn btn-primary btn-sm" onclick="abrirNuevaCotizacion()"><i class="ti ti-plus"></i> Nueva cotización</button></div>
+      <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div class="metric-card"><div class="metric-label">Total cotizado</div><div class="metric-value" id="kpi-cot-total">$0</div></div>
+        <div class="metric-card"><div class="metric-label">Aceptadas</div><div class="metric-value" id="kpi-cot-acept">0</div></div>
+        <div class="metric-card"><div class="metric-label">Pendientes</div><div class="metric-value" id="kpi-cot-pend">0</div></div>
+        <div class="metric-card"><div class="metric-label">Tasa de cierre</div><div class="metric-value" id="kpi-cot-tasa">0%</div></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <input type="text" placeholder="Buscar..." id="search-cot" oninput="renderCotizaciones()" style="width:200px"/>
+          <select id="filter-cot-estado" onchange="renderCotizaciones()" style="width:160px"><option value="">Todos los estados</option><option>Borrador</option><option>Enviada</option><option>Aceptada</option><option>Rechazada</option><option>Facturada</option></select>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Folio</th><th>Cliente / Prospecto</th><th>Conceptos</th><th>Subtotal</th><th>IVA</th><th>Total</th><th>Vigencia</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-cotizaciones"></tbody></table>
+          <div id="empty-cotizaciones" class="empty-state hidden"><i class="ti ti-file-description"></i>Sin cotizaciones aún.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENTAS -->
+    <div id="page-ventas" class="hidden">
+      <div class="page-header"><div class="page-title">Ventas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-venta')"><i class="ti ti-plus"></i> Registrar venta</button></div>
+      <div class="card">
+        <div class="table-wrap"><table><thead><tr><th>Folio</th><th>Cliente</th><th>Producto/Servicio</th><th>Monto</th><th>Fecha</th><th>Origen</th><th>Estado</th></tr></thead><tbody id="tabla-ventas"></tbody></table>
+        <div id="empty-ventas" class="empty-state hidden"><i class="ti ti-currency-dollar"></i>Sin ventas registradas.</div></div>
+      </div>
+    </div>
+
+    <!-- FACTURACIÓN -->
+    <div id="page-facturacion" class="hidden">
+      <div class="page-header"><div class="page-title">Facturación</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-factura')"><i class="ti ti-plus"></i> Nueva factura</button></div>
+      <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
+        <div class="metric-card"><div class="metric-label">Facturado total</div><div class="metric-value" id="kpi-facturado">$0</div></div>
+        <div class="metric-card"><div class="metric-label">Por cobrar</div><div class="metric-value" id="kpi-por-cobrar">$0</div></div>
+        <div class="metric-card"><div class="metric-label">Cobrado</div><div class="metric-value" id="kpi-cobrado">$0</div></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap"><table><thead><tr><th>Folio</th><th>Cliente</th><th>Concepto</th><th>Monto</th><th>Vencimiento</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-facturas"></tbody></table>
+        <div id="empty-facturas" class="empty-state hidden"><i class="ti ti-file-invoice"></i>Sin facturas aún.</div></div>
+      </div>
+    </div>
+
+    <!-- ACTIVIDADES -->
+    <div id="page-actividades" class="hidden">
+      <div class="page-header"><div class="page-title">Actividades y tareas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-actividad')"><i class="ti ti-plus"></i> Nueva actividad</button></div>
+      <div class="card">
+        <div class="table-wrap"><table><thead><tr><th>Actividad</th><th>Tipo</th><th>Relacionado con</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-actividades"></tbody></table>
+        <div id="empty-actividades" class="empty-state hidden"><i class="ti ti-checklist"></i>Sin actividades.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL COTIZACIÓN -->
+<div id="modal-cotizacion" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-cotizacion')">
+  <div class="modal" style="width:640px;max-width:97vw">
+    <div class="modal-header"><div class="modal-title">Nueva cotización</div><button class="close-btn" onclick="closeModal('modal-cotizacion')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px">
+      <div class="form-group"><label>Cliente / Prospecto *</label><input id="cot-cliente" placeholder="Escribe o selecciona" list="cot-cliente-list" oninput="autoLinkCotCliente()"/><datalist id="cot-cliente-list"></datalist></div>
+      <div class="form-group"><label>Vinculado a</label><input id="cot-vinculo" placeholder="Se detecta automáticamente" readonly style="color:var(--text-tertiary);font-size:12px"/></div>
+      <div class="form-group"><label>Fecha emisión</label><input id="cot-fecha" type="date"/></div>
+      <div class="form-group"><label>Vigencia hasta</label><input id="cot-vigencia" type="date"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Notas / condiciones de pago</label><textarea id="cot-notas" rows="2" placeholder="Condiciones de pago, entrega, garantía..."></textarea></div>
+    </div>
+    <div style="font-size:11px;font-weight:500;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Conceptos</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:6px">
+        <thead><tr>
+          <th style="text-align:left;padding:4px 6px;color:var(--text-secondary);font-weight:500;border-bottom:0.5px solid var(--border-light)">Descripción</th>
+          <th style="text-align:right;padding:4px 6px;color:var(--text-secondary);font-weight:500;width:55px;border-bottom:0.5px solid var(--border-light)">Cant.</th>
+          <th style="text-align:right;padding:4px 6px;color:var(--text-secondary);font-weight:500;width:110px;border-bottom:0.5px solid var(--border-light)">P. Unitario</th>
+          <th style="text-align:right;padding:4px 6px;color:var(--text-secondary);font-weight:500;width:70px;border-bottom:0.5px solid var(--border-light)">Desc %</th>
+          <th style="text-align:right;padding:4px 6px;color:var(--text-secondary);font-weight:500;width:110px;border-bottom:0.5px solid var(--border-light)">Subtotal</th>
+          <th style="width:30px;border-bottom:0.5px solid var(--border-light)"></th>
+        </tr></thead>
+        <tbody id="cot-items-body"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-sm" onclick="addCotItem()" style="margin-bottom:14px"><i class="ti ti-plus"></i> Agregar línea</button>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+      <div style="min-width:240px;font-size:13px;background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)"><span>Subtotal</span><span id="cot-subtotal-disp">$0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)"><span>IVA (16%)</span><span id="cot-iva-disp">$0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:500;border-top:0.5px solid var(--border-mid);margin-top:4px"><span>Total</span><span id="cot-total-disp" style="color:var(--purple)">$0</span></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-cotizacion')">Cancelar</button>
+      <button class="btn btn-sm" onclick="guardarCotizacion('Borrador')"><i class="ti ti-file"></i> Guardar borrador</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarCotizacion('Enviada')"><i class="ti ti-send"></i> Guardar y enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE COTIZACIÓN -->
+<div id="modal-cot-detalle" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-cot-detalle')">
+  <div class="modal" style="width:600px;max-width:97vw">
+    <div class="modal-header">
+      <div><div class="modal-title" id="det-folio"></div><div style="font-size:12px;color:var(--text-secondary);margin-top:2px" id="det-meta"></div></div>
+      <button class="close-btn" onclick="closeModal('modal-cot-detalle')">&times;</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center"><span id="det-badge"></span><span style="font-size:12px;color:var(--text-secondary)" id="det-vigencia"></span></div>
+    <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px;margin-bottom:12px;font-size:13px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="color:var(--text-secondary)">Cliente / Prospecto</span><span id="det-cliente" style="font-weight:500"></span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--text-secondary)">Vinculado a</span><span id="det-vinculo" style="font-size:12px;color:var(--purple)"></span></div>
+    </div>
+    <div class="table-wrap" style="margin-bottom:12px">
+      <table style="font-size:12px"><thead><tr><th>Descripción</th><th style="text-align:right">Cant.</th><th style="text-align:right">P.Unit</th><th style="text-align:right">Desc</th><th style="text-align:right">Subtotal</th></tr></thead><tbody id="det-items"></tbody></table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <div style="min-width:220px;font-size:13px;background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)"><span>Subtotal</span><span id="det-subtotal"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)"><span>IVA 16%</span><span id="det-iva"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-weight:500;border-top:0.5px solid var(--border-mid);margin-top:4px"><span>Total</span><span id="det-total" style="color:var(--purple)"></span></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;font-style:italic" id="det-notas"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="det-acciones"></div>
+      <button class="btn btn-sm" onclick="imprimirCotizacion(currentCotId)" style="margin-left:auto"><i class="ti ti-printer"></i> Imprimir / PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLANTILLA IMPRESIÓN -->
+<div id="print-area" style="display:none">
+  <div id="print-content"></div>
+</div>
+
+<!-- MODAL CLIENTE -->
+<div id="modal-cliente" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-cliente')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nuevo cliente</div><button class="close-btn" onclick="closeModal('modal-cliente')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Nombre completo *</label><input id="c-nombre" placeholder="Juan García"/></div>
+      <div class="form-group"><label>Empresa</label><input id="c-empresa" placeholder="Empresa S.A."/></div>
+      <div class="form-group"><label>Email</label><input id="c-email" placeholder="correo@email.com"/></div>
+      <div class="form-group"><label>Teléfono</label><input id="c-tel" placeholder="+52 444 000 0000"/></div>
+      <div class="form-group"><label>Ciudad</label><input id="c-ciudad" placeholder="San Luis Potosí"/></div>
+      <div class="form-group"><label>Segmento</label><select id="c-segmento"><option>Pequeño</option><option>Mediano</option><option>Grande</option><option>Gobierno</option></select></div>
+    </div>
+    <div class="form-group"><label>Notas</label><textarea id="c-notas" rows="2" placeholder="Información relevante..."></textarea></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-cliente')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarCliente()">Guardar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PROSPECTO -->
+<div id="modal-prospecto" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-prospecto')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nuevo prospecto</div><button class="close-btn" onclick="closeModal('modal-prospecto')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Nombre *</label><input id="p-nombre" placeholder="Nombre"/></div>
+      <div class="form-group"><label>Empresa</label><input id="p-empresa" placeholder="Empresa"/></div>
+      <div class="form-group"><label>Email</label><input id="p-email" placeholder="correo@email.com"/></div>
+      <div class="form-group"><label>Teléfono</label><input id="p-tel" placeholder="+52 444 000 0000"/></div>
+      <div class="form-group"><label>Valor estimado ($)</label><input id="p-valor" type="number" placeholder="5000"/></div>
+      <div class="form-group"><label>Fuente</label><select id="p-fuente"><option>Referido</option><option>Redes sociales</option><option>Llamada fría</option><option>WhatsApp</option><option>Web</option><option>Otro</option></select></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Etapa</label><select id="p-etapa"><option>Contacto</option><option>Interés</option><option>Propuesta</option><option>Negociación</option><option>Cerrado</option></select></div>
+    </div>
+    <div class="form-group"><label>Notas</label><textarea id="p-notas" rows="2" placeholder="Detalles..."></textarea></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-prospecto')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarProspecto()">Guardar prospecto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VENTA -->
+<div id="modal-venta" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-venta')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Registrar venta</div><button class="close-btn" onclick="closeModal('modal-venta')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Cliente *</label><input id="v-cliente" placeholder="Nombre del cliente"/></div>
+      <div class="form-group"><label>Producto / Servicio *</label><input id="v-producto" placeholder="Descripción"/></div>
+      <div class="form-group"><label>Monto ($) *</label><input id="v-monto" type="number" placeholder="1000"/></div>
+      <div class="form-group"><label>Fecha</label><input id="v-fecha" type="date"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Estado</label><select id="v-estado"><option>Completada</option><option>Pendiente</option><option>Cancelada</option></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-venta')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarVenta()">Guardar venta</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FACTURA -->
+<div id="modal-factura" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-factura')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nueva factura</div><button class="close-btn" onclick="closeModal('modal-factura')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Cliente *</label><input id="f-cliente" placeholder="Cliente"/></div>
+      <div class="form-group"><label>Concepto *</label><input id="f-concepto" placeholder="Servicio / producto"/></div>
+      <div class="form-group"><label>Monto ($) *</label><input id="f-monto" type="number" placeholder="1000"/></div>
+      <div class="form-group"><label>Vencimiento</label><input id="f-vencimiento" type="date"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Estado</label><select id="f-estado"><option>Pendiente</option><option>Pagada</option><option>Vencida</option></select></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-factura')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarFactura()">Guardar factura</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ACTIVIDAD -->
+<div id="modal-actividad" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-actividad')">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">Nueva actividad</div><button class="close-btn" onclick="closeModal('modal-actividad')">&times;</button></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="form-group"><label>Actividad *</label><input id="a-titulo" placeholder="Llamada de seguimiento"/></div>
+      <div class="form-group"><label>Tipo</label><select id="a-tipo"><option>Llamada</option><option>WhatsApp</option><option>Email</option><option>Reunión</option><option>Tarea</option></select></div>
+      <div class="form-group"><label>Relacionado con</label><input id="a-relacion" placeholder="Cliente o prospecto"/></div>
+      <div class="form-group"><label>Fecha</label><input id="a-fecha" type="date"/></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Notas</label><textarea id="a-notas" rows="2" placeholder="Detalles..."></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+      <button class="btn btn-sm" onclick="closeModal('modal-actividad')">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarActividad()">Guardar actividad</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var DB={clientes:[],prospectos:[],ventas:[],facturas:[],actividades:[],cotizaciones:[]};
+var dashChart=null,cotPieChart=null,cotItemCount=0;
+var etapas=['Contacto','Interés','Propuesta','Negociación','Cerrado'];
+var etapaColors={'Contacto':'#888780','Interés':'#534AB7','Propuesta':'#185FA5','Negociación':'#854F0B','Cerrado':'#3B6D11'};
+var avatarCls=['avatar-purple','avatar-teal','avatar-blue','avatar-coral'];
+var estadoBadge={Borrador:'badge-gray',Enviada:'badge-blue',Aceptada:'badge-green',Rechazada:'badge-red',Facturada:'badge-teal',Completada:'badge-green',Pendiente:'badge-amber',Cancelada:'badge-red',Pagada:'badge-green',Vencida:'badge-red'};
+
+function initDemo(){
+  DB.clientes=[
+    {id:1,nombre:'María López',empresa:'Distribuidora Potosí',email:'mlopez@dpotosi.com',tel:'+52 444 100 2000',ciudad:'San Luis Potosí',segmento:'Mediano',notas:''},
+    {id:2,nombre:'Carlos Ramírez',empresa:'Constructora CR',email:'carlos@cr.mx',tel:'+52 444 200 3000',ciudad:'San Luis Potosí',segmento:'Grande',notas:''},
+    {id:3,nombre:'Ana Gutiérrez',empresa:'Boutique AG',email:'ana@ag.mx',tel:'+52 444 300 4000',ciudad:'Matehuala',segmento:'Pequeño',notas:''},
+  ];
+  DB.prospectos=[
+    {id:1,nombre:'Roberto Sánchez',empresa:'Tech SLP',email:'rsanchez@tech.mx',tel:'',valor:15000,fuente:'Referido',etapa:'Propuesta',notas:''},
+    {id:2,nombre:'Lucía Flores',empresa:'Flores Moda',email:'lucia@flores.mx',tel:'',valor:8000,fuente:'Redes sociales',etapa:'Interés',notas:''},
+    {id:3,nombre:'Miguel Torres',empresa:'Transportes MT',email:'',tel:'+52 444 600 7000',valor:25000,fuente:'Llamada fría',etapa:'Negociación',notas:'Precio negociable'},
+    {id:4,nombre:'Patricia Vega',empresa:'Restaurante PV',email:'pvega@rest.mx',tel:'',valor:5000,fuente:'WhatsApp',etapa:'Contacto',notas:''},
+    {id:5,nombre:'José Martínez',empresa:'JM Servicios',email:'jose@jm.mx',tel:'',valor:12000,fuente:'Web',etapa:'Cerrado',notas:''},
+  ];
+  DB.ventas=[
+    {id:1,cliente:'María López',producto:'Servicio mensual',monto:8500,fecha:'2026-05-01',estado:'Completada',origen:'Manual'},
+    {id:2,cliente:'Carlos Ramírez',producto:'Instalación especial',monto:22000,fecha:'2026-05-10',estado:'Completada',origen:'Manual'},
+    {id:3,cliente:'Ana Gutiérrez',producto:'Consultoría',monto:3200,fecha:'2026-05-20',estado:'Pendiente',origen:'Manual'},
+    {id:4,cliente:'José Martínez',producto:'Contrato anual',monto:12000,fecha:'2026-05-25',estado:'Completada',origen:'Manual'},
+  ];
+  DB.facturas=[
+    {id:1,cliente:'María López',concepto:'Servicio mayo',monto:8500,vencimiento:'2026-06-01',estado:'Pendiente'},
+    {id:2,cliente:'Carlos Ramírez',concepto:'Instalación',monto:22000,vencimiento:'2026-05-30',estado:'Pagada'},
+    {id:3,cliente:'Ana Gutiérrez',concepto:'Consultoría',monto:3200,vencimiento:'2026-06-10',estado:'Pendiente'},
+  ];
+  DB.actividades=[
+    {id:1,titulo:'Llamada seguimiento',tipo:'Llamada',relacion:'Roberto Sánchez',fecha:'2026-05-28',estado:'Completada',notas:''},
+    {id:2,titulo:'Enviar cotización',tipo:'Email',relacion:'Miguel Torres',fecha:'2026-05-29',estado:'Pendiente',notas:''},
+    {id:3,titulo:'WhatsApp recordatorio',tipo:'WhatsApp',relacion:'Patricia Vega',fecha:'2026-05-30',estado:'Pendiente',notas:''},
+    {id:4,titulo:'Reunión cierre',tipo:'Reunión',relacion:'José Martínez',fecha:'2026-05-25',estado:'Completada',notas:''},
+  ];
+  DB.cotizaciones=[
+    {id:1,folio:'COT-0001',cliente:'Roberto Sánchez',vinculo:'Prospecto',fecha:'2026-05-20',vigencia:'2026-06-20',estado:'Enviada',notas:'Pago a 30 días',items:[{desc:'Consultoría inicial',cant:1,pu:8000,desc_pct:0},{desc:'Implementación módulo A',cant:2,pu:3500,desc_pct:5}]},
+    {id:2,folio:'COT-0002',cliente:'María López',vinculo:'Cliente',fecha:'2026-05-22',vigencia:'2026-06-22',estado:'Aceptada',notas:'',items:[{desc:'Servicio anual',cant:1,pu:28000,desc_pct:10}]},
+    {id:3,folio:'COT-0003',cliente:'Miguel Torres',vinculo:'Prospecto',fecha:'2026-05-27',vigencia:'2026-06-10',estado:'Borrador',notas:'Descuento especial por volumen',items:[{desc:'Paquete transporte',cant:5,pu:4000,desc_pct:8}]},
+  ];
+}
+
+function cotCalc(items){var sub=0;items.forEach(function(it){sub+=Number(it.cant)*Number(it.pu)*(1-Number(it.desc_pct)/100);});var iva=sub*0.16;return{sub:sub,iva:iva,total:sub+iva};}
+function fmtMoney(n){return'$'+Math.round(Number(n)).toLocaleString('es-MX');}
+function fmtDate(d){if(!d)return'—';var p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+function today(){return new Date().toISOString().split('T')[0];}
+function initials(n){return n.split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}
+function avatarCl(i){return avatarCls[i%avatarCls.length];}
+
+function doLogin(){
+  var u=document.getElementById('login-user').value.trim();
+  var p=document.getElementById('login-pass').value;
+  if(u==='admin'&&p==='aphernzz2024'){
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.remove('hidden');
+    initDemo();renderDashboard();
+  } else {document.getElementById('login-err').classList.remove('hidden');}
+}
+function logout(){
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('app-screen').classList.add('hidden');
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-err').classList.add('hidden');
+}
+function navTo(page,el){
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  if(el)el.classList.add('active');
+  document.querySelectorAll('[id^="page-"]').forEach(function(p){p.classList.add('hidden');});
+  document.getElementById('page-'+page).classList.remove('hidden');
+  if(page==='dashboard')renderDashboard();
+  if(page==='clientes')renderClientes();
+  if(page==='prospectos')renderPipeline();
+  if(page==='cotizaciones')renderCotizaciones();
+  if(page==='ventas')renderVentas();
+  if(page==='facturacion')renderFacturas();
+  if(page==='actividades')renderActividades();
+}
+function openModal(id){document.getElementById(id).classList.remove('hidden');}
+function closeModal(id){document.getElementById(id).classList.add('hidden');}
+
+function renderDashboard(){
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('kpi-clientes').textContent=DB.clientes.length;
+  document.getElementById('kpi-prospectos').textContent=DB.prospectos.filter(function(p){return p.etapa!=='Cerrado';}).length;
+  var tv=DB.ventas.filter(function(v){return v.estado==='Completada';}).reduce(function(s,v){return s+Number(v.monto);},0);
+  document.getElementById('kpi-ventas').textContent=fmtMoney(tv);
+  var ac=DB.cotizaciones.filter(function(c){return c.estado==='Aceptada'||c.estado==='Facturada';}).length;
+  document.getElementById('kpi-conversion').textContent=DB.cotizaciones.length?Math.round(ac/DB.cotizaciones.length*100)+'%':'0%';
+  var ps=document.getElementById('pipeline-summary');ps.innerHTML='';
+  etapas.forEach(function(e){
+    var cnt=DB.prospectos.filter(function(p){return p.etapa===e;}).length;
+    var pct=DB.prospectos.length?Math.round(cnt/DB.prospectos.length*100):0;
+    ps.innerHTML+='<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+e+'</span><span style="color:var(--text-secondary)">'+cnt+' ('+pct+'%)</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+etapaColors[e]+'"></div></div></div>';
+  });
+  var acts=DB.actividades.slice(-4).reverse();
+  var da=document.getElementById('dash-activities');
+  da.innerHTML=acts.length?acts.map(function(a){return'<div class="timeline-item"><div class="timeline-dot"></div><div><div style="font-size:13px;font-weight:500">'+a.titulo+'</div><div style="font-size:12px;color:var(--text-secondary)">'+a.relacion+' · '+fmtDate(a.fecha)+'</div></div><div style="margin-left:auto"><span class="badge '+(a.estado==='Completada'?'badge-green':'badge-amber')+'">'+a.estado+'</span></div></div>';}).join(''):'<div class="empty-state"><i class="ti ti-checklist"></i>Sin actividades.</div>';
+  var meses=['Ene','Feb','Mar','Abr','May','Jun'];
+  var datos=[18500,24000,15000,31000,43700,0];
+  DB.ventas.forEach(function(v){if(v.estado==='Completada'){var m=new Date(v.fecha).getMonth();if(m<6)datos[m]+=Number(v.monto);}});
+  datos[4]=datos[4]||43700;
+  var ctx=document.getElementById('dash-chart');
+  if(dashChart)dashChart.destroy();
+  dashChart=new Chart(ctx,{type:'bar',data:{labels:meses,datasets:[{label:'Ventas',data:datos,backgroundColor:'#AFA9EC',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:function(v){return'$'+v.toLocaleString('es-MX')}},grid:{color:'rgba(0,0,0,.06)'}},x:{grid:{display:false}}}}});
+  renderDashCotizaciones();
+}
+
+function renderDashCotizaciones(){
+  var recientes=DB.cotizaciones.slice(-4).reverse();
+  var lista=document.getElementById('dash-cot-list');
+  lista.innerHTML=recientes.length?recientes.map(function(c){var calc=cotCalc(c.items);return'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border-light)"><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+c.cliente+'</div><div style="font-size:11px;color:var(--text-tertiary)">'+c.folio+' · '+fmtDate(c.fecha)+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:500;color:var(--purple)">'+fmtMoney(calc.total)+'</div><span class="badge '+(estadoBadge[c.estado]||'badge-gray')+'" style="font-size:10px">'+c.estado+'</span></div></div>';}).join(''):'<div class="empty-state" style="padding:1rem"><i class="ti ti-file-description"></i>Sin cotizaciones aún.</div>';
+  var estados=['Borrador','Enviada','Aceptada','Rechazada','Facturada'];
+  var colores=['#B4B2A9','#85B7EB','#97C459','#F09595','#5DCAA5'];
+  var conteos=estados.map(function(e){return DB.cotizaciones.filter(function(c){return c.estado===e;}).length;});
+  var ctx2=document.getElementById('dash-cot-chart');
+  if(cotPieChart)cotPieChart.destroy();
+  var tot=conteos.reduce(function(a,b){return a+b;},0);
+  if(!tot){document.getElementById('dash-cot-legend').innerHTML='<span style="color:var(--text-tertiary)">Sin datos aún</span>';return;}
+  cotPieChart=new Chart(ctx2,{type:'doughnut',data:{labels:estados,datasets:[{data:conteos,backgroundColor:colores,borderWidth:0,hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}});
+  document.getElementById('dash-cot-legend').innerHTML=estados.map(function(e,i){return conteos[i]?'<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:'+colores[i]+'"></span>'+e+' '+conteos[i]+'</span>':'';}).join('');
+}
+
+function renderClientes(){
+  var q=(document.getElementById('search-clientes')||{value:''}).value.toLowerCase();
+  var list=DB.clientes.filter(function(c){return c.nombre.toLowerCase().includes(q)||c.empresa.toLowerCase().includes(q);});
+  var tb=document.getElementById('tabla-clientes'),em=document.getElementById('empty-clientes');
+  if(!list.length){tb.innerHTML='';em.classList.remove('hidden');return;}
+  em.classList.add('hidden');
+  tb.innerHTML=list.map(function(c,i){return'<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar '+avatarCl(i)+'" style="width:28px;height:28px;font-size:11px">'+initials(c.nombre)+'</div>'+c.nombre+'</div></td><td>'+c.empresa+'</td><td style="color:var(--text-secondary)">'+c.email+'</td><td>'+c.tel+'</td><td><span class="badge badge-purple">'+c.segmento+'</span></td><td><span class="badge badge-green">Activo</span></td><td><button class="btn btn-sm" onclick="eliminarCliente('+c.id+')"><i class="ti ti-trash"></i></button></td></tr>';}).join('');
+}
+function guardarCliente(){
+  var n=document.getElementById('c-nombre').value.trim();if(!n){alert('El nombre es requerido');return;}
+  DB.clientes.push({id:Date.now(),nombre:n,empresa:document.getElementById('c-empresa').value,email:document.getElementById('c-email').value,tel:document.getElementById('c-tel').value,ciudad:document.getElementById('c-ciudad').value,segmento:document.getElementById('c-segmento').value,notas:document.getElementById('c-notas').value});
+  closeModal('modal-cliente');['c-nombre','c-empresa','c-email','c-tel','c-ciudad','c-notas'].forEach(function(id){document.getElementById(id).value='';});renderClientes();
+}
+function eliminarCliente(id){if(confirm('¿Eliminar este cliente?')){DB.clientes=DB.clientes.filter(function(c){return c.id!==id;});renderClientes();}}
+
+function renderPipeline(){
+  var board=document.getElementById('pipeline-board');board.innerHTML='';
+  etapas.forEach(function(etapa){
+    var items=DB.prospectos.filter(function(p){return p.etapa===etapa;});
+    var total=items.reduce(function(s,p){return s+Number(p.valor||0);},0);
+    var col=document.createElement('div');col.className='pipeline-col';col.style.minWidth='165px';
+    col.innerHTML='<div class="pipeline-col-title"><span>'+etapa+'</span><span>'+items.length+'</span></div>'+(items.length?items.map(function(p){return'<div class="prospect-card"><div style="font-size:13px;font-weight:500;margin-bottom:2px">'+p.nombre+'</div><div style="font-size:11px;color:var(--text-secondary)">'+p.empresa+'</div><div style="font-size:12px;color:var(--purple);font-weight:500">'+fmtMoney(p.valor||0)+'</div><div style="margin-top:4px"><span class="badge badge-blue" style="font-size:10px">'+p.fuente+'</span></div></div>';}).join(''):'<div style="font-size:12px;color:var(--text-tertiary);text-align:center;padding:16px 0">Sin prospectos</div>')+'<div style="font-size:11px;color:var(--text-tertiary);margin-top:6px;text-align:right">'+(total>0?fmtMoney(total):'')+'</div>';
+    board.appendChild(col);
+  });
+}
+function guardarProspecto(){
+  var n=document.getElementById('p-nombre').value.trim();if(!n){alert('El nombre es requerido');return;}
+  DB.prospectos.push({id:Date.now(),nombre:n,empresa:document.getElementById('p-empresa').value,email:document.getElementById('p-email').value,tel:document.getElementById('p-tel').value,valor:document.getElementById('p-valor').value||0,fuente:document.getElementById('p-fuente').value,etapa:document.getElementById('p-etapa').value,notas:document.getElementById('p-notas').value});
+  closeModal('modal-prospecto');['p-nombre','p-empresa','p-email','p-tel','p-valor','p-notas'].forEach(function(id){document.getElementById(id).value='';});renderPipeline();
+}
+
+function abrirNuevaCotizacion(){
+  cotItemCount=0;document.getElementById('cot-items-body').innerHTML='';
+  ['cot-cliente','cot-vinculo','cot-notas'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('cot-fecha').value=today();
+  var v=new Date();v.setDate(v.getDate()+30);document.getElementById('cot-vigencia').value=v.toISOString().split('T')[0];
+  actualizarDatalist();addCotItem();recalcCot();openModal('modal-cotizacion');
+}
+function actualizarDatalist(){
+  var dl=document.getElementById('cot-cliente-list');dl.innerHTML='';
+  DB.clientes.forEach(function(c){var o=document.createElement('option');o.value=c.nombre;dl.appendChild(o);});
+  DB.prospectos.forEach(function(p){var o=document.createElement('option');o.value=p.nombre;dl.appendChild(o);});
+}
+function autoLinkCotCliente(){
+  var val=document.getElementById('cot-cliente').value.trim().toLowerCase(),vinculo='';
+  DB.clientes.forEach(function(c){if(c.nombre.toLowerCase()===val)vinculo='Cliente — '+c.empresa;});
+  if(!vinculo)DB.prospectos.forEach(function(p){if(p.nombre.toLowerCase()===val)vinculo='Prospecto — '+p.empresa+' ('+p.etapa+')';});
+  document.getElementById('cot-vinculo').value=vinculo||'';
+}
+function addCotItem(){
+  cotItemCount++;var idx=cotItemCount;
+  var tr=document.createElement('tr');tr.id='cot-row-'+idx;
+  tr.innerHTML='<td style="padding:3px 4px"><input id="ci-desc-'+idx+'" placeholder="Descripción" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-cant-'+idx+'" type="number" value="1" min="1" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-pu-'+idx+'" type="number" value="0" min="0" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-dp-'+idx+'" type="number" value="0" min="0" max="100" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px;text-align:right;font-size:12px;font-weight:500;color:var(--purple);white-space:nowrap" id="ci-st-'+idx+'">$0</td><td style="padding:3px 4px;text-align:center"><button class="btn btn-sm" style="padding:3px 7px" onclick="removeCotItem('+idx+')"><i class="ti ti-x" style="font-size:12px"></i></button></td>';
+  document.getElementById('cot-items-body').appendChild(tr);
+}
+function removeCotItem(idx){var r=document.getElementById('cot-row-'+idx);if(r){r.remove();recalcCot();}}
+function getCotItems(){
+  var items=[];
+  document.getElementById('cot-items-body').querySelectorAll('tr').forEach(function(r){
+    var idx=r.id.replace('cot-row-','');
+    var d=document.getElementById('ci-desc-'+idx);
+    if(d)items.push({desc:d.value,cant:Number(document.getElementById('ci-cant-'+idx).value)||1,pu:Number(document.getElementById('ci-pu-'+idx).value)||0,desc_pct:Number(document.getElementById('ci-dp-'+idx).value)||0});
+  });return items;
+}
+function recalcCot(){
+  document.getElementById('cot-items-body').querySelectorAll('tr').forEach(function(r){
+    var idx=r.id.replace('cot-row-','');
+    var cant=Number((document.getElementById('ci-cant-'+idx)||{value:1}).value)||1;
+    var pu=Number((document.getElementById('ci-pu-'+idx)||{value:0}).value)||0;
+    var dp=Number((document.getElementById('ci-dp-'+idx)||{value:0}).value)||0;
+    var el=document.getElementById('ci-st-'+idx);if(el)el.textContent=fmtMoney(cant*pu*(1-dp/100));
+  });
+  var c=cotCalc(getCotItems());
+  document.getElementById('cot-subtotal-disp').textContent=fmtMoney(c.sub);
+  document.getElementById('cot-iva-disp').textContent=fmtMoney(c.iva);
+  document.getElementById('cot-total-disp').textContent=fmtMoney(c.total);
+}
+function guardarCotizacion(estado){
+  var cliente=document.getElementById('cot-cliente').value.trim();if(!cliente){alert('El cliente es requerido');return;}
+  var items=getCotItems();if(!items.length||!items[0].desc){alert('Agrega al menos un concepto');return;}
+  var vinculo=document.getElementById('cot-vinculo').value;
+  var vt=vinculo.startsWith('Prospecto')?'Prospecto':vinculo.startsWith('Cliente')?'Cliente':'Externo';
+  var folio='COT-'+String(DB.cotizaciones.length+1).padStart(4,'0');
+  DB.cotizaciones.push({id:Date.now(),folio:folio,cliente:cliente,vinculo:vt,fecha:document.getElementById('cot-fecha').value,vigencia:document.getElementById('cot-vigencia').value,estado:estado,notas:document.getElementById('cot-notas').value,items:items});
+  if(estado==='Enviada')DB.prospectos.forEach(function(p){if(p.nombre.toLowerCase()===cliente.toLowerCase()&&p.etapa==='Interés')p.etapa='Propuesta';});
+  closeModal('modal-cotizacion');renderCotizaciones();
+}
+function renderCotizaciones(){
+  var q=(document.getElementById('search-cot')||{value:''}).value.toLowerCase();
+  var est=(document.getElementById('filter-cot-estado')||{value:''}).value;
+  var list=DB.cotizaciones.filter(function(c){return(c.cliente.toLowerCase().includes(q)||c.folio.toLowerCase().includes(q))&&(!est||c.estado===est);});
+  var ac=DB.cotizaciones.filter(function(c){return c.estado==='Aceptada'||c.estado==='Facturada';}).length;
+  var pend=DB.cotizaciones.filter(function(c){return c.estado==='Enviada'||c.estado==='Borrador';}).length;
+  document.getElementById('kpi-cot-total').textContent=fmtMoney(DB.cotizaciones.reduce(function(s,c){return s+cotCalc(c.items).total;},0));
+  document.getElementById('kpi-cot-acept').textContent=ac;
+  document.getElementById('kpi-cot-pend').textContent=pend;
+  document.getElementById('kpi-cot-tasa').textContent=DB.cotizaciones.length?Math.round(ac/DB.cotizaciones.length*100)+'%':'0%';
+  var tb=document.getElementById('tabla-cotizaciones'),em=document.getElementById('empty-cotizaciones');
+  if(!list.length){tb.innerHTML='';em.classList.remove('hidden');return;}
+  em.classList.add('hidden');
+  tb.innerHTML=list.map(function(c){
+    var calc=cotCalc(c.items);
+    var conc=c.items.map(function(i){return i.desc;}).filter(Boolean).join(', ').substring(0,38)+(c.items.length>1?'…':'');
+    return'<tr><td style="font-family:monospace;font-size:12px;color:var(--text-secondary)">'+c.folio+'</td><td><div style="font-weight:500">'+c.cliente+'</div><div style="font-size:11px;color:var(--text-tertiary)">'+c.vinculo+'</div></td><td style="font-size:12px;color:var(--text-secondary)">'+conc+'</td><td>'+fmtMoney(calc.sub)+'</td><td style="color:var(--text-secondary)">'+fmtMoney(calc.iva)+'</td><td style="font-weight:500;color:var(--purple)">'+fmtMoney(calc.total)+'</td><td>'+fmtDate(c.vigencia)+'</td><td><span class="badge '+(estadoBadge[c.estado]||'badge-gray')+'">'+c.estado+'</span></td><td><button class="btn btn-sm" onclick="verCotizacion('+c.id+')">Ver</button></td></tr>';
+  }).join('');
+}
+var currentCotId=null;
+function imprimirCotizacion(id){
+  var c=DB.cotizaciones.find(function(x){return x.id===id;});if(!c)return;
+  var calc=cotCalc(c.items);
+  var itemsHtml=c.items.map(function(it,i){
+    var st=Number(it.cant)*Number(it.pu)*(1-Number(it.desc_pct)/100);
+    var bg=i%2===0?'#f9f9f7':'#ffffff';
+    return'<tr style="background:'+bg+'"><td style="padding:8px 10px;border-bottom:0.5px solid #e0e0d8">'+it.desc+'</td><td style="padding:8px 10px;border-bottom:0.5px solid #e0e0d8;text-align:center">'+it.cant+'</td><td style="padding:8px 10px;border-bottom:0.5px solid #e0e0d8;text-align:right">'+fmtMoney(it.pu)+'</td><td style="padding:8px 10px;border-bottom:0.5px solid #e0e0d8;text-align:center">'+(it.desc_pct||0)+'%</td><td style="padding:8px 10px;border-bottom:0.5px solid #e0e0d8;text-align:right;font-weight:500">'+fmtMoney(st)+'</td></tr>';
+  }).join('');
+  var estadoColor={Borrador:'#888',Enviada:'#185FA5',Aceptada:'#3B6D11',Rechazada:'#A32D2D',Facturada:'#0F6E56'};
+  var html='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #534AB7">'
+    +'<div><div style="font-size:28px;font-weight:700;color:#534AB7;letter-spacing:-0.5px">Aphernzz</div><div style="font-size:12px;color:#888;margin-top:2px">CRM — Sistema de gestión</div></div>'
+    +'<div style="text-align:right"><div style="font-size:22px;font-weight:600;color:#1a1a1a">COTIZACIÓN</div>'
+    +'<div style="font-size:15px;color:#534AB7;font-weight:500;margin-top:2px">'+c.folio+'</div>'
+    +'<div style="margin-top:6px"><span style="background:'+(estadoColor[c.estado]||'#888')+';color:#fff;padding:3px 12px;border-radius:20px;font-size:11px;font-weight:500">'+c.estado+'</span></div>'
+    +'</div></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px">'
+    +'<div><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:6px">Para</div>'
+    +'<div style="font-size:16px;font-weight:600">'+c.cliente+'</div>'
+    +'<div style="font-size:12px;color:#666;margin-top:2px">'+c.vinculo+'</div></div>'
+    +'<div style="text-align:right"><div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:6px">Detalles</div>'
+    +'<div style="font-size:13px;color:#444;margin-bottom:3px"><span style="color:#888">Fecha emisión:</span> '+fmtDate(c.fecha)+'</div>'
+    +'<div style="font-size:13px;color:#444"><span style="color:#888">Válida hasta:</span> <strong>'+fmtDate(c.vigencia)+'</strong></div>'
+    +'</div></div>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px">'
+    +'<thead><tr style="background:#534AB7;color:#fff"><th style="padding:10px;text-align:left;font-weight:500">Descripción</th><th style="padding:10px;text-align:center;font-weight:500;width:60px">Cant.</th><th style="padding:10px;text-align:right;font-weight:500;width:110px">P. Unitario</th><th style="padding:10px;text-align:center;font-weight:500;width:70px">Desc.</th><th style="padding:10px;text-align:right;font-weight:500;width:110px">Subtotal</th></tr></thead>'
+    +'<tbody>'+itemsHtml+'</tbody></table>'
+    +'<div style="display:flex;justify-content:flex-end;margin-bottom:24px">'
+    +'<div style="min-width:260px;background:#f5f5f3;border-radius:8px;padding:14px 18px">'
+    +'<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;color:#666"><span>Subtotal</span><span>'+fmtMoney(calc.sub)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px;color:#666"><span>IVA (16%)</span><span>'+fmtMoney(calc.iva)+'</span></div>'
+    +'<div style="display:flex;justify-content:space-between;padding:8px 0 4px;font-size:16px;font-weight:700;border-top:1.5px solid #ccc;margin-top:6px;color:#534AB7"><span>Total</span><span>'+fmtMoney(calc.total)+'</span></div>'
+    +'</div></div>'
+    +(c.notas?'<div style="background:#EEEDFE;border-left:3px solid #534AB7;padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:24px;font-size:12px;color:#444"><strong style="color:#534AB7">Notas y condiciones:</strong><br>'+c.notas+'</div>':'')
+    +'<div style="border-top:0.5px solid #ddd;padding-top:14px;font-size:11px;color:#aaa;text-align:center">Cotización generada por Aphernzz CRM · '+new Date().toLocaleDateString('es-MX',{year:'numeric',month:'long',day:'numeric'})+'</div>';
+  document.getElementById('print-content').innerHTML=html;
+  document.getElementById('print-area').style.display='block';
+  setTimeout(function(){
+    window.print();
+    document.getElementById('print-area').style.display='none';
+  },120);
+}
+
+function verCotizacion(id){
+  currentCotId=id;
+  var c=DB.cotizaciones.find(function(x){return x.id===id;});if(!c)return;
+  var calc=cotCalc(c.items);
+  document.getElementById('det-folio').textContent=c.folio;
+  document.getElementById('det-meta').textContent='Emitida: '+fmtDate(c.fecha);
+  document.getElementById('det-badge').innerHTML='<span class="badge '+(estadoBadge[c.estado]||'badge-gray')+'">'+c.estado+'</span>';
+  document.getElementById('det-vigencia').textContent='Vigente hasta: '+fmtDate(c.vigencia);
+  document.getElementById('det-cliente').textContent=c.cliente;
+  document.getElementById('det-vinculo').textContent=c.vinculo;
+  document.getElementById('det-items').innerHTML=c.items.map(function(it){var st=Number(it.cant)*Number(it.pu)*(1-Number(it.desc_pct)/100);return'<tr><td>'+it.desc+'</td><td style="text-align:right">'+it.cant+'</td><td style="text-align:right">'+fmtMoney(it.pu)+'</td><td style="text-align:right">'+(it.desc_pct||0)+'%</td><td style="text-align:right;font-weight:500">'+fmtMoney(st)+'</td></tr>';}).join('');
+  document.getElementById('det-subtotal').textContent=fmtMoney(calc.sub);
+  document.getElementById('det-iva').textContent=fmtMoney(calc.iva);
+  document.getElementById('det-total').textContent=fmtMoney(calc.total);
+  document.getElementById('det-notas').textContent=c.notas?'Notas: '+c.notas:'';
+  var acc=document.getElementById('det-acciones');acc.innerHTML='';
+  if(c.estado==='Borrador'||c.estado==='Enviada'){
+    var bA=document.createElement('button');bA.className='btn btn-success btn-sm';bA.innerHTML='<i class="ti ti-check"></i> Marcar aceptada';bA.onclick=function(){c.estado='Aceptada';closeModal('modal-cot-detalle');renderCotizaciones();};acc.appendChild(bA);
+    var bR=document.createElement('button');bR.className='btn btn-danger btn-sm';bR.innerHTML='<i class="ti ti-x"></i> Marcar rechazada';bR.onclick=function(){c.estado='Rechazada';closeModal('modal-cot-detalle');renderCotizaciones();};acc.appendChild(bR);
+  }
+  if(c.estado==='Aceptada'){
+    var bV=document.createElement('button');bV.className='btn btn-primary btn-sm';bV.innerHTML='<i class="ti ti-currency-dollar"></i> Convertir a venta';bV.onclick=function(){convertirAVenta(c);closeModal('modal-cot-detalle');};acc.appendChild(bV);
+    var bF=document.createElement('button');bF.className='btn btn-sm';bF.innerHTML='<i class="ti ti-file-invoice"></i> Generar factura';bF.onclick=function(){generarFacturaDesdeCot(c);closeModal('modal-cot-detalle');};acc.appendChild(bF);
+  }
+  openModal('modal-cot-detalle');
+}
+function convertirAVenta(c){
+  var calc=cotCalc(c.items);
+  DB.ventas.push({id:Date.now(),cliente:c.cliente,producto:c.items.map(function(i){return i.desc;}).filter(Boolean).join(', '),monto:calc.total,fecha:today(),estado:'Completada',origen:'Cotización '+c.folio});
+  c.estado='Facturada';
+  DB.prospectos.forEach(function(p){if(p.nombre.toLowerCase()===c.cliente.toLowerCase())p.etapa='Cerrado';});
+  renderCotizaciones();renderVentas();alert('Venta registrada desde '+c.folio+'.');
+}
+function generarFacturaDesdeCot(c){
+  var calc=cotCalc(c.items);
+  DB.facturas.push({id:Date.now(),cliente:c.cliente,concepto:c.items.map(function(i){return i.desc;}).filter(Boolean).join(', ').substring(0,50),monto:calc.total,vencimiento:'',estado:'Pendiente'});
+  c.estado='Facturada';renderCotizaciones();renderFacturas();alert('Factura generada desde '+c.folio+'.');
+}
+
+function renderVentas(){
+  var tb=document.getElementById('tabla-ventas'),em=document.getElementById('empty-ventas');
+  if(!DB.ventas.length){tb.innerHTML='';em.classList.remove('hidden');return;}
+  em.classList.add('hidden');
+  tb.innerHTML=DB.ventas.map(function(v,i){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">#'+String(i+1).padStart(4,'0')+'</td><td>'+v.cliente+'</td><td style="color:var(--text-secondary)">'+v.producto+'</td><td style="font-weight:500">'+fmtMoney(v.monto)+'</td><td>'+fmtDate(v.fecha)+'</td><td><span class="badge '+(v.origen&&v.origen.startsWith('Cotización')?'badge-teal':'badge-gray')+'">'+((v.origen&&v.origen.startsWith('Cotización'))?v.origen:'Manual')+'</span></td><td><span class="badge '+(estadoBadge[v.estado]||'badge-gray')+'">'+v.estado+'</span></td></tr>';}).join('');
+}
+function guardarVenta(){
+  var c=document.getElementById('v-cliente').value.trim(),m=document.getElementById('v-monto').value;
+  if(!c||!m){alert('Cliente y monto son requeridos');return;}
+  DB.ventas.push({id:Date.now(),cliente:c,producto:document.getElementById('v-producto').value,monto:m,fecha:document.getElementById('v-fecha').value||today(),estado:document.getElementById('v-estado').value,origen:'Manual'});
+  closeModal('modal-venta');['v-cliente','v-producto','v-monto','v-fecha'].forEach(function(id){document.getElementById(id).value='';});renderVentas();
+}
+
+function renderFacturas(){
+  var total=DB.facturas.reduce(function(s,f){return s+Number(f.monto);},0);
+  var cobrado=DB.facturas.filter(function(f){return f.estado==='Pagada';}).reduce(function(s,f){return s+Number(f.monto);},0);
+  document.getElementById('kpi-facturado').textContent=fmtMoney(total);
+  document.getElementById('kpi-por-cobrar').textContent=fmtMoney(total-cobrado);
+  document.getElementById('kpi-cobrado').textContent=fmtMoney(cobrado);
+  var tb=document.getElementById('tabla-facturas'),em=document.getElementById('empty-facturas');
+  if(!DB.facturas.length){tb.innerHTML='';em.classList.remove('hidden');return;}
+  em.classList.add('hidden');
+  tb.innerHTML=DB.facturas.map(function(f,i){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">F-'+String(i+1).padStart(4,'0')+'</td><td>'+f.cliente+'</td><td>'+f.concepto+'</td><td style="font-weight:500">'+fmtMoney(f.monto)+'</td><td>'+fmtDate(f.vencimiento)+'</td><td><span class="badge '+(estadoBadge[f.estado]||'badge-gray')+'">'+f.estado+'</span></td><td><button class="btn btn-sm" onclick="pagarFactura('+f.id+')" style="font-size:11px">'+(f.estado==='Pendiente'?'Marcar pagada':'—')+'</button></td></tr>';}).join('');
+}
+function pagarFactura(id){var f=DB.facturas.find(function(x){return x.id===id;});if(f&&f.estado==='Pendiente'){f.estado='Pagada';renderFacturas();}}
+function guardarFactura(){
+  var c=document.getElementById('f-cliente').value.trim(),m=document.getElementById('f-monto').value;
+  if(!c||!m){alert('Cliente y monto son requeridos');return;}
+  DB.facturas.push({id:Date.now(),cliente:c,concepto:document.getElementById('f-concepto').value,monto:m,vencimiento:document.getElementById('f-vencimiento').value,estado:document.getElementById('f-estado').value});
+  closeModal('modal-factura');['f-cliente','f-concepto','f-monto','f-vencimiento'].forEach(function(id){document.getElementById(id).value='';});renderFacturas();
+}
+
+function renderActividades(){
+  var tb=document.getElementById('tabla-actividades'),em=document.getElementById('empty-actividades');
+  if(!DB.actividades.length){tb.innerHTML='';em.classList.remove('hidden');return;}
+  em.classList.add('hidden');
+  var tipoIcon={Llamada:'ti-phone',WhatsApp:'ti-brand-whatsapp',Email:'ti-mail','Reunión':'ti-calendar',Tarea:'ti-checkbox'};
+  tb.innerHTML=DB.actividades.map(function(a){return'<tr><td><i class="ti '+(tipoIcon[a.tipo]||'ti-checklist')+'" style="font-size:14px;vertical-align:-2px;margin-right:6px"></i>'+a.titulo+'</td><td><span class="badge badge-blue">'+a.tipo+'</span></td><td>'+a.relacion+'</td><td>'+fmtDate(a.fecha)+'</td><td><span class="badge '+(a.estado==='Completada'?'badge-green':'badge-amber')+'">'+a.estado+'</span></td><td><button class="btn btn-sm" onclick="completarActividad('+a.id+')" style="font-size:11px">'+(a.estado==='Pendiente'?'Completar':'—')+'</button></td></tr>';}).join('');
+}
+function completarActividad(id){var a=DB.actividades.find(function(x){return x.id===id;});if(a)a.estado='Completada';renderActividades();}
+function guardarActividad(){
+  var t=document.getElementById('a-titulo').value.trim();if(!t){alert('La actividad es requerida');return;}
+  DB.actividades.push({id:Date.now(),titulo:t,tipo:document.getElementById('a-tipo').value,relacion:document.getElementById('a-relacion').value,fecha:document.getElementById('a-fecha').value||today(),estado:'Pendiente',notas:document.getElementById('a-notas').value});
+  closeModal('modal-actividad');['a-titulo','a-relacion','a-fecha','a-notas'].forEach(function(id){document.getElementById(id).value='';});renderActividades();
+}
+</script>
+</body>
+</html>
