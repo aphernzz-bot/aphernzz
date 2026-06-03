@@ -56,3 +56,46 @@ MySQL ha dicho: Documentación
 
 #1101 - Campo Blob 'permisos' no puede tener valores patron
 Abrir nueva ventana de phpMyAdmin
+
+  DB_HOST=localhost
+  DB_PORT=3306
+  DB_USER=tuusuario_dbuser
+  DB_PASSWORD=tu_password_mysql
+  DB_NAME=tuusuario_crm_aphernzz
+
+  CORS_ORIGIN=https://aphernzz.com
+
+  JWT_SECRET=19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df
+  JWT_EXPIRES=8h
+
+  ▎ El JWT_SECRET ya está generado y es seguro, úsalo tal cual.
+
+  ---
+  Paso 5 — Crear la app Node.js en cPanel
+  CORS_ORIGIN=https://aphernzz.com
+
+  JWT_SECRET=19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df
+  JWT_EXPIRES=8h
+
+  ▎ El JWT_SECRET ya está generado y es seguro, úsalo tal cual.
+
+  ---
+  Paso 5 — Crear la app Node.js en cPanel
+
+  En cPanel → Setup Node.js App → Create Application:
+
+  Dentro de la carpeta crm/, crea un archivo nuevo llamado .env con este contenido (sustituye con tus datos reales de MySQL del paso 1):
+
+  DB_HOST=localhost
+  DB_PORT=3306
+  DB_USER=tuusuario_dbuser
+  DB_PASSWORD=tu_password_mysql
+  DB_NAME=tuusuario_crm_aphernzz
+
+  CORS_ORIGIN=https://aphernzz.com
+
+  JWT_SECRET=19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df
+  JWT_EXPIRES=8h
+
+  ▎ El JWT_SECRET ya está generado y es seguro, úsalo tal cual.
+
