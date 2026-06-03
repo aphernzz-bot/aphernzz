@@ -26,3 +26,33 @@ MySQL ha dicho: Documentación
 #1064 - Algo está equivocado en su sintax cerca '(JSON_OBJECT()),
   created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 ) ENGI' en la linea 15
+
+
+-- ============================================================--  CRM Aphernzz — Esquema de base de datos--  Motor: MySQL 8+ / MariaDB 10.6+--  Charset: utf8mb4 (soporte completo Unicode + emojis)-- ============================================================-- ============================================================--  MÓDULO: USUARIOS Y ROLES-- ============================================================CREATE TABLE roles (  id            TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  nombre        VARCHAR(50)  NOT NULL UNIQUE,  descripcion   VARCHAR(200),  permisos      JSON         NOT NULL DEFAULT '{}',  created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB;
+
+Bug 3
+
+consulta SQL: Copiar
+
+
+-- ============================================================
+--  CRM Aphernzz — Esquema de base de datos
+--  Motor: MySQL 8+ / MariaDB 10.6+
+--  Charset: utf8mb4 (soporte completo Unicode + emojis)
+-- ============================================================
+
+-- ============================================================
+--  MÓDULO: USUARIOS Y ROLES
+-- ============================================================
+
+CREATE TABLE roles (
+  id            TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre        VARCHAR(50)  NOT NULL UNIQUE,
+  descripcion   VARCHAR(200),
+  permisos      JSON         NOT NULL DEFAULT '{}',
+  created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+MySQL ha dicho: Documentación
+
+#1101 - Campo Blob 'permisos' no puede tener valores patron
+Abrir nueva ventana de phpMyAdmin
