@@ -1,0 +1,1 @@
+-- ============================================================--  CRM Aphernzz — Esquema de base de datos--  Motor: MySQL 8+ / MariaDB 10.6+--  Charset: utf8mb4 (soporte completo Unicode + emojis)-- ============================================================CREATE DATABASE IF NOT EXISTS crm_aphernzz  CHARACTER SET utf8mb4  COLLATE utf8mb4_unicode_ci;
