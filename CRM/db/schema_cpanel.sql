@@ -12,7 +12,7 @@ CREATE TABLE roles (
   id            TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre        VARCHAR(50)  NOT NULL UNIQUE,
   descripcion   VARCHAR(200),
-  permisos      JSON         NOT NULL DEFAULT '{}',
+  permisos      JSON         NOT NULL,
   created_at    TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
