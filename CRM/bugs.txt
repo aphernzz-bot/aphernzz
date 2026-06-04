@@ -1,3 +1,16 @@
+#Error 4
+
+
+https://aphernzz.com/CRM/proxy.php?_p=%2Fapi%2Fauth%2Flogin
+Método de la solicitud
+POST
+Código de estado
+502 Bad Gateway
+Dirección remota
+[2606:4700:3035::6815:1704]:443
+Política de referencia
+strict-origin-when-cross-origin
+
 # Error 3
 
 URL de solicitud
