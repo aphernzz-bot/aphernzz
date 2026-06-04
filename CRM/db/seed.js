@@ -8,11 +8,11 @@ const bcrypt = require('bcryptjs');
 
 async function seed() {
   const conn = await mysql.createConnection({
-    host:     process.env.DB_HOST     || 'localhost',
-    port:     process.env.DB_PORT     || 3306,
-    user:     process.env.DB_USER     || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME     || 'crm_aphernzz',
+    host:     process.env.DB_HOST     || process.env.MYSQL_HOST     || 'localhost',
+    port:     process.env.DB_PORT     || process.env.MYSQL_PORT     || 3306,
+    user:     process.env.DB_USER     || process.env.MYSQL_USER     || 'root',
+    password: process.env.DB_PASSWORD || process.env.MYSQL_PASSWORD || '',
+    database: process.env.DB_NAME     || process.env.MYSQL_DATABASE || 'crm_aphernzz',
   });
 
   const nombre   = 'Admin Principal';
