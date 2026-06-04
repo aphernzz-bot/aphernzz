@@ -174,3 +174,11 @@ permissions-policy
 camera=(), microphone=(), geolocation=()
 priority
 u=0,i
+
+#Error login
+
+tabler-icons.woff2?v2.44.0	(bloqueado: CSP)	font	tabler-icons.min.css	0,0 kB	0 ms
+tabler-icons.woff	(bloqueado: CSP)	font	tabler-icons.min.css	0,0 kB	0 ms
+tabler-icons.ttf?v2.44.0	(bloqueado: CSP)	font	tabler-icons.min.css	0,0 kB	0 ms
+login	404	fetch	aphernzz_crm.html:603	4,7 kB	226 ms
+login	404	fetch	aphernzz_crm.html:603	4,7 kB	222 ms
