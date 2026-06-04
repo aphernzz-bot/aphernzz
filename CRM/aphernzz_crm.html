@@ -9,7 +9,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Aphernzz CRM</title>
-<link rel="stylesheet" href="assets/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -61,7 +61,7 @@
   .nav-item{display:flex;align-items:center;gap:8px;padding:9px 1rem;cursor:pointer;font-size:13px;color:var(--text-secondary);border-left:2px solid transparent;transition:all .15s}
   .nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
   .nav-item.active{background:var(--bg-secondary);color:var(--purple);border-left-color:var(--purple);font-weight:500}
-  .nav-item i{font-size:16px}
+  .nav-item i,.nav-item .material-symbols-outlined{font-size:18px}
   .main-content{flex:1;overflow:auto;padding:1.5rem;min-width:0}
   .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
   .page-title{font-size:18px;font-weight:500}
@@ -101,6 +101,9 @@
   .login-error{font-size:12px;color:#A32D2D;margin-top:6px}
   /* Cot items */
   #cot-items-body input{padding:5px 7px;font-size:12px}
+
+  .material-symbols-outlined{font-size:16px;vertical-align:middle;line-height:1;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 20}
+  .btn .material-symbols-outlined{font-size:14px}
 </style>
 </head>
 <body>
@@ -126,15 +129,15 @@
       <div style="font-size:11px;color:var(--text-tertiary)">CRM</div>
     </div>
     <nav style="flex:1;padding:8px 0;overflow-y:auto">
-      <div class="nav-item active" onclick="navTo('dashboard',this)"><i class="ti ti-layout-dashboard"></i>Dashboard</div>
-      <div class="nav-item" onclick="navTo('clientes',this)"><i class="ti ti-users"></i>Clientes</div>
-      <div class="nav-item" onclick="navTo('prospectos',this)"><i class="ti ti-target"></i>Prospectos</div>
-      <div class="nav-item" onclick="navTo('cotizaciones',this)"><i class="ti ti-file-description"></i>Cotizaciones</div>
-      <div class="nav-item" onclick="navTo('ventas',this)"><i class="ti ti-currency-dollar"></i>Ventas</div>
-      <div class="nav-item" onclick="navTo('facturacion',this)"><i class="ti ti-file-invoice"></i>Facturación</div>
-      <div class="nav-item" onclick="navTo('actividades',this)"><i class="ti ti-checklist"></i>Actividades</div>
-      <div class="nav-item" id="nav-usuarios" onclick="navTo('usuarios',this)"><i class="ti ti-users-group"></i>Usuarios</div>
-      <div class="nav-item" onclick="navTo('configuracion',this)"><i class="ti ti-settings"></i>Configuración</div>
+      <div class="nav-item active" onclick="navTo('dashboard',this)"><span class="material-symbols-outlined">dashboard</span>Dashboard</div>
+      <div class="nav-item" onclick="navTo('clientes',this)"><span class="material-symbols-outlined">group</span>Clientes</div>
+      <div class="nav-item" onclick="navTo('prospectos',this)"><span class="material-symbols-outlined">my_location</span>Prospectos</div>
+      <div class="nav-item" onclick="navTo('cotizaciones',this)"><span class="material-symbols-outlined">description</span>Cotizaciones</div>
+      <div class="nav-item" onclick="navTo('ventas',this)"><span class="material-symbols-outlined">attach_money</span>Ventas</div>
+      <div class="nav-item" onclick="navTo('facturacion',this)"><span class="material-symbols-outlined">receipt_long</span>Facturación</div>
+      <div class="nav-item" onclick="navTo('actividades',this)"><span class="material-symbols-outlined">checklist</span>Actividades</div>
+      <div class="nav-item" id="nav-usuarios" onclick="navTo('usuarios',this)"><span class="material-symbols-outlined">groups</span>Usuarios</div>
+      <div class="nav-item" onclick="navTo('configuracion',this)"><span class="material-symbols-outlined">settings</span>Configuración</div>
     </nav>
     <div style="padding:12px 1rem;border-top:0.5px solid var(--border-light)">
       <div style="display:flex;align-items:center;gap:8px">
@@ -153,10 +156,10 @@
         <div style="font-size:12px;color:var(--text-tertiary)" id="dash-date"></div>
       </div>
       <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
-        <div class="metric-card"><div class="metric-label"><i class="ti ti-users" style="font-size:13px"></i> Clientes</div><div class="metric-value" id="kpi-clientes">0</div><div class="metric-sub">total registrados</div></div>
-        <div class="metric-card"><div class="metric-label"><i class="ti ti-target" style="font-size:13px"></i> Prospectos</div><div class="metric-value" id="kpi-prospectos">0</div><div class="metric-sub">en pipeline</div></div>
-        <div class="metric-card"><div class="metric-label"><i class="ti ti-currency-dollar" style="font-size:13px"></i> Ventas</div><div class="metric-value" id="kpi-ventas">$0</div><div class="metric-sub">este mes</div></div>
-        <div class="metric-card"><div class="metric-label"><i class="ti ti-file-description" style="font-size:13px"></i> Cotizaciones</div><div class="metric-value" id="kpi-conversion">0%</div><div class="metric-sub">tasa de cierre</div></div>
+        <div class="metric-card"><div class="metric-label"><span class="material-symbols-outlined" style="font-size:13px">group</span> Clientes</div><div class="metric-value" id="kpi-clientes">0</div><div class="metric-sub">total registrados</div></div>
+        <div class="metric-card"><div class="metric-label"><span class="material-symbols-outlined" style="font-size:13px">my_location</span> Prospectos</div><div class="metric-value" id="kpi-prospectos">0</div><div class="metric-sub">en pipeline</div></div>
+        <div class="metric-card"><div class="metric-label"><span class="material-symbols-outlined" style="font-size:13px">attach_money</span> Ventas</div><div class="metric-value" id="kpi-ventas">$0</div><div class="metric-sub">este mes</div></div>
+        <div class="metric-card"><div class="metric-label"><span class="material-symbols-outlined" style="font-size:13px">description</span> Cotizaciones</div><div class="metric-value" id="kpi-conversion">0%</div><div class="metric-sub">tasa de cierre</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
         <div class="card"><div style="font-size:13px;font-weight:500;margin-bottom:1rem">Ventas por mes</div><div style="position:relative;height:200px"><canvas id="dash-chart"></canvas></div></div>
@@ -181,23 +184,23 @@
 
     <!-- CLIENTES -->
     <div id="page-clientes" class="hidden">
-      <div class="page-header"><div class="page-title">Clientes</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-cliente')"><i class="ti ti-plus"></i> Nuevo cliente</button></div>
+      <div class="page-header"><div class="page-title">Clientes</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-cliente')"><span class="material-symbols-outlined">add</span> Nuevo cliente</button></div>
       <div class="card">
         <div style="margin-bottom:12px"><input type="text" placeholder="Buscar cliente..." id="search-clientes" oninput="renderClientes()" style="width:260px"/></div>
         <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th>Segmento</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-clientes"></tbody></table>
-        <div id="empty-clientes" class="empty-state hidden"><i class="ti ti-users"></i>Sin clientes aún.</div></div>
+        <div id="empty-clientes" class="empty-state hidden"><span class="material-symbols-outlined">group</span>Sin clientes aún.</div></div>
       </div>
     </div>
 
     <!-- PROSPECTOS -->
     <div id="page-prospectos" class="hidden">
-      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-prospecto')"><i class="ti ti-plus"></i> Nuevo prospecto</button></div>
+      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-prospecto')"><span class="material-symbols-outlined">add</span> Nuevo prospecto</button></div>
       <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px" id="pipeline-board"></div>
     </div>
 
     <!-- COTIZACIONES -->
     <div id="page-cotizaciones" class="hidden">
-      <div class="page-header"><div class="page-title">Cotizaciones</div><button class="btn btn-primary btn-sm" onclick="abrirNuevaCotizacion()"><i class="ti ti-plus"></i> Nueva cotización</button></div>
+      <div class="page-header"><div class="page-title">Cotizaciones</div><button class="btn btn-primary btn-sm" onclick="abrirNuevaCotizacion()"><span class="material-symbols-outlined">add</span> Nueva cotización</button></div>
       <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
         <div class="metric-card"><div class="metric-label">Total cotizado</div><div class="metric-value" id="kpi-cot-total">$0</div></div>
         <div class="metric-card"><div class="metric-label">Aceptadas</div><div class="metric-value" id="kpi-cot-acept">0</div></div>
@@ -211,23 +214,23 @@
         </div>
         <div class="table-wrap">
           <table><thead><tr><th>Folio</th><th>Cliente / Prospecto</th><th>Conceptos</th><th>Subtotal</th><th>IVA</th><th>Total</th><th>Vigencia</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-cotizaciones"></tbody></table>
-          <div id="empty-cotizaciones" class="empty-state hidden"><i class="ti ti-file-description"></i>Sin cotizaciones aún.</div>
+          <div id="empty-cotizaciones" class="empty-state hidden"><span class="material-symbols-outlined">description</span>Sin cotizaciones aún.</div>
         </div>
       </div>
     </div>
 
     <!-- VENTAS -->
     <div id="page-ventas" class="hidden">
-      <div class="page-header"><div class="page-title">Ventas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-venta')"><i class="ti ti-plus"></i> Registrar venta</button></div>
+      <div class="page-header"><div class="page-title">Ventas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-venta')"><span class="material-symbols-outlined">add</span> Registrar venta</button></div>
       <div class="card">
         <div class="table-wrap"><table><thead><tr><th>Folio</th><th>Cliente</th><th>Producto/Servicio</th><th>Monto</th><th>Fecha</th><th>Origen</th><th>Estado</th></tr></thead><tbody id="tabla-ventas"></tbody></table>
-        <div id="empty-ventas" class="empty-state hidden"><i class="ti ti-currency-dollar"></i>Sin ventas registradas.</div></div>
+        <div id="empty-ventas" class="empty-state hidden"><span class="material-symbols-outlined">attach_money</span>Sin ventas registradas.</div></div>
       </div>
     </div>
 
     <!-- FACTURACIÓN -->
     <div id="page-facturacion" class="hidden">
-      <div class="page-header"><div class="page-title">Facturación</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-factura')"><i class="ti ti-plus"></i> Nueva factura</button></div>
+      <div class="page-header"><div class="page-title">Facturación</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-factura')"><span class="material-symbols-outlined">add</span> Nueva factura</button></div>
       <div style="display:flex;gap:12px;margin-bottom:1.5rem;flex-wrap:wrap">
         <div class="metric-card"><div class="metric-label">Facturado total</div><div class="metric-value" id="kpi-facturado">$0</div></div>
         <div class="metric-card"><div class="metric-label">Por cobrar</div><div class="metric-value" id="kpi-por-cobrar">$0</div></div>
@@ -235,16 +238,16 @@
       </div>
       <div class="card">
         <div class="table-wrap"><table><thead><tr><th>Folio</th><th>Cliente</th><th>Concepto</th><th>Monto</th><th>Vencimiento</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-facturas"></tbody></table>
-        <div id="empty-facturas" class="empty-state hidden"><i class="ti ti-file-invoice"></i>Sin facturas aún.</div></div>
+        <div id="empty-facturas" class="empty-state hidden"><span class="material-symbols-outlined">receipt_long</span>Sin facturas aún.</div></div>
       </div>
     </div>
 
     <!-- ACTIVIDADES -->
     <div id="page-actividades" class="hidden">
-      <div class="page-header"><div class="page-title">Actividades y tareas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-actividad')"><i class="ti ti-plus"></i> Nueva actividad</button></div>
+      <div class="page-header"><div class="page-title">Actividades y tareas</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-actividad')"><span class="material-symbols-outlined">add</span> Nueva actividad</button></div>
       <div class="card">
         <div class="table-wrap"><table><thead><tr><th>Actividad</th><th>Tipo</th><th>Relacionado con</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-actividades"></tbody></table>
-        <div id="empty-actividades" class="empty-state hidden"><i class="ti ti-checklist"></i>Sin actividades.</div></div>
+        <div id="empty-actividades" class="empty-state hidden"><span class="material-symbols-outlined">checklist</span>Sin actividades.</div></div>
       </div>
     </div>
 
@@ -253,7 +256,7 @@
     <div id="page-usuarios" class="hidden">
       <div class="page-header">
         <div class="page-title">Usuarios</div>
-        <button id="btn-nuevo-usuario" class="btn btn-primary btn-sm" onclick="abrirNuevoUsuario()"><i class="ti ti-plus"></i> Nuevo usuario</button>
+        <button id="btn-nuevo-usuario" class="btn btn-primary btn-sm" onclick="abrirNuevoUsuario()"><span class="material-symbols-outlined">add</span> Nuevo usuario</button>
       </div>
       <div style="display:flex;gap:1rem;margin-bottom:1rem">
         <div class="metric-card"><div class="metric-label">Total usuarios</div><div class="metric-value" id="u-kTotal">—</div></div>
@@ -289,28 +292,28 @@
             <label style="font-size:12px;color:var(--text-secondary);display:block;margin-bottom:6px">Logotipo (PNG o JPG, máx 2 MB — aparecerá en todas las cotizaciones PDF)</label>
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
               <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;background:var(--bg-secondary);border:0.5px solid var(--border-mid);border-radius:var(--radius-md);padding:7px 14px;font-size:13px;color:var(--text-primary)">
-                <i class="ti ti-upload" style="font-size:15px"></i> Subir logo
+                <span class="material-symbols-outlined" style="font-size:15px">upload</span> Subir logo
                 <input type="file" id="cfg-logo-input" accept="image/png,image/jpeg,image/webp" onchange="previewLogo(event)" style="display:none"/>
               </label>
               <div id="cfg-logo-container" style="display:none;align-items:center;gap:8px">
                 <img id="cfg-logo-preview" style="max-height:52px;max-width:140px;border-radius:4px;border:0.5px solid var(--border-light)"/>
-                <button class="btn btn-sm btn-danger" onclick="removeLogo()" title="Quitar logo"><i class="ti ti-x"></i></button>
+                <button class="btn btn-sm btn-danger" onclick="removeLogo()" title="Quitar logo"><span class="material-symbols-outlined">close</span></button>
               </div>
             </div>
           </div>
           <div style="display:flex;justify-content:flex-end;margin-top:16px">
-            <button class="btn btn-primary btn-sm" onclick="guardarConfig()"><i class="ti ti-device-floppy"></i> Guardar configuración</button>
+            <button class="btn btn-primary btn-sm" onclick="guardarConfig()"><span class="material-symbols-outlined">save</span> Guardar configuración</button>
           </div>
         </div>
         <div class="card">
           <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Sesión</div>
           <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Conectado como <strong>Admin</strong></div>
-          <button class="btn btn-sm btn-danger" onclick="logout()"><i class="ti ti-logout"></i> Cerrar sesión</button>
+          <button class="btn btn-sm btn-danger" onclick="logout()"><span class="material-symbols-outlined">logout</span> Cerrar sesión</button>
         </div>
         <div class="card">
           <div style="font-size:13px;font-weight:500;margin-bottom:1rem">Base de datos</div>
           <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px">Los datos se guardan automáticamente en tu navegador (localStorage). Para exportar usa las opciones de tu navegador.</div>
-          <button class="btn btn-sm btn-danger" onclick="resetDB()"><i class="ti ti-trash"></i> Borrar todos los datos</button>
+          <button class="btn btn-sm btn-danger" onclick="resetDB()"><span class="material-symbols-outlined">delete</span> Borrar todos los datos</button>
         </div>
       </div>
     </div>
@@ -350,7 +353,7 @@
     </div>
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
       <button class="btn btn-sm" onclick="closeModal('modal-usuario')">Cancelar</button>
-      <button class="btn btn-primary btn-sm" onclick="guardarUsuario()"><i class="ti ti-device-floppy"></i> Guardar</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarUsuario()"><span class="material-symbols-outlined">save</span> Guardar</button>
     </div>
   </div>
 </div>
@@ -380,7 +383,7 @@
         <tbody id="cot-items-body"></tbody>
       </table>
     </div>
-    <button class="btn btn-sm" onclick="addCotItem()" style="margin-bottom:14px"><i class="ti ti-plus"></i> Agregar línea</button>
+    <button class="btn btn-sm" onclick="addCotItem()" style="margin-bottom:14px"><span class="material-symbols-outlined">add</span> Agregar línea</button>
     <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
       <div style="min-width:240px;font-size:13px;background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 14px">
         <div style="display:flex;justify-content:space-between;padding:3px 0;color:var(--text-secondary)"><span>Subtotal</span><span id="cot-subtotal-disp">$0</span></div>
@@ -390,8 +393,8 @@
     </div>
     <div style="display:flex;justify-content:flex-end;gap:8px">
       <button class="btn btn-sm" onclick="closeModal('modal-cotizacion')">Cancelar</button>
-      <button class="btn btn-sm" onclick="guardarCotizacion('Borrador')"><i class="ti ti-file"></i> Guardar borrador</button>
-      <button class="btn btn-primary btn-sm" onclick="guardarCotizacion('Enviada')"><i class="ti ti-send"></i> Guardar y enviar</button>
+      <button class="btn btn-sm" onclick="guardarCotizacion('Borrador')"><span class="material-symbols-outlined">insert_drive_file</span> Guardar borrador</button>
+      <button class="btn btn-primary btn-sm" onclick="guardarCotizacion('Enviada')"><span class="material-symbols-outlined">send</span> Guardar y enviar</button>
     </div>
   </div>
 </div>
@@ -421,7 +424,7 @@
     <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;font-style:italic" id="det-notas"></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center">
       <div style="display:flex;gap:8px;flex-wrap:wrap" id="det-acciones"></div>
-      <button class="btn btn-primary btn-sm" onclick="descargarCotizacionPDF(currentCotId)" style="margin-left:auto"><i class="ti ti-download"></i> Descargar PDF</button>
+      <button class="btn btn-primary btn-sm" onclick="descargarCotizacionPDF(currentCotId)" style="margin-left:auto"><span class="material-symbols-outlined">download</span> Descargar PDF</button>
     </div>
   </div>
 </div>
@@ -541,7 +544,7 @@ var DB={clientes:[],prospectos:[],ventas:[],facturas:[],actividades:[],cotizacio
 
 // ─── API Layer ────────────────────────────────────────────────────────────
 // URL base del API — vacío = mismo servidor, o pon la URL de Railway
-var API_BASE='';
+var API_BASE='/CRM';
 var TOKEN='';var USUARIO=null;
 try{TOKEN=sessionStorage.getItem('crm_token')||'';}catch(e){}
 try{USUARIO=JSON.parse(sessionStorage.getItem('crm_usuario')||'null');}catch(e){}
@@ -677,7 +680,7 @@ async function renderDashboard(){
   // Actividades recientes
   var acts=dash.pendActividades||[];
   var da=document.getElementById('dash-activities');
-  da.innerHTML=acts.length?acts.map(function(a){return'<div class="timeline-item"><div class="timeline-dot"></div><div><div style="font-size:13px;font-weight:500">'+a.titulo+'</div><div style="font-size:12px;color:var(--text-secondary)">'+(a.relacion_nombre?a.relacion_nombre+' · ':'')+fmtDate(a.fecha)+'</div></div><div style="margin-left:auto"><span class="badge '+(a.estado==='Completada'?'badge-green':'badge-amber')+'">'+a.estado+'</span></div></div>';}).join(''):'<div class="empty-state"><i class="ti ti-checklist"></i>Sin actividades pendientes.</div>';
+  da.innerHTML=acts.length?acts.map(function(a){return'<div class="timeline-item"><div class="timeline-dot"></div><div><div style="font-size:13px;font-weight:500">'+a.titulo+'</div><div style="font-size:12px;color:var(--text-secondary)">'+(a.relacion_nombre?a.relacion_nombre+' · ':'')+fmtDate(a.fecha)+'</div></div><div style="margin-left:auto"><span class="badge '+(a.estado==='Completada'?'badge-green':'badge-amber')+'">'+a.estado+'</span></div></div>';}).join(''):'<div class="empty-state"><span class="material-symbols-outlined">checklist</span>Sin actividades pendientes.</div>';
   // Gráfica ventas por mes
   var meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   var datos=new Array(12).fill(0);
@@ -692,7 +695,7 @@ function renderDashCotizaciones(recientes){
   var lista=document.getElementById('dash-cot-list');
   lista.innerHTML=recientes.length?recientes.map(function(c){
     return'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border-light)"><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(c.cliente_nombre||c.cliente)+'</div><div style="font-size:11px;color:var(--text-tertiary)">'+c.folio+' · '+fmtDate(c.fecha_emision||c.fecha)+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:13px;font-weight:500;color:var(--purple)">'+fmtMoney(c.total||0)+'</div><span class="badge '+(estadoBadge[c.estado]||'badge-gray')+'" style="font-size:10px">'+c.estado+'</span></div></div>';
-  }).join(''):'<div class="empty-state" style="padding:1rem"><i class="ti ti-file-description"></i>Sin cotizaciones aún.</div>';
+  }).join(''):'<div class="empty-state" style="padding:1rem"><span class="material-symbols-outlined">description</span>Sin cotizaciones aún.</div>';
   var estados=['Borrador','Enviada','Aceptada','Rechazada','Facturada'];
   var colores=['#B4B2A9','#85B7EB','#97C459','#F09595','#5DCAA5'];
   var conteos=estados.map(function(e){return DB.cotizaciones.filter(function(c){return c.estado===e;}).length;});
@@ -713,7 +716,7 @@ async function renderClientes(){
   var tb=document.getElementById('tabla-clientes'),em=document.getElementById('empty-clientes');
   if(!clientes.length){tb.innerHTML='';em.classList.remove('hidden');return;}
   em.classList.add('hidden');
-  tb.innerHTML=clientes.map(function(c,i){return'<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar '+avatarCl(i)+'" style="width:28px;height:28px;font-size:11px">'+initials(c.nombre)+'</div>'+c.nombre+'</div></td><td>'+(c.empresa||'—')+'</td><td style="color:var(--text-secondary)">'+(c.email||'—')+'</td><td>'+(c.telefono||'—')+'</td><td><span class="badge badge-purple">'+(c.segmento||'—')+'</span></td><td><span class="badge '+(c.estado==='Activo'?'badge-green':'badge-gray')+'">'+c.estado+'</span></td><td><button class="btn btn-sm" onclick="eliminarCliente('+c.id+')"><i class="ti ti-trash"></i></button></td></tr>';}).join('');
+  tb.innerHTML=clientes.map(function(c,i){return'<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar '+avatarCl(i)+'" style="width:28px;height:28px;font-size:11px">'+initials(c.nombre)+'</div>'+c.nombre+'</div></td><td>'+(c.empresa||'—')+'</td><td style="color:var(--text-secondary)">'+(c.email||'—')+'</td><td>'+(c.telefono||'—')+'</td><td><span class="badge badge-purple">'+(c.segmento||'—')+'</span></td><td><span class="badge '+(c.estado==='Activo'?'badge-green':'badge-gray')+'">'+c.estado+'</span></td><td><button class="btn btn-sm" onclick="eliminarCliente('+c.id+')"><span class="material-symbols-outlined">delete</span></button></td></tr>';}).join('');
 }
 async function guardarCliente(){
   var n=document.getElementById('c-nombre').value.trim();if(!n){alert('El nombre es requerido');return;}
@@ -761,7 +764,7 @@ function autoLinkCotCliente(){
 function addCotItem(){
   cotItemCount++;var idx=cotItemCount;
   var tr=document.createElement('tr');tr.id='cot-row-'+idx;
-  tr.innerHTML='<td style="padding:3px 4px"><input id="ci-desc-'+idx+'" placeholder="Descripción" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-cant-'+idx+'" type="number" value="1" min="1" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-pu-'+idx+'" type="number" value="0" min="0" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-dp-'+idx+'" type="number" value="0" min="0" max="100" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px;text-align:right;font-size:12px;font-weight:500;color:var(--purple);white-space:nowrap" id="ci-st-'+idx+"'>$0</td><td style=\"padding:3px 4px;text-align:center\"><button class=\"btn btn-sm\" style=\"padding:3px 7px\" onclick=\"removeCotItem("+idx+')\"><i class="ti ti-x" style="font-size:12px"></i></button></td>';
+  tr.innerHTML='<td style="padding:3px 4px"><input id="ci-desc-'+idx+'" placeholder="Descripción" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-cant-'+idx+'" type="number" value="1" min="1" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-pu-'+idx+'" type="number" value="0" min="0" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px"><input id="ci-dp-'+idx+'" type="number" value="0" min="0" max="100" style="text-align:right" oninput="recalcCot()"/></td><td style="padding:3px 4px;text-align:right;font-size:12px;font-weight:500;color:var(--purple);white-space:nowrap" id="ci-st-'+idx+"'>$0</td><td style=\"padding:3px 4px;text-align:center\"><button class=\"btn btn-sm\" style=\"padding:3px 7px\" onclick=\"removeCotItem("+idx+')\"><span class="material-symbols-outlined" style="font-size:12px">close</span></button></td>';
   document.getElementById('cot-items-body').appendChild(tr);
 }
 function removeCotItem(idx){var r=document.getElementById('cot-row-'+idx);if(r){r.remove();recalcCot();}}
@@ -843,15 +846,15 @@ function verCotizacion(id){
   document.getElementById('det-notas').textContent=c.notas?'Notas: '+c.notas:'';
   var acc=document.getElementById('det-acciones');acc.innerHTML='';
   if(c.estado==='Borrador'||c.estado==='Enviada'){
-    var bA=document.createElement('button');bA.className='btn btn-success btn-sm';bA.innerHTML='<i class="ti ti-check"></i> Marcar aceptada';
+    var bA=document.createElement('button');bA.className='btn btn-success btn-sm';bA.innerHTML='<span class="material-symbols-outlined">check</span> Marcar aceptada';
     bA.onclick=async function(){var r=await apiFetch('/api/cotizaciones/'+c.id+'/estado',{method:'PUT',body:JSON.stringify({estado:'Aceptada'})});if(r){c.estado='Aceptada';closeModal('modal-cot-detalle');renderCotizaciones();}};acc.appendChild(bA);
-    var bR=document.createElement('button');bR.className='btn btn-danger btn-sm';bR.innerHTML='<i class="ti ti-x"></i> Marcar rechazada';
+    var bR=document.createElement('button');bR.className='btn btn-danger btn-sm';bR.innerHTML='<span class="material-symbols-outlined">close</span> Marcar rechazada';
     bR.onclick=async function(){var r=await apiFetch('/api/cotizaciones/'+c.id+'/estado',{method:'PUT',body:JSON.stringify({estado:'Rechazada'})});if(r){c.estado='Rechazada';closeModal('modal-cot-detalle');renderCotizaciones();}};acc.appendChild(bR);
   }
   if(c.estado==='Aceptada'){
-    var bV=document.createElement('button');bV.className='btn btn-primary btn-sm';bV.innerHTML='<i class="ti ti-currency-dollar"></i> Convertir a venta';
+    var bV=document.createElement('button');bV.className='btn btn-primary btn-sm';bV.innerHTML='<span class="material-symbols-outlined">attach_money</span> Convertir a venta';
     bV.onclick=async function(){await convertirAVenta(c);closeModal('modal-cot-detalle');};acc.appendChild(bV);
-    var bF=document.createElement('button');bF.className='btn btn-sm';bF.innerHTML='<i class="ti ti-file-invoice"></i> Generar factura';
+    var bF=document.createElement('button');bF.className='btn btn-sm';bF.innerHTML='<span class="material-symbols-outlined">receipt_long</span> Generar factura';
     bF.onclick=async function(){await generarFacturaDesdeCot(c);closeModal('modal-cot-detalle');};acc.appendChild(bF);
   }
   openModal('modal-cot-detalle');
@@ -952,15 +955,15 @@ async function renderUsuarios(){
   document.getElementById('u-kRoles').textContent=roles.length;
   // Tabla
   var tbody=document.getElementById('tbody-usuarios');
-  if(!usuarios.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><i class="ti ti-users-group"></i>No hay usuarios</div></td></tr>';return;}
+  if(!usuarios.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty-state"><span class="material-symbols-outlined">groups</span>No hay usuarios</div></td></tr>';return;}
   tbody.innerHTML=usuarios.map(function(u){
     var ini=(u.nombre||'?').split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
     var rolBadge={'superadmin':'badge-purple','admin':'badge-blue','vendedor':'badge-teal','soporte':'badge-amber'}[u.rol_nombre]||'badge-gray';
     var estadoBadge=u.activo?'<span class="badge badge-green">Activo</span>':'<span class="badge badge-gray">Inactivo</span>';
     var acceso=u.ultimo_acceso?fmtDate(u.ultimo_acceso):'Nunca';
     var esYo=USUARIO&&u.id===USUARIO.id;
-    var editBtn=perm.editar?'<button class="btn btn-sm" onclick="editarUsuario('+u.id+')" title="Editar"><i class="ti ti-edit"></i></button>':'';
-    var delBtn=(perm.eliminar&&!esYo&&u.activo)?'<button class="btn btn-sm btn-danger" onclick="eliminarUsuario('+u.id+',\''+u.nombre.replace(/'/g,"\\'")+'\')" title="Desactivar"><i class="ti ti-user-off"></i></button>':'';
+    var editBtn=perm.editar?'<button class="btn btn-sm" onclick="editarUsuario('+u.id+')" title="Editar"><span class="material-symbols-outlined">edit</span></button>':'';
+    var delBtn=(perm.eliminar&&!esYo&&u.activo)?'<button class="btn btn-sm btn-danger" onclick="eliminarUsuario('+u.id+',\''+u.nombre.replace(/'/g,"\\'")+'\')" title="Desactivar"><span class="material-symbols-outlined">person_off</span></button>':'';
     return '<tr>'
       +'<td><div style="display:flex;align-items:center;gap:10px">'
       +'<div class="avatar avatar-'+u.avatar_color+'">'+ini+'</div>'
