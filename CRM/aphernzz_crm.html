@@ -541,7 +541,7 @@ var DB={clientes:[],prospectos:[],ventas:[],facturas:[],actividades:[],cotizacio
 
 // ─── API Layer ────────────────────────────────────────────────────────────
 // URL base del API — vacío = mismo servidor, o pon la URL de Railway
-var API_BASE='';
+var API_BASE='https://aphernzz-crm.onrender.com';
 var TOKEN='';var USUARIO=null;
 try{TOKEN=sessionStorage.getItem('crm_token')||'';}catch(e){}
 try{USUARIO=JSON.parse(sessionStorage.getItem('crm_usuario')||'null');}catch(e){}
