@@ -141,3 +141,13 @@ LOGS Render
 ==> ///////////////////////////////////////////////////////////
 ==> Detected service running on port 10000
 ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+
+
+LOG NETWORK
+
+aphernzz_crm.html	304	document	Otros	0,9 kB	709 ms
+chart.umd.js	200	script	aphernzz_crm.html:13	(caché de disco)	14 ms
+
+jspdf.umd.min.js	200	script	aphernzz_crm.html:14	(caché de disco)	29 ms
+tabler-icons.min.css	(bloqueado: CSP)	stylesheet	aphernzz_crm.html:12	0,0 kB	0 ms
+
