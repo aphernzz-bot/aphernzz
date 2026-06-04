@@ -1,3 +1,31 @@
+#Error RENDER
+
+Node.js v26.3.0
+==> Running 'node server.js'
+  CRM Aphernzz corriendo en http://localhost:10000
+node:internal/process/promises:324
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+Error: getaddrinfo ENOTFOUND mx102.hostgator.com
+    at db (/opt/render/project/src/server.js:33:34)
+    at /opt/render/project/src/server.js:59:26
+    at Layer.handle [as handle_request] (/opt/render/project/src/node_modules/express/lib/router/layer.js:95:5)
+    at next (/opt/render/project/src/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/opt/render/project/src/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/opt/render/project/src/node_modules/express/lib/router/layer.js:95:5)
+    at /opt/render/project/src/node_modules/express/lib/router/index.js:284:15
+    at router.process_params (/opt/render/project/src/node_modules/express/lib/router/index.js:346:12)
+    at next (/opt/render/project/src/node_modules/express/lib/router/index.js:280:10)
+    at serveStatic (/opt/render/project/src/node_modules/serve-static/index.js:75:16) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'mx102.hostgator.com',
+  fatal: true
+}
+Node.js v26.3.0
+
+
 #Error 4
 
 
