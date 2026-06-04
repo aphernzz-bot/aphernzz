@@ -1,8 +1,4 @@
 <?php
-/**
- * Proxy API → Render
- * Uso: /CRM/proxy.php?_p=/api/ruta&otros_params=valor
- */
 $RENDER = 'https://aphernzz-crm.onrender.com';
 
 $path  = urldecode($_GET['_p'] ?? '/');
@@ -27,7 +23,8 @@ curl_setopt_array($ch, [
     CURLOPT_HTTPHEADER     => $headers,
     CURLOPT_SSL_VERIFYPEER => true,
     CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_TIMEOUT        => 30,
+    CURLOPT_TIMEOUT        => 60,
+    CURLOPT_CONNECTTIMEOUT => 20,
 ]);
 if ($body && in_array($method, ['POST', 'PUT', 'PATCH'])) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
@@ -35,8 +32,17 @@ if ($body && in_array($method, ['POST', 'PUT', 'PATCH'])) {
 
 $response  = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curl_err  = curl_error($ch);
+$curl_errno= curl_errno($ch);
 curl_close($ch);
 
-http_response_code($http_code ?: 500);
 header('Content-Type: application/json; charset=utf-8');
+
+if ($curl_err) {
+    http_response_code(502);
+    echo json_encode(['error' => 'proxy_error', 'detail' => $curl_err, 'code' => $curl_errno, 'url' => $url]);
+    exit;
+}
+
+http_response_code($http_code ?: 500);
 echo $response;
