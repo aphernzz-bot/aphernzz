@@ -124,3 +124,20 @@ Abrir nueva ventana de phpMyAdmin
     1
   ); 
 
+
+
+LOGS Render
+
+==> Deploying...
+==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+==> Running 'node server.js'
+  CRM Aphernzz corriendo en http://localhost:10000
+==> Your service is live 🎉
+==> 
+==> ///////////////////////////////////////////////////////////
+==> 
+==> Available at your primary URL https://aphernzz-crm.onrender.com
+==> 
+==> ///////////////////////////////////////////////////////////
+==> Detected service running on port 10000
+==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
