@@ -1,3 +1,69 @@
+#Error RENDER 2.0
+
+node:internal/process/promises:324
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+AggregateError: 
+    at db (/opt/render/project/src/server.js:33:34)
+    at /opt/render/project/src/server.js:59:26
+    at Layer.handle [as handle_request] (/opt/render/project/src/node_modules/express/lib/router/layer.js:95:5)
+    at next (/opt/render/project/src/node_modules/express/lib/router/route.js:149:13)
+    at Route.dispatch (/opt/render/project/src/node_modules/express/lib/router/route.js:119:3)
+    at Layer.handle [as handle_request] (/opt/render/project/src/node_modules/express/lib/router/layer.js:95:5)
+    at /opt/render/project/src/node_modules/express/lib/router/index.js:284:15
+    at router.process_params (/opt/render/project/src/node_modules/express/lib/router/index.js:346:12)
+    at next (/opt/render/project/src/node_modules/express/lib/router/index.js:280:10)
+    at serveStatic (/opt/render/project/src/node_modules/serve-static/index.js:75:16) {
+  code: 'ETIMEDOUT',
+  fatal: true,
+  [errors]: [
+    Error: connect ETIMEDOUT 172.67.208.44:3306
+        at createConnectionError (node:net:1746:14)
+        at Timeout.internalConnectMultipleTimeout (node:net:1805:38)
+        at listOnTimeout (node:internal/timers:607:11)
+        at process.processTimers (node:internal/timers:541:7) {
+      errno: -110,
+      code: 'ETIMEDOUT',
+      syscall: 'connect',
+      address: '172.67.208.44',
+      port: 3306
+    },
+    Error: connect ENETUNREACH 2606:4700:3035::6815:1704:3306 - Local (:::0)
+        at internalConnectMultiple (node:net:1265:16)
+        at Timeout.internalConnectMultipleTimeout (node:net:1810:5)
+        at listOnTimeout (node:internal/timers:607:11)
+        at process.processTimers (node:internal/timers:541:7) {
+      errno: -101,
+      code: 'ENETUNREACH',
+      syscall: 'connect',
+      address: '2606:4700:3035::6815:1704',
+      port: 3306
+    },
+    Error: connect ETIMEDOUT 104.21.23.4:3306
+        at createConnectionError (node:net:1746:14)
+        at Timeout.internalConnectMultipleTimeout (node:net:1805:38)
+        at listOnTimeout (node:internal/timers:607:11)
+        at process.processTimers (node:internal/timers:541:7) {
+      errno: -110,
+      code: 'ETIMEDOUT',
+      syscall: 'connect',
+      address: '104.21.23.4',
+      port: 3306
+    },
+    Error: connect ENETUNREACH 2606:4700:3033::ac43:d02c:3306 - Local (:::0)
+        at internalConnectMultiple (node:net:1265:16)
+        at Timeout.internalConnectMultipleTimeout (node:net:1810:5)
+        at listOnTimeout (node:internal/timers:607:11)
+        at process.processTimers (node:internal/timers:541:7) {
+      errno: -101,
+      code: 'ENETUNREACH',
+      syscall: 'connect',
+      address: '2606:4700:3033::ac43:d02c',
+      port: 3306
+    }
+  ]
+}
+
 #Error RENDER
 
 Node.js v26.3.0
