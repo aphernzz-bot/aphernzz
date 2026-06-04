@@ -151,3 +151,26 @@ chart.umd.js	200	script	aphernzz_crm.html:13	(caché de disco)	14 ms
 jspdf.umd.min.js	200	script	aphernzz_crm.html:14	(caché de disco)	29 ms
 tabler-icons.min.css	(bloqueado: CSP)	stylesheet	aphernzz_crm.html:12	0,0 kB	0 ms
 
+# Content security policy
+accept-ranges
+bytes
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+a0652c4b398baccd-DFW
+content-security-policy
+default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com https://aphernzz.com data:; connect-src 'self' https://formsubmit.co;
+content-security-policy
+default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;
+date
+Thu, 04 Jun 2026 07:20:06 GMT
+last-modified
+Thu, 04 Jun 2026 07:03:06 GMT
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+permissions-policy
+camera=(), microphone=(), geolocation=()
+priority
+u=0,i
