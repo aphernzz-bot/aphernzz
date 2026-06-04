@@ -182,3 +182,9 @@ tabler-icons.woff	(bloqueado: CSP)	font	tabler-icons.min.css	0,0 kB	0 ms
 tabler-icons.ttf?v2.44.0	(bloqueado: CSP)	font	tabler-icons.min.css	0,0 kB	0 ms
 login	404	fetch	aphernzz_crm.html:603	4,7 kB	226 ms
 login	404	fetch	aphernzz_crm.html:603	4,7 kB	222 ms
+
+#Error 2.0
+
+Connecting to 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js.map' violates the following Content Security Policy directive: "connect-src 'self' https://formsubmit.co". The request has been blocked.
+Entender este error
+Connecting to 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js.map' violates the following Content Security Policy directive: "connect-src 'self' https://formsubmit.co". The request has been blocked.
