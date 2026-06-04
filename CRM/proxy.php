@@ -1,26 +1,22 @@
 <?php
 /**
  * Proxy API → Render
- * Coloca este archivo en public_html/CRM/proxy.php
+ * Uso: /CRM/proxy.php?_p=/api/ruta&otros_params=valor
  */
 $RENDER = 'https://aphernzz-crm.onrender.com';
 
-// Extraer la ruta /api/... de la URI original
-$uri   = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$query = $_SERVER['QUERY_STRING'] ?? '';
-$path  = preg_replace('#^.*/CRM/proxy\.php#', '', $uri);
-if (!$path) $path = '/';
+$path  = urldecode($_GET['_p'] ?? '/');
+$query = $_GET;
+unset($query['_p']);
 
 $url = $RENDER . $path;
-if ($query) $url .= '?' . $query;
+if (!empty($query)) $url .= '?' . http_build_query($query);
 
-// Headers a reenviar
 $headers = ['Accept: application/json', 'Content-Type: application/json'];
 if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
     $headers[] = 'Authorization: ' . $_SERVER['HTTP_AUTHORIZATION'];
 }
 
-// Body
 $body   = file_get_contents('php://input');
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -41,6 +37,6 @@ $response  = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close($ch);
 
-http_response_code($http_code);
+http_response_code($http_code ?: 500);
 header('Content-Type: application/json; charset=utf-8');
 echo $response;

@@ -543,16 +543,21 @@ var estadoBadge={Borrador:'badge-gray',Enviada:'badge-blue',Aceptada:'badge-gree
 var DB={clientes:[],prospectos:[],ventas:[],facturas:[],actividades:[],cotizaciones:[]};
 
 // ─── API Layer ────────────────────────────────────────────────────────────
-// URL base del API — vacío = mismo servidor, o pon la URL de Railway
-var API_BASE='/CRM';
 var TOKEN='';var USUARIO=null;
 try{TOKEN=sessionStorage.getItem('crm_token')||'';}catch(e){}
 try{USUARIO=JSON.parse(sessionStorage.getItem('crm_usuario')||'null');}catch(e){}
 
+// Construye la URL del proxy: /CRM/proxy.php?_p=/api/ruta&params
+function _proxyUrl(apiUrl){
+  var idx=apiUrl.indexOf('?');
+  var path=idx>=0?apiUrl.substring(0,idx):apiUrl;
+  var qs=idx>=0?'&'+apiUrl.substring(idx+1):'';
+  return'/CRM/proxy.php?_p='+encodeURIComponent(path)+qs;
+}
 function apiHdrs(){return{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN};}
 async function apiFetch(url,opts){
   opts=opts||{};opts.headers=Object.assign(apiHdrs(),opts.headers||{});
-  url=API_BASE+url;
+  url=_proxyUrl(url);
   try{
     var res=await fetch(url,opts);
     if(res.status===401){sessionStorage.clear();document.getElementById('login-screen').classList.remove('hidden');document.getElementById('app-screen').classList.add('hidden');return null;}
@@ -603,7 +608,7 @@ async function doLogin(){
   var pass=document.getElementById('login-pass').value;
   var errEl=document.getElementById('login-err');errEl.classList.add('hidden');
   try{
-    var res=await fetch(API_BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})});
+    var res=await fetch(_proxyUrl('/api/auth/login'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})});
     var data=await res.json();
     if(!res.ok||!data.token){errEl.classList.remove('hidden');return;}
     TOKEN=data.token;USUARIO=data.usuario;
