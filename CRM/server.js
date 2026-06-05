@@ -620,7 +620,130 @@ app.use((err, req, res, _next) => {
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
+// ─── Auto-setup DB ─────────────────────────────────────────
+async function initDB() {
+  const conn = await pool.getConnection();
+  try {
+    // Tablas
+    await conn.execute(`CREATE TABLE IF NOT EXISTS roles (
+      id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL UNIQUE, descripcion VARCHAR(200),
+      permisos JSON NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS usuarios (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(100) NOT NULL,
+      email VARCHAR(150) NOT NULL UNIQUE, password_hash VARCHAR(255) NOT NULL,
+      rol_id TINYINT UNSIGNED NOT NULL, activo TINYINT(1) NOT NULL DEFAULT 1,
+      avatar_color VARCHAR(20) DEFAULT 'purple', ultimo_acceso TIMESTAMP NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (rol_id) REFERENCES roles(id) ON UPDATE CASCADE) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS clientes (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(150) NOT NULL,
+      empresa VARCHAR(150), rfc VARCHAR(20), email VARCHAR(150), telefono VARCHAR(30),
+      ciudad VARCHAR(100), segmento ENUM('Pequeño','Mediano','Grande','Gobierno','Corporativo') DEFAULT 'Pequeño',
+      estado ENUM('Activo','Inactivo','Bloqueado') DEFAULT 'Activo', notas TEXT,
+      usuario_asignado INT UNSIGNED NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (usuario_asignado) REFERENCES usuarios(id) ON DELETE SET NULL) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS prospectos (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nombre VARCHAR(150) NOT NULL,
+      empresa VARCHAR(150), email VARCHAR(150), telefono VARCHAR(30),
+      valor_estimado DECIMAL(14,2) DEFAULT 0.00,
+      fuente ENUM('Referido','Redes sociales','Llamada fría','WhatsApp','Web','Evento','Email','Otro') DEFAULT 'Otro',
+      etapa ENUM('Contacto','Interés','Propuesta','Negociación','Cerrado') DEFAULT 'Contacto',
+      notas TEXT, usuario_asignado INT UNSIGNED NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (usuario_asignado) REFERENCES usuarios(id) ON DELETE SET NULL) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS cotizaciones (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, folio VARCHAR(20) NOT NULL UNIQUE,
+      cliente_id INT UNSIGNED NULL, prospecto_id INT UNSIGNED NULL,
+      cliente_nombre VARCHAR(150) NOT NULL, vinculo VARCHAR(50),
+      fecha_emision DATE NOT NULL, fecha_vigencia DATE NOT NULL,
+      estado ENUM('Borrador','Enviada','Aceptada','Rechazada','Facturada') DEFAULT 'Borrador',
+      subtotal DECIMAL(14,2) DEFAULT 0, iva_pct DECIMAL(5,2) DEFAULT 16,
+      iva DECIMAL(14,2) DEFAULT 0, total DECIMAL(14,2) DEFAULT 0,
+      notas TEXT, usuario_id INT UNSIGNED NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS cotizacion_items (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, cotizacion_id INT UNSIGNED NOT NULL,
+      descripcion VARCHAR(500) NOT NULL, cantidad DECIMAL(10,2) DEFAULT 1,
+      precio_unitario DECIMAL(14,2) DEFAULT 0, descuento_pct DECIMAL(5,2) DEFAULT 0,
+      subtotal DECIMAL(14,2) DEFAULT 0, orden TINYINT UNSIGNED DEFAULT 0,
+      FOREIGN KEY (cotizacion_id) REFERENCES cotizaciones(id) ON DELETE CASCADE) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS ventas (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, folio VARCHAR(20) NOT NULL UNIQUE,
+      cliente_id INT UNSIGNED NULL, cliente_nombre VARCHAR(150) NOT NULL,
+      descripcion VARCHAR(500), monto DECIMAL(14,2) DEFAULT 0,
+      fecha DATE NOT NULL, estado ENUM('Completada','Pendiente','Cancelada') DEFAULT 'Completada',
+      origen VARCHAR(100) DEFAULT 'Manual', cotizacion_id INT UNSIGNED NULL,
+      usuario_id INT UNSIGNED NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS facturas (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, folio VARCHAR(20) NOT NULL UNIQUE,
+      cliente_id INT UNSIGNED NULL, cliente_nombre VARCHAR(150) NOT NULL,
+      cotizacion_id INT UNSIGNED NULL, concepto VARCHAR(500) NOT NULL,
+      subtotal DECIMAL(14,2) DEFAULT 0, iva DECIMAL(14,2) DEFAULT 0,
+      monto DECIMAL(14,2) DEFAULT 0, fecha_emision DATE NOT NULL,
+      fecha_vencimiento DATE NULL, fecha_pago DATE NULL,
+      estado ENUM('Pendiente','Pagada','Vencida','Cancelada') DEFAULT 'Pendiente',
+      usuario_id INT UNSIGNED NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS actividades (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      tipo ENUM('Llamada','WhatsApp','Email','Reunión','Tarea','Visita') DEFAULT 'Tarea',
+      titulo VARCHAR(200) NOT NULL, relacion_nombre VARCHAR(150),
+      fecha DATE NOT NULL, estado ENUM('Pendiente','Completada','Cancelada') DEFAULT 'Pendiente',
+      notas TEXT, usuario_id INT UNSIGNED NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    await conn.execute(`CREATE TABLE IF NOT EXISTS historial_cambios (
+      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, tabla VARCHAR(50) NOT NULL,
+      registro_id INT UNSIGNED NOT NULL,
+      accion ENUM('crear','editar','eliminar','cambio_estado') NOT NULL,
+      datos_antes JSON NULL, datos_despues JSON NULL,
+      usuario_id INT UNSIGNED NULL, usuario_nombre VARCHAR(100), ip VARCHAR(45),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB`);
+
+    // Roles
+    const roles = [
+      ['superadmin','Acceso total','{"clientes":{"ver":true,"crear":true,"editar":true,"eliminar":true},"prospectos":{"ver":true,"crear":true,"editar":true,"eliminar":true},"cotizaciones":{"ver":true,"crear":true,"editar":true,"eliminar":true},"ventas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"facturas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":true},"usuarios":{"ver":true,"crear":true,"editar":true,"eliminar":true},"reportes":{"ver":true}}'],
+      ['admin','Administrador sin gestión de usuarios','{"clientes":{"ver":true,"crear":true,"editar":true,"eliminar":true},"prospectos":{"ver":true,"crear":true,"editar":true,"eliminar":true},"cotizaciones":{"ver":true,"crear":true,"editar":true,"eliminar":true},"ventas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"facturas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":true},"usuarios":{"ver":false,"crear":false,"editar":false,"eliminar":false},"reportes":{"ver":true}}'],
+      ['vendedor','Ejecutivo de ventas','{"clientes":{"ver":true,"crear":true,"editar":true,"eliminar":false},"prospectos":{"ver":true,"crear":true,"editar":true,"eliminar":false},"cotizaciones":{"ver":true,"crear":true,"editar":true,"eliminar":false},"ventas":{"ver":true,"crear":true,"editar":false,"eliminar":false},"facturas":{"ver":true,"crear":false,"editar":false,"eliminar":false},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":true},"usuarios":{"ver":false,"crear":false,"editar":false,"eliminar":false},"reportes":{"ver":false}}'],
+      ['soporte','Solo actividades','{"clientes":{"ver":true,"crear":false,"editar":false,"eliminar":false},"prospectos":{"ver":true,"crear":false,"editar":false,"eliminar":false},"cotizaciones":{"ver":true,"crear":false,"editar":false,"eliminar":false},"ventas":{"ver":true,"crear":false,"editar":false,"eliminar":false},"facturas":{"ver":true,"crear":false,"editar":false,"eliminar":false},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":false},"usuarios":{"ver":false,"crear":false,"editar":false,"eliminar":false},"reportes":{"ver":false}}'],
+    ];
+    for (const [nombre, desc, perms] of roles) {
+      await conn.execute(
+        'INSERT IGNORE INTO roles (nombre, descripcion, permisos) VALUES (?,?,?)',
+        [nombre, desc, perms]
+      );
+    }
+
+    // Usuario admin
+    const [[exist]] = await conn.execute('SELECT id FROM usuarios WHERE email=?', ['admin@aphernzz.com']);
+    if (!exist) {
+      const hash = await bcrypt.hash('aphernzz2024', 10);
+      await conn.execute(
+        'INSERT INTO usuarios (nombre,email,password_hash,rol_id) VALUES (?,?,?,1)',
+        ['Admin Principal','admin@aphernzz.com', hash]
+      );
+      console.log('  ✓ Usuario admin creado: admin@aphernzz.com');
+    }
+    console.log('  ✓ Base de datos lista\n');
+  } finally {
+    conn.release();
+  }
+}
+
 // ─── Start ─────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n  CRM Aphernzz corriendo en http://localhost:${PORT}\n`);
-});
+initDB()
+  .then(() => app.listen(PORT, () => console.log(`\n  CRM Aphernzz corriendo en http://localhost:${PORT}\n`)))
+  .catch(err => { console.error('Error iniciando DB:', err.message); process.exit(1); });
