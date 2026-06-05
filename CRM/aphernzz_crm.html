@@ -68,10 +68,14 @@
   tr:last-child td{border-bottom:none}
   tr:hover td{background:var(--bg-secondary)}
   /* Pipeline */
-  .pipeline-col{flex:1;min-width:0;background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px}
-  .pipeline-col-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);margin-bottom:12px;display:flex;justify-content:space-between}
-  .prospect-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px;margin-bottom:8px}
-  .prospect-card:hover{border-color:var(--border-mid)}
+  .pipeline-col{flex:1;min-width:200px;max-width:260px;background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px;display:flex;flex-direction:column;transition:box-shadow .15s}
+  .pipeline-col.drag-over{box-shadow:0 0 0 2px var(--purple);background:color-mix(in srgb,var(--purple) 6%,var(--bg-secondary))}
+  .pipeline-col-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-secondary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+  .kanban-cards{flex:1;min-height:80px;display:flex;flex-direction:column;gap:7px}
+  .kanban-empty{font-size:12px;color:var(--text-tertiary);text-align:center;padding:20px 8px;border:1.5px dashed var(--border-light);border-radius:var(--radius-md);pointer-events:none}
+  .prospect-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px 11px;cursor:grab;user-select:none;transition:box-shadow .12s,opacity .12s}
+  .prospect-card:hover{border-color:var(--border-mid);box-shadow:0 2px 8px rgba(0,0,0,.07)}
+  .prospect-card.dragging{opacity:.35;cursor:grabbing}
   /* Modals */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200}
   .modal{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:1.5rem;width:480px;max-width:95vw;max-height:88vh;overflow-y:auto}
@@ -180,7 +184,7 @@
 
     <!-- CLIENTES -->
     <div id="page-clientes" class="hidden">
-      <div class="page-header"><div class="page-title">Clientes</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-cliente')"><span class="material-symbols-outlined">add</span> Nuevo cliente</button></div>
+      <div class="page-header"><div class="page-title">Clientes</div><button class="btn btn-primary btn-sm" onclick="abrirNuevoCliente()"><span class="material-symbols-outlined">add</span> Nuevo cliente</button></div>
       <div class="card">
         <div style="margin-bottom:12px"><input type="text" placeholder="Buscar cliente..." id="search-clientes" oninput="renderClientes()" style="width:260px"/></div>
         <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Empresa</th><th>Email</th><th>Teléfono</th><th>Segmento</th><th>Estado</th><th></th></tr></thead><tbody id="tabla-clientes"></tbody></table>
@@ -190,7 +194,7 @@
 
     <!-- PROSPECTOS -->
     <div id="page-prospectos" class="hidden">
-      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="openModal('modal-prospecto')"><span class="material-symbols-outlined">add</span> Nuevo prospecto</button></div>
+      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="abrirNuevoProspecto()"><span class="material-symbols-outlined">add</span> Nuevo prospecto</button></div>
       <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px" id="pipeline-board"></div>
     </div>
 
@@ -433,7 +437,8 @@
 <!-- MODAL CLIENTE -->
 <div id="modal-cliente" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-cliente')">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">Nuevo cliente</div><button class="close-btn" onclick="closeModal('modal-cliente')">&times;</button></div>
+    <div class="modal-header"><div class="modal-title" id="modal-cliente-titulo">Nuevo cliente</div><button class="close-btn" onclick="closeModal('modal-cliente')">&times;</button></div>
+    <input type="hidden" id="c-id"/>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div class="form-group"><label>Nombre completo *</label><input id="c-nombre" placeholder="Juan García"/></div>
       <div class="form-group"><label>Empresa</label><input id="c-empresa" placeholder="Empresa S.A."/></div>
@@ -453,7 +458,8 @@
 <!-- MODAL PROSPECTO -->
 <div id="modal-prospecto" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-prospecto')">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title">Nuevo prospecto</div><button class="close-btn" onclick="closeModal('modal-prospecto')">&times;</button></div>
+    <div class="modal-header"><div class="modal-title" id="modal-prospecto-titulo">Nuevo prospecto</div><button class="close-btn" onclick="closeModal('modal-prospecto')">&times;</button></div>
+    <input type="hidden" id="p-id"/>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
       <div class="form-group"><label>Nombre *</label><input id="p-nombre" placeholder="Nombre"/></div>
       <div class="form-group"><label>Empresa</label><input id="p-empresa" placeholder="Empresa"/></div>
@@ -717,37 +723,173 @@ async function renderClientes(){
   var tb=document.getElementById('tabla-clientes'),em=document.getElementById('empty-clientes');
   if(!clientes.length){tb.innerHTML='';em.classList.remove('hidden');return;}
   em.classList.add('hidden');
-  tb.innerHTML=clientes.map(function(c,i){return'<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar '+avatarCl(i)+'" style="width:28px;height:28px;font-size:11px">'+initials(c.nombre)+'</div>'+c.nombre+'</div></td><td>'+(c.empresa||'—')+'</td><td style="color:var(--text-secondary)">'+(c.email||'—')+'</td><td>'+(c.telefono||'—')+'</td><td><span class="badge badge-purple">'+(c.segmento||'—')+'</span></td><td><span class="badge '+(c.estado==='Activo'?'badge-green':'badge-gray')+'">'+c.estado+'</span></td><td><button class="btn btn-sm" onclick="eliminarCliente('+c.id+')"><span class="material-symbols-outlined">delete</span></button></td></tr>';}).join('');
+  var canEdit=USUARIO&&USUARIO.permisos&&USUARIO.permisos.clientes&&USUARIO.permisos.clientes.editar;
+  var canDel=USUARIO&&USUARIO.permisos&&USUARIO.permisos.clientes&&USUARIO.permisos.clientes.eliminar;
+  tb.innerHTML=clientes.map(function(c,i){
+    return'<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar '+avatarCl(i)+'" style="width:28px;height:28px;font-size:11px">'+initials(c.nombre)+'</div>'+c.nombre+'</div></td>'
+      +'<td>'+(c.empresa||'—')+'</td>'
+      +'<td style="color:var(--text-secondary)">'+(c.email||'—')+'</td>'
+      +'<td>'+(c.telefono||'—')+'</td>'
+      +'<td><span class="badge badge-purple">'+(c.segmento||'—')+'</span></td>'
+      +'<td><span class="badge '+(c.estado==='Activo'?'badge-green':'badge-gray')+'">'+c.estado+'</span></td>'
+      +'<td style="display:flex;gap:4px">'
+      +(canEdit?'<button class="btn btn-sm" onclick="editarCliente('+c.id+')" title="Editar"><span class="material-symbols-outlined">edit</span></button>':'')
+      +(canDel?'<button class="btn btn-sm" onclick="eliminarCliente('+c.id+',\''+c.nombre+'\')" title="Eliminar"><span class="material-symbols-outlined" style="color:var(--danger)">delete</span></button>':'')
+      +'</td></tr>';
+  }).join('');
+}
+function abrirNuevoCliente(){
+  document.getElementById('c-id').value='';
+  document.getElementById('modal-cliente-titulo').textContent='Nuevo cliente';
+  ['c-nombre','c-empresa','c-email','c-tel','c-ciudad','c-notas'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('c-segmento').value='Pequeño';
+  openModal('modal-cliente');
+}
+function editarCliente(id){
+  var c=DB.clientes.find(function(x){return x.id===id;});if(!c)return;
+  document.getElementById('c-id').value=c.id;
+  document.getElementById('modal-cliente-titulo').textContent='Editar cliente';
+  document.getElementById('c-nombre').value=c.nombre||'';
+  document.getElementById('c-empresa').value=c.empresa||'';
+  document.getElementById('c-email').value=c.email||'';
+  document.getElementById('c-tel').value=c.telefono||'';
+  document.getElementById('c-ciudad').value=c.ciudad||'';
+  document.getElementById('c-segmento').value=c.segmento||'Pequeño';
+  document.getElementById('c-notas').value=c.notas||'';
+  openModal('modal-cliente');
 }
 async function guardarCliente(){
+  var id=document.getElementById('c-id').value;
   var n=document.getElementById('c-nombre').value.trim();if(!n){alert('El nombre es requerido');return;}
-  var res=await apiFetch('/api/clientes',{method:'POST',body:JSON.stringify({nombre:n,empresa:document.getElementById('c-empresa').value,email:document.getElementById('c-email').value,telefono:document.getElementById('c-tel').value,ciudad:document.getElementById('c-ciudad').value,segmento:document.getElementById('c-segmento').value,notas:document.getElementById('c-notas').value})});
+  var payload={nombre:n,empresa:document.getElementById('c-empresa').value,email:document.getElementById('c-email').value,telefono:document.getElementById('c-tel').value,ciudad:document.getElementById('c-ciudad').value,segmento:document.getElementById('c-segmento').value,notas:document.getElementById('c-notas').value};
+  var res=id
+    ?await apiFetch('/api/clientes/'+id,{method:'PUT',body:JSON.stringify(payload)})
+    :await apiFetch('/api/clientes',{method:'POST',body:JSON.stringify(payload)});
   if(!res)return;
-  closeModal('modal-cliente');['c-nombre','c-empresa','c-email','c-tel','c-ciudad','c-notas'].forEach(function(id){document.getElementById(id).value='';});renderClientes();
+  closeModal('modal-cliente');renderClientes();
 }
-async function eliminarCliente(id){
-  if(!confirm('¿Eliminar este cliente?'))return;
+async function eliminarCliente(id,nombre){
+  if(!confirm('¿Eliminar el cliente "'+(nombre||'este cliente')+'"? Esta acción no se puede deshacer.'))return;
   if(await apiFetch('/api/clientes/'+id,{method:'DELETE'}))renderClientes();
 }
 
-// ─── Prospectos ───────────────────────────────────────────────────────────
+// ─── Prospectos — Kanban ──────────────────────────────────────────────────
+var _dragPId=null;
+
 async function renderPipeline(){
   var prospectos=await apiFetch('/api/prospectos');if(!prospectos)return;
   DB.prospectos=prospectos;
+  _drawKanban();
+}
+
+function _drawKanban(){
   var board=document.getElementById('pipeline-board');board.innerHTML='';
   etapas.forEach(function(etapa){
-    var items=prospectos.filter(function(p){return p.etapa===etapa;});
+    var items=DB.prospectos.filter(function(p){return p.etapa===etapa;});
     var total=items.reduce(function(s,p){return s+Number(p.valor_estimado||0);},0);
-    var col=document.createElement('div');col.className='pipeline-col';col.style.minWidth='165px';
-    col.innerHTML='<div class="pipeline-col-title"><span>'+etapa+'</span><span>'+items.length+'</span></div>'+(items.length?items.map(function(p){return'<div class="prospect-card"><div style="font-size:13px;font-weight:500;margin-bottom:2px">'+p.nombre+'</div><div style="font-size:11px;color:var(--text-secondary)">'+(p.empresa||'')+'</div><div style="font-size:12px;color:var(--purple);font-weight:500">'+fmtMoney(p.valor_estimado||0)+'</div><div style="margin-top:4px"><span class="badge badge-blue" style="font-size:10px">'+p.fuente+'</span></div></div>';}).join(''):'<div style="font-size:12px;color:var(--text-tertiary);text-align:center;padding:16px 0">Sin prospectos</div>')+'<div style="font-size:11px;color:var(--text-tertiary);margin-top:6px;text-align:right">'+(total>0?fmtMoney(total):'')+'</div>';
+    var col=document.createElement('div');
+    col.className='pipeline-col';col.dataset.etapa=etapa;
+    var dot='<span style="width:8px;height:8px;border-radius:50%;background:'+(etapaColors[etapa]||'#888')+';display:inline-block;flex-shrink:0"></span>';
+    col.innerHTML='<div class="pipeline-col-title"><span style="display:flex;align-items:center;gap:6px">'+dot+etapa+'</span>'
+      +'<span style="background:var(--bg-tertiary);border-radius:10px;padding:1px 7px;font-size:10px">'+items.length+'</span></div>'
+      +'<div class="kanban-cards" data-etapa="'+etapa+'">'
+      +(items.length?items.map(function(p){return _cardHTML(p);}).join(''):'<div class="kanban-empty">Arrastra aquí</div>')
+      +'</div>'
+      +(total>0?'<div style="font-size:11px;color:var(--text-tertiary);margin-top:8px;text-align:right;font-weight:500">'+fmtMoney(total)+'</div>':'');
+
+    // Drop zone
+    var zone=col.querySelector('.kanban-cards');
+    zone.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('drag-over');});
+    zone.addEventListener('dragleave',function(e){if(!col.contains(e.relatedTarget))col.classList.remove('drag-over');});
+    zone.addEventListener('drop',function(e){e.preventDefault();col.classList.remove('drag-over');_dropCard(etapa);});
     board.appendChild(col);
   });
+
+  // Drag source on every card
+  board.querySelectorAll('.prospect-card').forEach(function(card){
+    card.addEventListener('dragstart',function(e){
+      _dragPId=parseInt(card.dataset.id);
+      card.classList.add('dragging');
+      e.dataTransfer.effectAllowed='move';
+    });
+    card.addEventListener('dragend',function(){
+      card.classList.remove('dragging');
+      board.querySelectorAll('.pipeline-col').forEach(function(c){c.classList.remove('drag-over');});
+    });
+  });
+}
+
+function _cardHTML(p){
+  var prob=Number(p.probabilidad||0);
+  var probColor=prob>=70?'var(--success)':prob>=40?'#f59e0b':'var(--text-tertiary)';
+  var canEdit=USUARIO&&USUARIO.permisos&&USUARIO.permisos.prospectos&&USUARIO.permisos.prospectos.editar;
+  var canDel=USUARIO&&USUARIO.permisos&&USUARIO.permisos.prospectos&&USUARIO.permisos.prospectos.eliminar;
+  return'<div class="prospect-card" draggable="true" data-id="'+p.id+'">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px">'
+    +'<div style="font-size:13px;font-weight:500;line-height:1.3;flex:1">'+p.nombre+'</div>'
+    +'<div style="display:flex;gap:2px;flex-shrink:0" draggable="false">'
+    +(canEdit?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();editarProspecto('+p.id+')" title="Editar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px">edit</span></button>':'')
+    +(canDel?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();eliminarProspecto('+p.id+',\''+p.nombre+'\')" title="Eliminar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px;color:var(--danger)">delete</span></button>':'')
+    +'</div></div>'
+    +(p.empresa?'<div style="font-size:11px;color:var(--text-secondary);margin:3px 0">'+p.empresa+'</div>':'')
+    +(Number(p.valor_estimado)>0?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:5px">'+fmtMoney(p.valor_estimado)+'</div>':'')
+    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +'<span class="badge badge-blue" style="font-size:10px">'+p.fuente+'</span>'
+    +(prob>0?'<span style="font-size:10px;color:'+probColor+';font-weight:500">'+prob+'%</span>':'')
+    +'</div></div>';
+}
+
+async function _dropCard(etapaDestino){
+  if(!_dragPId)return;
+  var p=DB.prospectos.find(function(x){return x.id===_dragPId;});
+  var id=_dragPId;_dragPId=null;
+  if(!p||p.etapa===etapaDestino)return;
+  var etapaOriginal=p.etapa;
+  p.etapa=etapaDestino;   // actualización optimista
+  _drawKanban();
+  var r=await apiFetch('/api/prospectos/'+id,{method:'PUT',body:JSON.stringify({etapa:etapaDestino})});
+  if(!r){p.etapa=etapaOriginal;_drawKanban();}  // revertir si falla
+}
+function abrirNuevoProspecto(){
+  document.getElementById('p-id').value='';
+  document.getElementById('modal-prospecto-titulo').textContent='Nuevo prospecto';
+  ['p-nombre','p-empresa','p-email','p-tel','p-notas'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('p-valor').value='';
+  document.getElementById('p-fuente').value='Otro';
+  document.getElementById('p-etapa').value='Contacto';
+  openModal('modal-prospecto');
+}
+function editarProspecto(id){
+  var p=DB.prospectos.find(function(x){return x.id===id;});if(!p)return;
+  document.getElementById('p-id').value=p.id;
+  document.getElementById('modal-prospecto-titulo').textContent='Editar prospecto';
+  document.getElementById('p-nombre').value=p.nombre||'';
+  document.getElementById('p-empresa').value=p.empresa||'';
+  document.getElementById('p-email').value=p.email||'';
+  document.getElementById('p-tel').value=p.telefono||'';
+  document.getElementById('p-valor').value=p.valor_estimado||'';
+  document.getElementById('p-fuente').value=p.fuente||'Otro';
+  document.getElementById('p-etapa').value=p.etapa||'Contacto';
+  document.getElementById('p-notas').value=p.notas||'';
+  openModal('modal-prospecto');
+}
+async function eliminarProspecto(id,nombre){
+  if(!confirm('¿Eliminar el prospecto "'+nombre+'"? Esta acción no se puede deshacer.'))return;
+  var r=await apiFetch('/api/prospectos/'+id,{method:'DELETE'});
+  if(!r)return;
+  DB.prospectos=DB.prospectos.filter(function(p){return p.id!==id;});
+  _drawKanban();
 }
 async function guardarProspecto(){
+  var id=document.getElementById('p-id').value;
   var n=document.getElementById('p-nombre').value.trim();if(!n){alert('El nombre es requerido');return;}
-  var res=await apiFetch('/api/prospectos',{method:'POST',body:JSON.stringify({nombre:n,empresa:document.getElementById('p-empresa').value,email:document.getElementById('p-email').value,telefono:document.getElementById('p-tel').value,valor_estimado:document.getElementById('p-valor').value||0,fuente:document.getElementById('p-fuente').value,etapa:document.getElementById('p-etapa').value,notas:document.getElementById('p-notas').value})});
+  var payload={nombre:n,empresa:document.getElementById('p-empresa').value,email:document.getElementById('p-email').value,telefono:document.getElementById('p-tel').value,valor_estimado:document.getElementById('p-valor').value||0,fuente:document.getElementById('p-fuente').value,etapa:document.getElementById('p-etapa').value,notas:document.getElementById('p-notas').value};
+  var res=id
+    ?await apiFetch('/api/prospectos/'+id,{method:'PUT',body:JSON.stringify(payload)})
+    :await apiFetch('/api/prospectos',{method:'POST',body:JSON.stringify(payload)});
   if(!res)return;
-  closeModal('modal-prospecto');['p-nombre','p-empresa','p-email','p-tel','p-valor','p-notas'].forEach(function(id){document.getElementById(id).value='';});renderPipeline();
+  closeModal('modal-prospecto');
+  renderPipeline();
 }
 
 // ─── Cotizaciones ─────────────────────────────────────────────────────────
