@@ -104,6 +104,15 @@
   .material-symbols-outlined{font-size:16px;vertical-align:middle;line-height:1;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 20}
   .btn .material-symbols-outlined{font-size:14px}
   @media print{body > *{display:none!important}#print-area{display:block!important;position:fixed;inset:0;background:#fff;z-index:9999;padding:0}#print-content{padding:40px 48px;font-family:system-ui,sans-serif;color:#111;font-size:13px}}
+  #sidebar-toggle{display:none;position:fixed;top:10px;left:10px;z-index:301;background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:6px 8px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.1);line-height:1}
+  #sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:299}
+  #sidebar-overlay.visible{display:block}
+  @media(max-width:768px){
+    #sidebar-toggle{display:flex;align-items:center;justify-content:center}
+    .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:300;transition:left .25s ease;box-shadow:none}
+    .sidebar.open{left:0;box-shadow:4px 0 20px rgba(0,0,0,.15)}
+    .main-content{padding:1rem;padding-top:3.5rem}
+  }
 </style>
 </head>
 <body>
@@ -117,9 +126,12 @@
     <div class="form-group"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
     <div id="login-err" class="login-error hidden">Usuario o contraseña incorrectos</div>
     <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doLogin()">Ingresar</button>
-    <div style="font-size:11px;color:var(--text-tertiary);margin-top:12px;text-align:center">demo: admin@aphernzz.com / aphernzz2024</div>
   </div>
 </div>
+
+<!-- Mobile sidebar toggle -->
+<button id="sidebar-toggle" onclick="toggleSidebar()" title="Menú"><span class="material-symbols-outlined" style="font-size:20px">menu</span></button>
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <!-- APP -->
 <div id="app-screen" class="hidden">
@@ -532,6 +544,8 @@
 </div>
 
 <script>
+function toggleSidebar(){var s=document.querySelector('.sidebar'),o=document.getElementById('sidebar-overlay');s.classList.toggle('open');o.classList.toggle('visible');}
+function closeSidebar(){document.querySelector('.sidebar').classList.remove('open');document.getElementById('sidebar-overlay').classList.remove('visible');}
 var DB={clientes:[],prospectos:[],ventas:[],facturas:[],actividades:[],cotizaciones:[]};
 var dashChart=null,cotPieChart=null,cotItemCount=0;
 
@@ -649,6 +663,7 @@ if(TOKEN&&USUARIO){window.addEventListener('DOMContentLoaded',function(){iniciar
 
 // ─── Navegación ───────────────────────────────────────────────────────────
 function navTo(page,el){
+  if(window.innerWidth<=768)closeSidebar();
   document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
   if(el)el.classList.add('active');
   document.querySelectorAll('[id^="page-"]').forEach(function(p){p.classList.add('hidden');});
