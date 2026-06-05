@@ -1,3 +1,11 @@
+#Node.js railway
+
+CORS_ORIGIN=https://aphernzz.com
+  JWT_SECRET=19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df
+  JWT_EXPIRES=8h
+
+
+
 #04 06
 
 @media print{ body > *{display:none!important} #print-area{display:block!important;position:fixed;inset:0;background:#fff;z-index:9999;padding:0} #print-content{padding:40px 48px;font-family:system-ui,sans-serif;color:#111;font-size:13px} }
