@@ -153,8 +153,12 @@
     </nav>
     <div style="padding:12px 1rem;border-top:0.5px solid var(--border-light)">
       <div style="display:flex;align-items:center;gap:8px">
-        <div class="avatar avatar-purple" style="width:28px;height:28px;font-size:11px">AD</div>
-        <div><div style="font-size:12px;font-weight:500" data-user-name>Admin</div><div style="font-size:11px;color:var(--text-tertiary)" data-user-role></div></div>
+        <div class="avatar avatar-purple" style="width:32px;height:32px;font-size:11px;flex-shrink:0" data-user-avatar></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" data-user-name></div>
+          <div style="font-size:11px;color:var(--text-tertiary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" data-user-role></div>
+        </div>
+        <button onclick="logout()" title="Cerrar sesión" style="background:none;border:none;cursor:pointer;color:var(--text-tertiary);padding:4px;flex-shrink:0;display:flex;align-items:center" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text-tertiary)'"><span class="material-symbols-outlined" style="font-size:18px">logout</span></button>
       </div>
     </div>
   </div>
@@ -639,7 +643,7 @@ function iniciarApp(){
   var cfg=loadConfig();
   if(cfg.empresa){var l=document.querySelector('.sidebar-logo div:first-child');if(l)l.textContent=cfg.empresa;}
   if(USUARIO){
-    var avEl=document.querySelector('.avatar-purple');if(avEl)avEl.textContent=initials(USUARIO.nombre);
+    var avEl=document.querySelector('[data-user-avatar]');if(avEl)avEl.textContent=initials(USUARIO.nombre);
     var nmEl=document.querySelector('[data-user-name]');if(nmEl)nmEl.textContent=USUARIO.nombre;
     var rlEl=document.querySelector('[data-user-role]');if(rlEl)rlEl.textContent=USUARIO.rol;
   }
