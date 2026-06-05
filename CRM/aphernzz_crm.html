@@ -547,17 +547,16 @@ var TOKEN='';var USUARIO=null;
 try{TOKEN=sessionStorage.getItem('crm_token')||'';}catch(e){}
 try{USUARIO=JSON.parse(sessionStorage.getItem('crm_usuario')||'null');}catch(e){}
 
-// Construye la URL del proxy: /CRM/proxy.php?_p=/api/ruta&params
 function _proxyUrl(apiUrl){
   var idx=apiUrl.indexOf('?');
   var path=idx>=0?apiUrl.substring(0,idx):apiUrl;
   var qs=idx>=0?'&'+apiUrl.substring(idx+1):'';
-  return'/CRM/proxy.php?_p='+encodeURIComponent(path)+qs;
+  return'/CRM/api.php?_p='+encodeURIComponent(path)+qs;
 }
 function apiHdrs(){return{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN};}
 async function apiFetch(url,opts){
-  opts=opts||{};opts.headers=Object.assign(apiHdrs(),opts.headers||{});
   url=_proxyUrl(url);
+  opts=opts||{};opts.headers=Object.assign(apiHdrs(),opts.headers||{});
   try{
     var res=await fetch(url,opts);
     if(res.status===401){sessionStorage.clear();document.getElementById('login-screen').classList.remove('hidden');document.getElementById('app-screen').classList.add('hidden');return null;}
@@ -565,7 +564,7 @@ async function apiFetch(url,opts){
     if(!res.ok){alert(data.error||'Error en la operación');return null;}
     return data;
   }catch(e){
-    alert('No se puede conectar con el servidor.\nVerifica que esté corriendo: npm start');
+    alert('Error de conexión con el servidor.');
     return null;
   }
 }
