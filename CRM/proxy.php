@@ -1,5 +1,5 @@
 <?php
-$RENDER = 'https://aphernzz-crm.onrender.com';
+$RENDER = 'https://TU-APP.up.railway.app'; // ← reemplaza con tu URL de Railway
 
 $path  = urldecode($_GET['_p'] ?? '/');
 $query = $_GET;
