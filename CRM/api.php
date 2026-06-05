@@ -139,21 +139,33 @@ $U = requireAuth();
 //  /api/dashboard
 // ============================================================
 if ($base === 'dashboard' && $method === 'GET') {
-    $clTot  = (int)row('SELECT COUNT(*) c FROM clientes')['c'];
-    $clAct  = (int)row('SELECT COUNT(*) c FROM clientes WHERE estado="Activo"')['c'];
-    $prosp  = (int)row('SELECT COUNT(*) c FROM prospectos WHERE etapa != "Cerrado"')['c'];
-    $vMes   = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(CURDATE()) AND YEAR(fecha)=YEAR(CURDATE()) AND estado="Completada"')['t'];
-    $vAnt   = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND YEAR(fecha)=YEAR(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND estado="Completada"')['t'];
-    $cotP   = (int)row('SELECT COUNT(*) c FROM cotizaciones WHERE estado IN ("Borrador","Enviada")')['c'];
-    $facP   = (int)row('SELECT COUNT(*) c FROM facturas WHERE estado="Pendiente"')['c'];
-    $actH   = (int)row('SELECT COUNT(*) c FROM actividades WHERE fecha=CURDATE() AND estado="Pendiente"')['c'];
-    $pipe   = rows('SELECT etapa, COUNT(*) n, COALESCE(SUM(valor_estimado),0) valor FROM prospectos WHERE etapa!="Cerrado" GROUP BY etapa');
-    $recAct = rows('SELECT tipo,titulo,DATE_FORMAT(created_at,"%d/%m/%Y") fecha FROM actividades ORDER BY created_at DESC LIMIT 5');
-    $crec   = $vAnt > 0 ? round(($vMes - $vAnt) / $vAnt * 100, 1) : 0;
-    out(['clientes'=>$clTot,'clientesActivos'=>$clAct,'prospectos'=>$prosp,
-         'ventasMes'=>$vMes,'crecimiento'=>$crec,
-         'cotizacionesPendientes'=>$cotP,'facturasPendientes'=>$facP,
-         'actividadesHoy'=>$actH,'pipeline'=>$pipe,'actividadesRecientes'=>$recAct]);
+    $clTot    = (int)row('SELECT COUNT(*) c FROM clientes')['c'];
+    $clAct    = (int)row('SELECT COUNT(*) c FROM clientes WHERE estado="Activo"')['c'];
+    $prosp    = (int)row('SELECT COUNT(*) c FROM prospectos WHERE etapa != "Cerrado"')['c'];
+    $vMes     = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(CURDATE()) AND YEAR(fecha)=YEAR(CURDATE()) AND estado="Completada"')['t'];
+    $vAnt     = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND YEAR(fecha)=YEAR(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND estado="Completada"')['t'];
+    $crec     = $vAnt > 0 ? round(($vMes - $vAnt) / $vAnt * 100, 1) : 0;
+    // Ventas por mes (últimos 12 meses) → para la gráfica de barras
+    $ventasMes = rows('SELECT MONTH(fecha) mes, SUM(monto) total FROM ventas WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND estado="Completada" GROUP BY MONTH(fecha)');
+    // Actividades pendientes próximas → para el timeline del dashboard
+    $pendAct  = rows('SELECT titulo, relacion_nombre, fecha, estado, tipo FROM actividades WHERE estado="Pendiente" ORDER BY fecha ASC LIMIT 8');
+    // Cotizaciones recientes → para la lista del dashboard
+    $recCot   = rows('SELECT id, folio, cliente_nombre, total, estado, fecha_emision FROM cotizaciones ORDER BY created_at DESC LIMIT 6');
+    // Conversión: cotizaciones aceptadas / total enviadas o más
+    $cotTotal = (int)row('SELECT COUNT(*) c FROM cotizaciones')['c'];
+    $cotAcept = (int)row('SELECT COUNT(*) c FROM cotizaciones WHERE estado="Aceptada"')['c'];
+    $conv     = $cotTotal > 0 ? round($cotAcept / $cotTotal * 100) : 0;
+    out([
+        'kClientes'       => $clTot,
+        'kClientesActivos'=> $clAct,
+        'kProspectos'     => $prosp,
+        'kVentas'         => $vMes,
+        'kConversion'     => $conv,
+        'crecimiento'     => $crec,
+        'ventasMes'       => $ventasMes,
+        'pendActividades' => $pendAct,
+        'recientesCot'    => $recCot,
+    ]);
 }
 
 // ============================================================

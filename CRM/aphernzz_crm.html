@@ -663,9 +663,10 @@ function closeModal(id){document.getElementById(id).classList.add('hidden');}
 // ─── Dashboard ────────────────────────────────────────────────────────────
 async function renderDashboard(){
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  var [dash,prospectos]=await Promise.all([apiFetch('/api/dashboard'),apiFetch('/api/prospectos')]);
+  var [dash,prospectos,cots]=await Promise.all([apiFetch('/api/dashboard'),apiFetch('/api/prospectos'),apiFetch('/api/cotizaciones')]);
   if(!dash)return;
   DB.prospectos=prospectos||[];
+  DB.cotizaciones=cots||[];
   document.getElementById('kpi-clientes').textContent=dash.kClientes;
   document.getElementById('kpi-prospectos').textContent=dash.kProspectos;
   document.getElementById('kpi-ventas').textContent=fmtMoney(dash.kVentas);
