@@ -734,7 +734,7 @@ async function renderClientes(){
       +'<td><span class="badge '+(c.estado==='Activo'?'badge-green':'badge-gray')+'">'+c.estado+'</span></td>'
       +'<td style="display:flex;gap:4px">'
       +(canEdit?'<button class="btn btn-sm" onclick="editarCliente('+c.id+')" title="Editar"><span class="material-symbols-outlined">edit</span></button>':'')
-      +(canDel?'<button class="btn btn-sm" onclick="eliminarCliente('+c.id+',\''+c.nombre+'\')" title="Eliminar"><span class="material-symbols-outlined" style="color:var(--danger)">delete</span></button>':'')
+      +(canDel?'<button class="btn btn-sm" onclick="eliminarCliente('+c.id+')" title="Eliminar"><span class="material-symbols-outlined" style="color:var(--danger)">delete</span></button>':'')
       +'</td></tr>';
   }).join('');
 }
@@ -768,8 +768,9 @@ async function guardarCliente(){
   if(!res)return;
   closeModal('modal-cliente');renderClientes();
 }
-async function eliminarCliente(id,nombre){
-  if(!confirm('¿Eliminar el cliente "'+(nombre||'este cliente')+'"? Esta acción no se puede deshacer.'))return;
+async function eliminarCliente(id){
+  var c=DB.clientes&&DB.clientes.find(function(x){return x.id===id;});
+  if(!confirm('¿Eliminar el cliente "'+(c?c.nombre:'seleccionado')+'"? Esta acción no se puede deshacer.'))return;
   if(await apiFetch('/api/clientes/'+id,{method:'DELETE'}))renderClientes();
 }
 
@@ -829,7 +830,7 @@ function _cardHTML(p){
     +'<div style="font-size:13px;font-weight:500;line-height:1.3;flex:1">'+p.nombre+'</div>'
     +'<div style="display:flex;gap:2px;flex-shrink:0" draggable="false">'
     +(canEdit?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();editarProspecto('+p.id+')" title="Editar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px">edit</span></button>':'')
-    +(canDel?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();eliminarProspecto('+p.id+',\''+p.nombre+'\')" title="Eliminar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px;color:var(--danger)">delete</span></button>':'')
+    +(canDel?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();eliminarProspecto('+p.id+')" title="Eliminar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px;color:var(--danger)">delete</span></button>':'')
     +'</div></div>'
     +(p.empresa?'<div style="font-size:11px;color:var(--text-secondary);margin:3px 0">'+p.empresa+'</div>':'')
     +(Number(p.valor_estimado)>0?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:5px">'+fmtMoney(p.valor_estimado)+'</div>':'')
@@ -845,10 +846,22 @@ async function _dropCard(etapaDestino){
   var id=_dragPId;_dragPId=null;
   if(!p||p.etapa===etapaDestino)return;
   var etapaOriginal=p.etapa;
-  p.etapa=etapaDestino;   // actualización optimista
+  p.etapa=etapaDestino;
   _drawKanban();
   var r=await apiFetch('/api/prospectos/'+id,{method:'PUT',body:JSON.stringify({etapa:etapaDestino})});
-  if(!r){p.etapa=etapaOriginal;_drawKanban();}  // revertir si falla
+  if(!r){p.etapa=etapaOriginal;_drawKanban();return;}
+  // Al cerrar un prospecto, ofrecer convertirlo en cliente
+  if(etapaDestino==='Cerrado'&&confirm('¿"'+p.nombre+'" fue ganado?\n¿Crear cliente a partir de este prospecto?')){
+    var nuevo=await apiFetch('/api/clientes',{method:'POST',body:JSON.stringify({
+      nombre:p.nombre,empresa:p.empresa||null,email:p.email||null,
+      telefono:p.telefono||null,celular:p.celular||null,ciudad:p.ciudad||null,
+      segmento:'Pequeño',notas:p.notas||null,usuario_asignado:p.usuario_asignado||null
+    })});
+    if(nuevo){
+      await apiFetch('/api/prospectos/'+id,{method:'PUT',body:JSON.stringify({convertido_cliente_id:nuevo.id})});
+      alert('Cliente "'+p.nombre+'" creado correctamente.');
+    }
+  }
 }
 function abrirNuevoProspecto(){
   document.getElementById('p-id').value='';
@@ -873,8 +886,9 @@ function editarProspecto(id){
   document.getElementById('p-notas').value=p.notas||'';
   openModal('modal-prospecto');
 }
-async function eliminarProspecto(id,nombre){
-  if(!confirm('¿Eliminar el prospecto "'+nombre+'"? Esta acción no se puede deshacer.'))return;
+async function eliminarProspecto(id){
+  var p=DB.prospectos&&DB.prospectos.find(function(x){return x.id===id;});
+  if(!confirm('¿Eliminar el prospecto "'+(p?p.nombre:'seleccionado')+'"? Esta acción no se puede deshacer.'))return;
   var r=await apiFetch('/api/prospectos/'+id,{method:'DELETE'});
   if(!r)return;
   DB.prospectos=DB.prospectos.filter(function(p){return p.id!==id;});
