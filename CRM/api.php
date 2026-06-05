@@ -650,5 +650,103 @@ if ($base === 'usuarios') {
     err('Ruta no encontrada', 404);
 }
 
+// ============================================================
+//  /api/facturas  — estado: validar
+//  Además del CRUD ya existente, intercepta /api/facturas/:id/validar
+// ============================================================
+if ($base === 'facturas' && $id && $sub === 'validar' && $method === 'POST') {
+    // Solo admin/superadmin (permisos facturas.editar)
+    if (!can($U,'facturas','editar')) err('Sin permiso', 403);
+    $f = row('SELECT * FROM facturas WHERE id=?', [$id]);
+    if (!$f) err('No encontrada', 404);
+    // Máquina de estados: solo Emitida o Enviada puede validarse
+    $permitidos = ['Emitida','Enviada'];
+    if (!in_array($f['estado'], $permitidos))
+        err('Solo se puede validar una factura en estado Emitida o Enviada. Estado actual: '.$f['estado'], 409);
+    q('UPDATE facturas SET estado="Validada", validado_por=?, validado_at=NOW() WHERE id=?', [$U['id'], $id]);
+    audit('facturas', $id, 'cambio_estado', ['estado'=>$f['estado']], ['estado'=>'Validada'], $U);
+    out(row('SELECT * FROM facturas WHERE id=?', [$id]));
+}
+
+// ============================================================
+//  /api/pagos
+// ============================================================
+if ($base === 'pagos') {
+    if (!can($U,'facturas','ver')) err('Sin permiso', 403);
+
+    // GET /api/pagos?factura_id=X  — historial de pagos de una factura
+    if ($method === 'GET' && !$id) {
+        if (empty($_GET['factura_id'])) err('Se requiere factura_id', 400);
+        out(rows('SELECT p.*, u.nombre AS usuario FROM pagos p LEFT JOIN usuarios u ON u.id=p.usuario_id WHERE p.factura_id=? ORDER BY p.fecha_pago DESC, p.id DESC', [(int)$_GET['factura_id']]));
+    }
+
+    // POST /api/pagos  — registrar un pago
+    if ($method === 'POST') {
+        if (!can($U,'facturas','editar')) err('Sin permiso', 403);
+        $b = body();
+        if (empty($b['factura_id'])) err('factura_id requerido');
+        if (empty($b['monto']) || (float)$b['monto'] <= 0) err('El monto debe ser mayor a 0');
+        if (empty($b['metodo_pago'])) err('metodo_pago requerido');
+
+        // ── Gate de integridad 1: la factura debe estar Validada, Enviada o Parcial ──
+        $f = row('SELECT * FROM facturas WHERE id=?', [(int)$b['factura_id']]);
+        if (!$f) err('Factura no encontrada', 404);
+        $estadosAceptan = ['Validada','Enviada','Parcial'];
+        if (!in_array($f['estado'], $estadosAceptan))
+            err('La factura debe estar Validada antes de registrar un pago. Estado actual: '.$f['estado'], 409);
+
+        // ── Gate de integridad 2: el pago no puede exceder el saldo pendiente ──
+        $saldo = (float)$f['monto'] - (float)$f['monto_pagado'];
+        $monto = (float)$b['monto'];
+        if ($monto > $saldo + 0.001)
+            err('El monto ('.$monto.') excede el saldo pendiente ('.$saldo.')', 409);
+
+        // Insertar pago (el trigger actualiza factura automáticamente)
+        db()->beginTransaction();
+        try {
+            q('INSERT INTO pagos (factura_id,monto,moneda,tipo_cambio,metodo_pago,referencia,fecha_pago,estado,notas,usuario_id) VALUES (?,?,?,?,?,?,?,?,?,?)',
+              [(int)$b['factura_id'],$monto,$b['moneda']??$f['moneda'],$b['tipo_cambio']??1,
+               $b['metodo_pago'],nvl($b['referencia']),$b['fecha_pago']??date('Y-m-d'),
+               'Confirmado',nvl($b['notas']),$U['id']]);
+            $pid = lid();
+            db()->commit();
+        } catch (Exception $e) {
+            db()->rollBack();
+            err('Error al registrar el pago: '.$e->getMessage(), 500);
+        }
+
+        $pago = row('SELECT * FROM pagos WHERE id=?', [$pid]);
+        $facturaActualizada = row('SELECT * FROM facturas WHERE id=?', [(int)$b['factura_id']]);
+        audit('pagos', $pid, 'crear', null, $pago, $U);
+        out(['pago'=>$pago,'factura'=>$facturaActualizada], 201);
+    }
+
+    // DELETE /api/pagos/:id  — rechazar/anular pago (el trigger revierte el saldo)
+    if ($method === 'DELETE' && $id) {
+        if (!can($U,'facturas','eliminar')) err('Sin permiso', 403);
+        $p = row('SELECT * FROM pagos WHERE id=?', [$id]);
+        if (!$p) err('Pago no encontrado', 404);
+        if ($p['estado'] === 'Rechazado') err('El pago ya estaba anulado', 409);
+
+        // Factura no puede estar Cancelada
+        $f = row('SELECT estado FROM facturas WHERE id=?', [$p['factura_id']]);
+        if ($f['estado'] === 'Cancelada') err('No se puede anular un pago de una factura cancelada', 409);
+
+        db()->beginTransaction();
+        try {
+            q('UPDATE pagos SET estado="Rechazado" WHERE id=?', [$id]);
+            db()->commit();
+        } catch (Exception $e) {
+            db()->rollBack();
+            err('Error al anular el pago: '.$e->getMessage(), 500);
+        }
+
+        audit('pagos', $id, 'cambio_estado', ['estado'=>'Confirmado'], ['estado'=>'Rechazado'], $U);
+        out(['ok'=>true,'factura'=>row('SELECT * FROM facturas WHERE id=?', [$p['factura_id']])]);
+    }
+
+    err('Ruta no encontrada', 404);
+}
+
 // ── Fallback ─────────────────────────────────────────────────
 err('Ruta no encontrada', 404);

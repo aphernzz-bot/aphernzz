@@ -902,15 +902,19 @@ async function verCotizacion(id){
   openModal('modal-cot-detalle');
 }
 async function convertirAVenta(c){
-  var total=c.total||cotCalc(c.items||[]).total;
-  var res=await apiFetch('/api/ventas',{method:'POST',body:JSON.stringify({cliente_nombre:c.cliente_nombre||c.cliente,descripcion:(c.items||[]).map(function(i){return i.descripcion||i.desc;}).filter(Boolean).join(', '),monto:total,fecha:today(),estado:'Completada',origen:'Cotización '+c.folio,cotizacion_id:c.id})});
-  if(!res)return;
+  var calc=cotCalc(c.items||[]);
+  var total=c.total||calc.total;
+  var concepto=(c.items||[]).map(function(i){return i.descripcion||i.desc;}).filter(Boolean).join(', ').substring(0,200);
+  var venta=await apiFetch('/api/ventas',{method:'POST',body:JSON.stringify({cliente_nombre:c.cliente_nombre||c.cliente,descripcion:concepto,monto:total,fecha:today(),estado:'Completada',origen:'Cotización '+c.folio,cotizacion_id:c.id})});
+  if(!venta)return;
+  // Factura en Emitida → se valida y paga a través del flujo de pagos
+  await apiFetch('/api/facturas',{method:'POST',body:JSON.stringify({cliente_nombre:c.cliente_nombre||c.cliente,venta_id:venta.id,cotizacion_id:c.id,concepto:concepto,subtotal:c.subtotal||calc.sub,iva:c.iva||calc.iva,monto:total,moneda:c.moneda||'MXN',fecha_emision:today(),estado:'Emitida'})});
   await apiFetch('/api/cotizaciones/'+c.id+'/estado',{method:'PUT',body:JSON.stringify({estado:'Facturada'})});
-  renderCotizaciones();renderVentas();alert('Venta registrada desde '+c.folio+'.');
+  renderCotizaciones();renderVentas();renderFacturas();alert('Venta y factura registradas desde '+c.folio+'.');
 }
 async function generarFacturaDesdeCot(c){
   var calc=cotCalc(c.items||[]);
-  var res=await apiFetch('/api/facturas',{method:'POST',body:JSON.stringify({cliente_nombre:c.cliente_nombre||c.cliente,cotizacion_id:c.id,concepto:(c.items||[]).map(function(i){return i.descripcion||i.desc;}).filter(Boolean).join(', ').substring(0,200),subtotal:c.subtotal||calc.sub,iva:c.iva||calc.iva,monto:c.total||calc.total,fecha_emision:today(),estado:'Pendiente'})});
+  var res=await apiFetch('/api/facturas',{method:'POST',body:JSON.stringify({cliente_nombre:c.cliente_nombre||c.cliente,cotizacion_id:c.id,concepto:(c.items||[]).map(function(i){return i.descripcion||i.desc;}).filter(Boolean).join(', ').substring(0,200),subtotal:c.subtotal||calc.sub,iva:c.iva||calc.iva,monto:c.total||calc.total,fecha_emision:today(),estado:'Emitida'})});
   if(!res)return;
   await apiFetch('/api/cotizaciones/'+c.id+'/estado',{method:'PUT',body:JSON.stringify({estado:'Facturada'})});
   renderCotizaciones();renderFacturas();alert('Factura generada desde '+c.folio+'.');
@@ -923,7 +927,8 @@ async function renderVentas(){
   var tb=document.getElementById('tabla-ventas'),em=document.getElementById('empty-ventas');
   if(!ventas.length){tb.innerHTML='';em.classList.remove('hidden');return;}
   em.classList.add('hidden');
-  tb.innerHTML=ventas.map(function(v){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">'+v.folio+'</td><td>'+v.cliente_nombre+'</td><td style="color:var(--text-secondary)">'+(v.descripcion||'—')+'</td><td style="font-weight:500">'+fmtMoney(v.monto)+'</td><td>'+fmtDate(v.fecha)+'</td><td><span class="badge '+(v.origen&&v.origen.startsWith('Cotización')?'badge-teal':'badge-gray')+'">'+(v.origen||'Manual')+'</span></td><td><span class="badge '+(estadoBadge[v.estado]||'badge-gray')+'">'+v.estado+'</span></td></tr>';}).join('');
+  var canDelV=USUARIO&&USUARIO.permisos&&USUARIO.permisos.ventas&&USUARIO.permisos.ventas.eliminar;
+  tb.innerHTML=ventas.map(function(v){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">'+v.folio+'</td><td>'+v.cliente_nombre+'</td><td style="color:var(--text-secondary)">'+(v.descripcion||'—')+'</td><td style="font-weight:500">'+fmtMoney(v.monto)+'</td><td>'+fmtDate(v.fecha)+'</td><td><span class="badge '+(v.origen&&v.origen.startsWith('Cotización')?'badge-teal':'badge-gray')+'">'+(v.origen||'Manual')+'</span></td><td><span class="badge '+(estadoBadge[v.estado]||'badge-gray')+'">'+v.estado+'</span></td><td>'+(canDelV?'<button class="btn btn-sm" onclick="eliminarVenta('+v.id+',\''+v.folio+'\')" title="Eliminar"><span class="material-symbols-outlined" style="font-size:14px;color:var(--danger)">delete</span></button>':'')+'</td></tr>';}).join('');
 }
 async function guardarVenta(){
   var c=document.getElementById('v-cliente').value.trim(),m=document.getElementById('v-monto').value;
@@ -945,10 +950,37 @@ async function renderFacturas(){
   var tb=document.getElementById('tabla-facturas'),em=document.getElementById('empty-facturas');
   if(!facturas.length){tb.innerHTML='';em.classList.remove('hidden');return;}
   em.classList.add('hidden');
-  tb.innerHTML=facturas.map(function(f){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">'+f.folio+'</td><td>'+f.cliente_nombre+'</td><td>'+f.concepto+'</td><td style="font-weight:500">'+fmtMoney(f.monto)+'</td><td>'+fmtDate(f.fecha_vencimiento)+'</td><td><span class="badge '+(estadoBadge[f.estado]||'badge-gray')+'">'+f.estado+'</span></td><td><button class="btn btn-sm" onclick="pagarFactura('+f.id+')" style="font-size:11px">'+(f.estado==='Pendiente'?'Marcar pagada':'—')+'</button></td></tr>';}).join('');
+  var canDelF=USUARIO&&USUARIO.permisos&&USUARIO.permisos.facturas&&USUARIO.permisos.facturas.eliminar;
+  tb.innerHTML=facturas.map(function(f){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">'+f.folio+'</td><td>'+f.cliente_nombre+'</td><td>'+f.concepto+'</td><td style="font-weight:500">'+fmtMoney(f.monto)+'</td><td>'+fmtDate(f.fecha_vencimiento)+'</td><td><span class="badge '+(estadoBadge[f.estado]||'badge-gray')+'">'+f.estado+'</span></td><td style="display:flex;gap:4px;align-items:center"><button class="btn btn-sm" onclick="pagarFactura('+f.id+')" style="font-size:11px">'+(f.estado==='Pendiente'?'Marcar pagada':'—')+'</button>'+(canDelF?'<button class="btn btn-sm" onclick="eliminarFactura('+f.id+',\''+f.folio+'\')" title="Eliminar"><span class="material-symbols-outlined" style="font-size:14px;color:var(--danger)">delete</span></button>':'')+'</td></tr>';}).join('');
+}
+async function validarFactura(id){
+  var r=await apiFetch('/api/facturas/'+id+'/validar',{method:'POST'});
+  if(r)renderFacturas();
 }
 async function pagarFactura(id){
-  if(await apiFetch('/api/facturas/'+id,{method:'PUT',body:JSON.stringify({estado:'Pagada',fecha_pago:today()})}))renderFacturas();
+  var f=DB.facturas.find(function(x){return x.id===id;});if(!f)return;
+  // Si aún no está validada, validar primero (admin lo puede hacer en un paso)
+  if(f.estado==='Emitida'||f.estado==='Enviada'){
+    if(!confirm('La factura no está validada aún. ¿Validar y registrar pago en un solo paso?'))return;
+    var rv=await apiFetch('/api/facturas/'+id+'/validar',{method:'POST'});
+    if(!rv)return;
+  }
+  var metodo=prompt('Método de pago (Transferencia, SPEI, Efectivo, Cheque, Tarjeta, Otro):','Transferencia');
+  if(!metodo)return;
+  var ref=prompt('Referencia / número de operación (opcional):','');
+  var saldo=Number(f.monto)-(Number(f.monto_pagado)||0);
+  var montoStr=prompt('Monto a pagar (saldo pendiente: $'+saldo.toLocaleString('es-MX')+'):',saldo);
+  if(!montoStr)return;
+  var r=await apiFetch('/api/pagos',{method:'POST',body:JSON.stringify({factura_id:id,monto:Number(montoStr),metodo_pago:metodo,referencia:ref||null,fecha_pago:today()})});
+  if(r){renderFacturas();alert('Pago registrado. Estado factura: '+r.factura.estado);};
+}
+async function eliminarVenta(id,folio){
+  if(!confirm('¿Eliminar la venta '+folio+'? Esta acción no se puede deshacer.'))return;
+  if(await apiFetch('/api/ventas/'+id,{method:'DELETE'}))renderVentas();
+}
+async function eliminarFactura(id,folio){
+  if(!confirm('¿Eliminar la factura '+folio+'? Esta acción no se puede deshacer.'))return;
+  if(await apiFetch('/api/facturas/'+id,{method:'DELETE'}))renderFacturas();
 }
 async function guardarFactura(){
   var c=document.getElementById('f-cliente').value.trim(),m=document.getElementById('f-monto').value;
