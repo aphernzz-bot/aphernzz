@@ -788,7 +788,10 @@ function recalcCot(){
   document.getElementById('cot-iva-disp').textContent=fmtMoney(c.iva);
   document.getElementById('cot-total-disp').textContent=fmtMoney(c.total);
 }
+var currentCotEditId=null;
 async function abrirNuevaCotizacion(){
+  currentCotEditId=null;
+  document.querySelector('#modal-cotizacion .modal-title').textContent='Nueva cotización';
   var [cl,pr]=await Promise.all([apiFetch('/api/clientes'),apiFetch('/api/prospectos')]);
   DB.clientes=cl||[];DB.prospectos=pr||[];
   cotItemCount=0;document.getElementById('cot-items-body').innerHTML='';
@@ -796,6 +799,33 @@ async function abrirNuevaCotizacion(){
   document.getElementById('cot-fecha').value=today();
   var v=new Date();v.setDate(v.getDate()+30);document.getElementById('cot-vigencia').value=v.toISOString().split('T')[0];
   actualizarDatalist();addCotItem();recalcCot();openModal('modal-cotizacion');
+}
+async function editarCotizacion(c){
+  currentCotEditId=c.id;
+  document.querySelector('#modal-cotizacion .modal-title').textContent='Editar cotización';
+  var [cl,pr]=await Promise.all([apiFetch('/api/clientes'),apiFetch('/api/prospectos')]);
+  DB.clientes=cl||[];DB.prospectos=pr||[];
+  actualizarDatalist();
+  document.getElementById('cot-cliente').value=c.cliente_nombre||'';
+  document.getElementById('cot-vinculo').value=c.vinculo||'';
+  document.getElementById('cot-fecha').value=(c.fecha_emision||'').substring(0,10);
+  document.getElementById('cot-vigencia').value=(c.fecha_vigencia||'').substring(0,10);
+  document.getElementById('cot-notas').value=c.notas||'';
+  cotItemCount=0;document.getElementById('cot-items-body').innerHTML='';
+  (c.items||[]).forEach(function(it){
+    addCotItem();var idx=cotItemCount;
+    document.getElementById('ci-desc-'+idx).value=it.descripcion||'';
+    document.getElementById('ci-cant-'+idx).value=it.cantidad||1;
+    document.getElementById('ci-pu-'+idx).value=it.precio_unitario||0;
+    document.getElementById('ci-dp-'+idx).value=it.descuento_pct||0;
+  });
+  recalcCot();closeModal('modal-cot-detalle');openModal('modal-cotizacion');
+}
+async function eliminarCotizacion(id,folio){
+  if(!confirm('¿Eliminar la cotización '+folio+'? Esta acción no se puede deshacer.'))return;
+  var r=await apiFetch('/api/cotizaciones/'+id,{method:'DELETE'});
+  if(!r)return;
+  closeModal('modal-cot-detalle');renderCotizaciones();
 }
 async function renderCotizaciones(){
   var q=(document.getElementById('search-cot')||{value:''}).value;
@@ -814,7 +844,7 @@ async function renderCotizaciones(){
   if(!cots.length){tb.innerHTML='';em.classList.remove('hidden');return;}
   em.classList.add('hidden');
   tb.innerHTML=cots.map(function(c){
-    var conc=(c.items||[]).map(function(i){return i.descripcion||i.desc;}).filter(Boolean).join(', ').substring(0,38)+((c.items||[]).length>1?'…':'');
+    var conc=(c.concepto_resumen||'').substring(0,38)+(c.concepto_resumen&&c.concepto_resumen.length>38?'…':'');
     return'<tr><td style="font-family:monospace;font-size:12px;color:var(--text-secondary)">'+c.folio+'</td><td><div style="font-weight:500">'+(c.cliente_nombre||c.cliente)+'</div><div style="font-size:11px;color:var(--text-tertiary)">'+c.vinculo+'</div></td><td style="font-size:12px;color:var(--text-secondary)">'+conc+'</td><td>'+fmtMoney(c.subtotal)+'</td><td style="color:var(--text-secondary)">'+fmtMoney(c.iva)+'</td><td style="font-weight:500;color:var(--purple)">'+fmtMoney(c.total)+'</td><td>'+fmtDate(c.fecha_vigencia||c.vigencia)+'</td><td><span class="badge '+(estadoBadge[c.estado]||'badge-gray')+'">'+c.estado+'</span></td><td><button class="btn btn-sm" onclick="verCotizacion('+c.id+')">Ver</button></td></tr>';
   }).join('');
 }
@@ -823,14 +853,17 @@ async function guardarCotizacion(estado){
   var items=getCotItems();if(!items.length||!items[0].descripcion){alert('Agrega al menos un concepto');return;}
   var vinculo=document.getElementById('cot-vinculo').value;
   var vt=vinculo.startsWith('Prospecto')?'Prospecto':vinculo.startsWith('Cliente')?'Cliente':'Externo';
-  var res=await apiFetch('/api/cotizaciones',{method:'POST',body:JSON.stringify({cliente_nombre:cliente,vinculo:vt,fecha_emision:document.getElementById('cot-fecha').value,fecha_vigencia:document.getElementById('cot-vigencia').value,estado:estado,notas:document.getElementById('cot-notas').value,items:items})});
+  var payload={cliente_nombre:cliente,vinculo:vt,fecha_emision:document.getElementById('cot-fecha').value,fecha_vigencia:document.getElementById('cot-vigencia').value,estado:estado,notas:document.getElementById('cot-notas').value,items:items};
+  var res=currentCotEditId
+    ?await apiFetch('/api/cotizaciones/'+currentCotEditId,{method:'PUT',body:JSON.stringify(payload)})
+    :await apiFetch('/api/cotizaciones',{method:'POST',body:JSON.stringify(payload)});
   if(!res)return;
-  closeModal('modal-cotizacion');renderCotizaciones();
+  currentCotEditId=null;closeModal('modal-cotizacion');renderCotizaciones();
 }
 
 var currentCotId=null;
-function verCotizacion(id){
-  var c=DB.cotizaciones.find(function(x){return x.id===id;});if(!c)return;
+async function verCotizacion(id){
+  var c=await apiFetch('/api/cotizaciones/'+id);if(!c)return;
   currentCotId=id;
   var calc=cotCalc(c.items||[]);
   document.getElementById('det-folio').textContent=c.folio;
@@ -845,6 +878,15 @@ function verCotizacion(id){
   document.getElementById('det-total').textContent=fmtMoney(c.total||calc.total);
   document.getElementById('det-notas').textContent=c.notas?'Notas: '+c.notas:'';
   var acc=document.getElementById('det-acciones');acc.innerHTML='';
+  var pCot=USUARIO&&USUARIO.permisos&&USUARIO.permisos.cotizaciones;
+  if(pCot&&pCot.editar){
+    var bEd=document.createElement('button');bEd.className='btn btn-sm';bEd.innerHTML='<span class="material-symbols-outlined">edit</span> Editar';
+    bEd.onclick=function(){editarCotizacion(c);};acc.appendChild(bEd);
+  }
+  if(pCot&&pCot.eliminar){
+    var bDel=document.createElement('button');bDel.className='btn btn-danger btn-sm';bDel.innerHTML='<span class="material-symbols-outlined">delete</span> Eliminar';
+    bDel.onclick=function(){eliminarCotizacion(c.id,c.folio);};acc.appendChild(bDel);
+  }
   if(c.estado==='Borrador'||c.estado==='Enviada'){
     var bA=document.createElement('button');bA.className='btn btn-success btn-sm';bA.innerHTML='<span class="material-symbols-outlined">check</span> Marcar aceptada';
     bA.onclick=async function(){var r=await apiFetch('/api/cotizaciones/'+c.id+'/estado',{method:'PUT',body:JSON.stringify({estado:'Aceptada'})});if(r){c.estado='Aceptada';closeModal('modal-cot-detalle');renderCotizaciones();}};acc.appendChild(bA);

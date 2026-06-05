@@ -303,7 +303,9 @@ if ($base === 'cotizaciones') {
     if (!can($U,'cotizaciones','ver')) err('Sin permiso', 403);
 
     if ($method === 'GET' && !$id) {
-        $sql = 'SELECT c.*, u.nombre AS asesor FROM cotizaciones c LEFT JOIN usuarios u ON u.id=c.usuario_id WHERE 1=1';
+        $sql = 'SELECT c.*, u.nombre AS asesor,
+            (SELECT GROUP_CONCAT(ci.descripcion ORDER BY ci.orden,ci.id SEPARATOR ", ") FROM cotizacion_items ci WHERE ci.cotizacion_id=c.id) AS concepto_resumen
+            FROM cotizaciones c LEFT JOIN usuarios u ON u.id=c.usuario_id WHERE 1=1';
         $p = [];
         if (!empty($_GET['q']))      { $like='%'.$_GET['q'].'%'; $sql.=' AND (c.cliente_nombre LIKE ? OR c.folio LIKE ?)'; $p[]=$like;$p[]=$like; }
         if (!empty($_GET['estado'])) { $sql.=' AND c.estado=?'; $p[]=$_GET['estado']; }
