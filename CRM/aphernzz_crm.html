@@ -953,26 +953,15 @@ async function renderFacturas(){
   var canDelF=USUARIO&&USUARIO.permisos&&USUARIO.permisos.facturas&&USUARIO.permisos.facturas.eliminar;
   tb.innerHTML=facturas.map(function(f){return'<tr><td style="color:var(--text-secondary);font-family:monospace;font-size:12px">'+f.folio+'</td><td>'+f.cliente_nombre+'</td><td>'+f.concepto+'</td><td style="font-weight:500">'+fmtMoney(f.monto)+'</td><td>'+fmtDate(f.fecha_vencimiento)+'</td><td><span class="badge '+(estadoBadge[f.estado]||'badge-gray')+'">'+f.estado+'</span></td><td style="display:flex;gap:4px;align-items:center"><button class="btn btn-sm" onclick="pagarFactura('+f.id+')" style="font-size:11px">'+(f.estado==='Pendiente'?'Marcar pagada':'—')+'</button>'+(canDelF?'<button class="btn btn-sm" onclick="eliminarFactura('+f.id+',\''+f.folio+'\')" title="Eliminar"><span class="material-symbols-outlined" style="font-size:14px;color:var(--danger)">delete</span></button>':'')+'</td></tr>';}).join('');
 }
-async function validarFactura(id){
-  var r=await apiFetch('/api/facturas/'+id+'/validar',{method:'POST'});
-  if(r)renderFacturas();
-}
 async function pagarFactura(id){
-  var f=DB.facturas.find(function(x){return x.id===id;});if(!f)return;
-  // Si aún no está validada, validar primero (admin lo puede hacer en un paso)
-  if(f.estado==='Emitida'||f.estado==='Enviada'){
-    if(!confirm('La factura no está validada aún. ¿Validar y registrar pago en un solo paso?'))return;
-    var rv=await apiFetch('/api/facturas/'+id+'/validar',{method:'POST'});
-    if(!rv)return;
-  }
-  var metodo=prompt('Método de pago (Transferencia, SPEI, Efectivo, Cheque, Tarjeta, Otro):','Transferencia');
+  var f=DB.facturas&&DB.facturas.find(function(x){return x.id===id;});if(!f)return;
+  if(f.estado==='Pagada'){alert('Esta factura ya está pagada.');return;}
+  if(f.estado==='Cancelada'){alert('Esta factura está cancelada.');return;}
+  var metodo=prompt('Método de pago:\n(Transferencia, SPEI, Efectivo, Cheque, Tarjeta, Otro)','Transferencia');
   if(!metodo)return;
-  var ref=prompt('Referencia / número de operación (opcional):','');
-  var saldo=Number(f.monto)-(Number(f.monto_pagado)||0);
-  var montoStr=prompt('Monto a pagar (saldo pendiente: $'+saldo.toLocaleString('es-MX')+'):',saldo);
-  if(!montoStr)return;
-  var r=await apiFetch('/api/pagos',{method:'POST',body:JSON.stringify({factura_id:id,monto:Number(montoStr),metodo_pago:metodo,referencia:ref||null,fecha_pago:today()})});
-  if(r){renderFacturas();alert('Pago registrado. Estado factura: '+r.factura.estado);};
+  var ref=prompt('Referencia / número de operación (opcional, Enter para omitir):','');
+  var r=await apiFetch('/api/facturas/'+id,{method:'PUT',body:JSON.stringify({estado:'Pagada',fecha_pago:today(),metodo_pago:metodo,referencia_pago:ref||null})});
+  if(r)renderFacturas();
 }
 async function eliminarVenta(id,folio){
   if(!confirm('¿Eliminar la venta '+folio+'? Esta acción no se puede deshacer.'))return;
@@ -1128,9 +1117,9 @@ async function eliminarUsuario(id,nombre){
 }
 
 
-function descargarCotizacionPDF(id){
+async function descargarCotizacionPDF(id){
   if(!window.jspdf){alert('La librería PDF no está disponible. Verifica tu conexión a internet.');return;}
-  var c=DB.cotizaciones.find(function(x){return x.id===id;});if(!c)return;
+  var c=await apiFetch('/api/cotizaciones/'+id);if(!c)return;
   var calc=cotCalc(c.items||[]);
   var cfg=loadConfig();
   var doc=new jspdf.jsPDF({unit:'mm',format:'a4'});

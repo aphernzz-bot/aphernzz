@@ -103,11 +103,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path   = urldecode($_GET['_p'] ?? '/');
 if (($qi = strpos($path, '?')) !== false) $path = substr($path, 0, $qi);
 $path = rtrim($path, '/') ?: '/';
-$seg  = explode('/', ltrim($path, '/'));  // ['api','clientes','5']
-$base = $seg[1] ?? '';
+$seg    = explode('/', ltrim($path, '/'));  // ['api','clientes','5','accion']
+$base   = $seg[1] ?? '';
 $rawSub = $seg[2] ?? '';
-$id   = (is_numeric($rawSub) && $rawSub !== '') ? (int)$rawSub : null;
-$sub  = $rawSub; // may be string like 'login','me'
+$id     = (is_numeric($rawSub) && $rawSub !== '') ? (int)$rawSub : null;
+$sub    = $rawSub;       // string como 'login','me' o ID numérico
+$action = $seg[3] ?? ''; // 4.º segmento: 'validar','estado', etc.
 
 // ============================================================
 //  /api/auth
@@ -654,7 +655,7 @@ if ($base === 'usuarios') {
 //  /api/facturas  — estado: validar
 //  Además del CRUD ya existente, intercepta /api/facturas/:id/validar
 // ============================================================
-if ($base === 'facturas' && $id && $sub === 'validar' && $method === 'POST') {
+if ($base === 'facturas' && $id && $action === 'validar' && $method === 'POST') {
     // Solo admin/superadmin (permisos facturas.editar)
     if (!can($U,'facturas','editar')) err('Sin permiso', 403);
     $f = row('SELECT * FROM facturas WHERE id=?', [$id]);
