@@ -10,7 +10,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'fbbeaaem_adminap');    // ← cPanel → MySQL → Usuarios
 define('DB_PASS', 'Alwasy@1009');   // ← el password que asignaste
-define('DB_NAME', 'aphernzz_crm');    // ← p.ej. aphernzz_crm
+define('DB_NAME', 'fbbeaaem_crm_aphernzz');    // ← p.ej. aphernzz_crm
 define('JWT_SECRET', '19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df');
 define('JWT_EXP', 86400); // 24 horas
 
