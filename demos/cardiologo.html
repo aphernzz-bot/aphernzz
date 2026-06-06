@@ -398,10 +398,22 @@
     .map-frame {
       border-radius: var(--radius); overflow: hidden;
       box-shadow: var(--shadow); height: 380px;
-      background: var(--blue-light);
+      background: var(--blue-light); position: relative;
     }
     .map-frame iframe { width: 100%; height: 100%; border: none; }
     #mapa-consultorio { width: 100%; height: 100%; }
+    .map-open-btn {
+      position: absolute; bottom: 14px; right: 14px; z-index: 999;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #fff; color: #0b2d4e;
+      border: 1.5px solid rgba(11,45,78,.15);
+      border-radius: 999px; padding: .5rem 1rem;
+      font-size: .8rem; font-weight: 600;
+      text-decoration: none; box-shadow: 0 2px 12px rgba(0,0,0,.18);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .map-open-btn:hover { box-shadow: 0 4px 20px rgba(0,0,0,.25); transform: translateY(-1px); }
+    .map-open-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 
     /* ─── FOOTER ─── */
     footer {
@@ -795,6 +807,12 @@
       </div>
       <div class="map-frame fade-up" style="transition-delay:.1s">
         <div id="mapa-consultorio"></div>
+        <a class="map-open-btn"
+           href="https://maps.google.com/?q=Av.+Insurgentes+Sur+3700,+Pedregal+de+San+%C3%81ngel,+Ciudad+de+M%C3%A9xico"
+           target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ver en Google Maps
+        </a>
       </div>
     </div>
   </div>
