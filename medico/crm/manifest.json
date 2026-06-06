@@ -1,0 +1,28 @@
+{
+  "name": "MediCRM — Expediente Clínico",
+  "short_name": "MediCRM",
+  "description": "Expediente Clínico Digital para doctores y consultorios",
+  "start_url": "/medico/crm/",
+  "scope": "/medico/crm/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#00976b",
+  "theme_color": "#00976b",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "productivity"],
+  "screenshots": []
+}
