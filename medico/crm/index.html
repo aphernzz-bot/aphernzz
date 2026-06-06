@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MediCRM — Expediente Clínico Digital</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:14px;color:#1a1a1a;background:#f4f7f5}
+:root{
+  --bg:#f4f7f5;--surface:#ffffff;--surface2:#eef3f0;--surface3:#e4ede8;
+  --text:#1a1a1a;--muted:#5a6b62;--faint:#8fa89a;
+  --border:rgba(0,0,0,0.09);--border-mid:rgba(0,0,0,0.16);
+  --r:8px;--rl:12px;
+  --green:#00976b;--green-dk:#007a55;--green-lt:#e6f5ef;--green-tx:#00835c;
+  --red:#c0392b;--red-lt:#fdecea;--amber:#b45309;--amber-lt:#fef3e2;
+  --blue:#1565c0;--blue-lt:#e8f0fe;
+}
+.hidden{display:none!important}
+/* Buttons */
+.btn{background:transparent;border:0.5px solid var(--border-mid);border-radius:var(--r);padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text);transition:background .15s;font-family:inherit}
+.btn:hover{background:var(--surface2)}
+.btn-primary{background:var(--green);border-color:var(--green);color:#fff}
+.btn-primary:hover{background:var(--green-dk);border-color:var(--green-dk)}
+.btn-danger{background:var(--red);border-color:var(--red);color:#fff}
+.btn-sm{padding:4px 10px;font-size:12px}
+/* Badges */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:var(--green-lt);color:var(--green-tx)}
+.badge-amber{background:var(--amber-lt);color:var(--amber)}
+.badge-red{background:var(--red-lt);color:var(--red)}
+.badge-blue{background:var(--blue-lt);color:var(--blue)}
+.badge-gray{background:var(--surface3);color:var(--muted)}
+/* Card */
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem}
+/* Form */
+input,select,textarea{width:100%;background:var(--surface2);border:0.5px solid var(--border-mid);border-radius:var(--r);padding:7px 10px;font-size:13px;color:var(--text);outline:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 2px rgba(0,151,107,.15)}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.form-group{margin-bottom:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* Avatar */
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.av-green{background:var(--green-lt);color:var(--green-tx)}
+.av-blue{background:var(--blue-lt);color:var(--blue)}
+.av-amber{background:var(--amber-lt);color:var(--amber)}
+.av-red{background:var(--red-lt);color:var(--red)}
+/* Layout */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#00976b 0%,#007a55 50%,#004d36 100%)}
+.login-box{background:#fff;border-radius:20px;padding:2.5rem 2rem;width:360px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{text-align:center;margin-bottom:1.75rem}
+.login-logo h1{font-size:1.6rem;font-weight:800;color:var(--green)}
+.login-logo p{font-size:.82rem;color:var(--muted);margin-top:4px}
+.login-demo-hint{background:var(--green-lt);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--green-tx);margin-bottom:1.25rem;text-align:center}
+#app-screen{display:flex;min-height:100vh}
+/* Sidebar */
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:0.5px solid var(--border);display:flex;flex-direction:column;min-height:100vh;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:1.25rem 1rem 1rem;border-bottom:0.5px solid var(--border)}
+.sidebar-logo h2{font-size:1rem;font-weight:800;color:var(--green)}
+.sidebar-logo span{font-size:.72rem;color:var(--muted)}
+.nav-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);padding:1rem 1rem .4rem}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 1rem;cursor:pointer;font-size:13px;color:var(--muted);border-left:2px solid transparent;transition:all .15s;position:relative}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--green-lt);color:var(--green);border-left-color:var(--green);font-weight:600}
+.nav-item .material-symbols-outlined{font-size:18px;font-variation-settings:'FILL' 0}
+.nav-item.active .material-symbols-outlined{font-variation-settings:'FILL' 1}
+.nav-badge{background:var(--red);color:#fff;border-radius:999px;font-size:10px;font-weight:700;padding:1px 6px;margin-left:auto}
+.sidebar-footer{margin-top:auto;padding:1rem;border-top:0.5px solid var(--border)}
+.sidebar-user{display:flex;align-items:center;gap:8px}
+.sidebar-user-info{flex:1;min-width:0}
+.sidebar-user-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-role{font-size:11px;color:var(--muted)}
+/* Main */
+.main{flex:1;overflow:auto;padding:1.5rem;min-width:0}
+.page-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;gap:1rem;flex-wrap:wrap}
+.page-title{font-size:18px;font-weight:700}
+.page-sub{font-size:12px;color:var(--muted);margin-top:2px}
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);border-bottom:0.5px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+td{padding:10px 12px;border-bottom:0.5px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface2);cursor:pointer}
+/* Metric cards */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.metric{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:1rem 1.2rem}
+.metric-lbl{font-size:11px;color:var(--muted);font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.metric-lbl .material-symbols-outlined{font-size:16px}
+.metric-val{font-size:26px;font-weight:700;line-height:1}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.metric.accent{background:linear-gradient(135deg,var(--green),var(--green-dk));color:#fff}
+.metric.accent .metric-lbl,.metric.accent .metric-sub{color:rgba(255,255,255,.75)}
+/* Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:300}
+.modal{background:var(--surface);border-radius:var(--rl);padding:1.5rem;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-lg{max-width:720px}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem}
+.modal-title{font-size:15px;font-weight:700}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;line-height:1;padding:4px}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:1.25rem;padding-top:1rem;border-top:0.5px solid var(--border)}
+/* Agenda */
+.agenda-day-hdr{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:1rem 0 .5rem;border-bottom:0.5px solid var(--border);margin-bottom:.75rem}
+.cita-row{display:flex;gap:12px;align-items:flex-start;padding:.75rem;border-radius:var(--r);border:0.5px solid var(--border);background:var(--surface);margin-bottom:.5rem;cursor:pointer;transition:box-shadow .15s}
+.cita-row:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.cita-hora{font-size:12px;font-weight:700;color:var(--green);min-width:48px;padding-top:2px}
+.cita-info{flex:1}
+.cita-nombre{font-size:13px;font-weight:600}
+.cita-tipo{font-size:12px;color:var(--muted);margin-top:2px}
+.cita-acciones{display:flex;gap:6px;align-items:center}
+/* Expediente lateral */
+.paciente-detail{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:1.25rem}
+.detail-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:1rem 0 .5rem}
+.detail-chip{display:inline-block;background:var(--surface2);border-radius:var(--r);padding:4px 10px;font-size:12px;margin:3px 3px 3px 0}
+/* Consulta SOAP */
+.soap-block{background:var(--surface2);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:.75rem}
+.soap-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--green-tx);margin-bottom:6px}
+.soap-text{font-size:13px;line-height:1.65;color:var(--text)}
+/* Receta print */
+@media print{
+  body *{visibility:hidden}
+  #receta-print,#receta-print *{visibility:visible}
+  #receta-print{position:fixed;inset:0;background:#fff;padding:40px;z-index:9999}
+}
+.receta-header{border-bottom:2px solid var(--green);padding-bottom:1rem;margin-bottom:1rem}
+.receta-doctor-name{font-size:1.2rem;font-weight:800;color:var(--green)}
+.receta-med-row{display:flex;gap:12px;padding:.6rem 0;border-bottom:0.5px dashed var(--border);align-items:flex-start}
+.receta-num{font-weight:700;color:var(--green);min-width:20px}
+/* Vitals grid */
+.vitals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.vital-box{background:var(--surface2);border-radius:var(--r);padding:.6rem .75rem;text-align:center}
+.vital-val{font-size:1.1rem;font-weight:700}
+.vital-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+/* Search */
+.search-bar{position:relative;max-width:320px}
+.search-bar input{padding-left:34px}
+.search-bar .material-symbols-outlined{position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--faint)}
+/* Seguimientos */
+.seg-row{display:flex;align-items:center;gap:12px;padding:.75rem;border-radius:var(--r);border:0.5px solid var(--border);background:var(--surface);margin-bottom:.5rem}
+.seg-fecha{font-size:12px;font-weight:700;min-width:70px}
+.seg-fecha.vencido{color:var(--red)}
+.seg-fecha.proximo{color:var(--amber)}
+.seg-fecha.ok{color:var(--green-tx)}
+/* Responsive sidebar */
+.hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--text)}
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-220px;top:0;z-index:200;transition:left .25s;height:100%;box-shadow:none}
+  .sidebar.open{left:0;box-shadow:4px 0 24px rgba(0,0,0,.15)}
+  .main{padding:1rem}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .form-row,.form-row3{grid-template-columns:1fr}
+  .hamburger{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
+  .vitals-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .metrics{grid-template-columns:1fr}
+}
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);margin-bottom:1.25rem}
+.tab{padding:.6rem 1.1rem;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted);margin-bottom:-1px;transition:color .15s}
+.tab.active{color:var(--green);border-bottom-color:var(--green);font-weight:600}
+/* Timeline consultas */
+.consult-item{display:flex;gap:12px;margin-bottom:1rem}
+.consult-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:5px}
+.consult-line{width:1px;background:var(--border);margin:0 auto;flex-grow:0}
+.consult-card{flex:1;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;cursor:pointer;transition:box-shadow .15s}
+.consult-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+/* Empty state */
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty .material-symbols-outlined{font-size:48px;display:block;margin-bottom:.75rem;color:var(--faint)}
+/* Top bar mobile */
+.top-bar{display:none;align-items:center;gap:10px;background:var(--surface);border-bottom:0.5px solid var(--border);padding:.75rem 1rem}
+@media(max-width:768px){.top-bar{display:flex}}
+/* Pagos summary */
+.pagos-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ LOGIN ═══════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <h1>🏥 MediCRM</h1>
+      <p>Expediente Clínico Digital para Doctores</p>
+    </div>
+    <div class="login-demo-hint">
+      <strong>Modo Demo</strong> — Usuario: <code>demo</code> &nbsp;|&nbsp; Contraseña: <code>demo</code>
+    </div>
+    <div class="form-group">
+      <label>Usuario</label>
+      <input id="login-user" type="text" placeholder="demo" value="demo"/>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input id="login-pass" type="password" placeholder="••••••" value="demo"/>
+    </div>
+    <div id="login-err" class="hidden" style="color:var(--red);font-size:12px;margin-bottom:10px;text-align:center"></div>
+    <button class="btn btn-primary" style="width:100%;padding:.75rem" onclick="doLogin()">Entrar al sistema</button>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:1rem">© 2025 MediCRM · Aphernzz · Demo sin datos reales</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ APP ═══════════════════════ -->
+<div id="app-screen" class="hidden">
+
+  <!-- Top bar mobile -->
+  <div class="top-bar">
+    <button class="hamburger" onclick="toggleSidebar()">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span style="font-weight:700;color:var(--green)">🏥 MediCRM</span>
+    <span id="top-section-name" style="margin-left:auto;font-size:13px;color:var(--muted)">Dashboard</span>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h2>🏥 MediCRM</h2>
+      <span id="sidebar-clinica">Consultorio Demo</span>
+    </div>
+
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" id="nav-dashboard" onclick="navTo('dashboard',this)">
+      <span class="material-symbols-outlined">dashboard</span> Dashboard
+    </div>
+    <div class="nav-item" id="nav-agenda" onclick="navTo('agenda',this)">
+      <span class="material-symbols-outlined">calendar_month</span> Agenda
+    </div>
+
+    <div class="nav-section">Clínico</div>
+    <div class="nav-item" id="nav-pacientes" onclick="navTo('pacientes',this)">
+      <span class="material-symbols-outlined">people</span> Pacientes
+    </div>
+    <div class="nav-item" id="nav-consultas" onclick="navTo('consultas',this)">
+      <span class="material-symbols-outlined">medical_services</span> Consultas
+    </div>
+    <div class="nav-item" id="nav-recetas" onclick="navTo('recetas',this)">
+      <span class="material-symbols-outlined">receipt_long</span> Recetas
+    </div>
+
+    <div class="nav-section">Gestión</div>
+    <div class="nav-item" id="nav-pagos" onclick="navTo('pagos',this)">
+      <span class="material-symbols-outlined">payments</span> Pagos
+    </div>
+    <div class="nav-item" id="nav-seguimientos" onclick="navTo('seguimientos',this)">
+      <span class="material-symbols-outlined">notification_important</span> Seguimientos
+      <span class="nav-badge hidden" id="badge-seg">0</span>
+    </div>
+
+    <div class="nav-section">Sistema</div>
+    <div class="nav-item" id="nav-ajustes" onclick="navTo('ajustes',this)">
+      <span class="material-symbols-outlined">settings</span> Ajustes
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar av-green" id="sb-avatar">AH</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sb-nombre">Dr. A. Hernández</div>
+          <div class="sidebar-user-role" id="sb-rol">Medicina General</div>
+        </div>
+        <button class="btn btn-sm" onclick="logout()" title="Salir" style="padding:4px 6px">
+          <span class="material-symbols-outlined" style="font-size:16px">logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ─── DASHBOARD ─── -->
+    <section id="sec-dashboard">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub" id="dash-fecha"></div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-cita')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nueva cita
+        </button>
+      </div>
+      <div class="metrics" id="dash-metrics"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start">
+        <div class="card">
+          <div style="font-weight:700;font-size:13px;margin-bottom:1rem;display:flex;justify-content:space-between">
+            <span>Citas de hoy</span>
+            <span class="badge badge-green" id="dash-total-hoy">0</span>
+          </div>
+          <div id="dash-citas-hoy"></div>
+        </div>
+        <div class="card">
+          <div style="font-weight:700;font-size:13px;margin-bottom:1rem">Seguimientos pendientes</div>
+          <div id="dash-seguimientos"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── AGENDA ─── -->
+    <section id="sec-agenda" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Agenda</div>
+          <div class="page-sub">Control de citas</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-cita')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nueva cita
+        </button>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="agendaTab('hoy',this)">Hoy</div>
+        <div class="tab" onclick="agendaTab('semana',this)">Esta semana</div>
+        <div class="tab" onclick="agendaTab('todas',this)">Todas</div>
+      </div>
+      <div id="agenda-content"></div>
+    </section>
+
+    <!-- ─── PACIENTES ─── -->
+    <section id="sec-pacientes" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Pacientes</div>
+          <div class="page-sub">Expediente clínico digital</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-paciente')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">person_add</span> Nuevo paciente
+        </button>
+      </div>
+      <div style="display:flex;gap:1rem;margin-bottom:1rem">
+        <div class="search-bar" style="flex:1">
+          <span class="material-symbols-outlined">search</span>
+          <input id="pac-search" type="text" placeholder="Buscar por nombre, teléfono…" oninput="renderPacientes()"/>
+        </div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="tbl-wrap">
+          <table id="pac-tabla">
+            <thead><tr><th>Paciente</th><th>Edad</th><th>Teléfono</th><th>Última consulta</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="pac-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONSULTAS ─── -->
+    <section id="sec-consultas" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Consultas</div>
+          <div class="page-sub">Historial clínico completo</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-consulta')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nueva consulta
+        </button>
+      </div>
+      <div style="display:flex;gap:1rem;margin-bottom:1rem">
+        <div class="search-bar" style="flex:1">
+          <span class="material-symbols-outlined">search</span>
+          <input id="cons-search" type="text" placeholder="Buscar por paciente o diagnóstico…" oninput="renderConsultas()"/>
+        </div>
+      </div>
+      <div id="cons-list"></div>
+    </section>
+
+    <!-- ─── RECETAS ─── -->
+    <section id="sec-recetas" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Recetas</div>
+          <div class="page-sub">Generador e historial de recetas</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-receta')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nueva receta
+        </button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Paciente</th><th>Fecha</th><th>Diagnóstico</th><th>Medicamentos</th><th></th></tr></thead>
+            <tbody id="rec-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PAGOS ─── -->
+    <section id="sec-pagos" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Pagos</div>
+          <div class="page-sub">Control de cobros por consulta</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-pago')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Registrar pago
+        </button>
+      </div>
+      <div class="pagos-summary" id="pagos-summary"></div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Paciente</th><th>Fecha</th><th>Concepto</th><th>Monto</th><th>Método</th><th>Estado</th><th></th></tr></thead>
+            <tbody id="pagos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SEGUIMIENTOS ─── -->
+    <section id="sec-seguimientos" class="hidden">
+      <div class="page-hdr">
+        <div>
+          <div class="page-title">Seguimientos</div>
+          <div class="page-sub">Alertas y revisiones programadas</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-seguimiento')">
+          <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nuevo seguimiento
+        </button>
+      </div>
+      <div id="seg-list"></div>
+    </section>
+
+    <!-- ─── AJUSTES ─── -->
+    <section id="sec-ajustes" class="hidden">
+      <div class="page-hdr"><div class="page-title">Ajustes del consultorio</div></div>
+      <div class="card" style="max-width:600px">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">Estos datos aparecen en las recetas y el encabezado del sistema.</p>
+        <div class="form-row">
+          <div class="form-group"><label>Nombre del médico</label><input id="aj-nombre" type="text"/></div>
+          <div class="form-group"><label>Especialidad</label><input id="aj-esp" type="text"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Cédula profesional</label><input id="aj-cedula" type="text"/></div>
+          <div class="form-group"><label>Teléfono del consultorio</label><input id="aj-tel" type="text"/></div>
+        </div>
+        <div class="form-group"><label>Nombre del consultorio / clínica</label><input id="aj-clinica" type="text"/></div>
+        <div class="form-group"><label>Dirección</label><input id="aj-dir" type="text"/></div>
+        <div class="form-group"><label>Horario de atención</label><input id="aj-horario" type="text" placeholder="Lun-Vie 9:00 - 18:00"/></div>
+        <div class="form-group">
+          <label>Costo de consulta (MXN)</label>
+          <input id="aj-costo" type="number" min="0" step="50"/>
+        </div>
+        <button class="btn btn-primary" onclick="saveAjustes()">Guardar cambios</button>
+        <span id="aj-ok" class="hidden" style="color:var(--green-tx);font-size:13px;margin-left:12px">✓ Guardado</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════════════ MODALES ══════════════════ -->
+
+<!-- Modal Nueva Cita -->
+<div class="modal-overlay hidden" id="modal-cita">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Nueva cita</span>
+      <button class="modal-close" onclick="closeModal('modal-cita')">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Paciente</label>
+      <select id="cita-pac"></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Fecha</label><input id="cita-fecha" type="date"/></div>
+      <div class="form-group"><label>Hora</label><input id="cita-hora" type="time" value="10:00"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tipo de consulta</label>
+        <select id="cita-tipo">
+          <option>Consulta general</option>
+          <option>Primera vez</option>
+          <option>Seguimiento</option>
+          <option>Urgencia</option>
+          <option>Control</option>
+          <option>Revisión de resultados</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Duración (min)</label>
+        <select id="cita-dur">
+          <option value="20">20 min</option>
+          <option value="30" selected>30 min</option>
+          <option value="45">45 min</option>
+          <option value="60">60 min</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Notas previas</label><textarea id="cita-notas" rows="2" placeholder="Motivo de consulta, indicaciones previas…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-cita')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveCita()">Agendar cita</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Paciente -->
+<div class="modal-overlay hidden" id="modal-paciente">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title">Nuevo paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-paciente')">✕</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.75rem">Datos personales</div>
+    <div class="form-row">
+      <div class="form-group"><label>Nombre completo *</label><input id="np-nombre" type="text" placeholder="Nombre completo"/></div>
+      <div class="form-group"><label>Fecha de nacimiento *</label><input id="np-dob" type="date"/></div>
+    </div>
+    <div class="form-row3">
+      <div class="form-group">
+        <label>Género</label>
+        <select id="np-genero"><option>Masculino</option><option>Femenino</option><option>Otro</option></select>
+      </div>
+      <div class="form-group"><label>Teléfono / WhatsApp *</label><input id="np-tel" type="tel" placeholder="444 123 4567"/></div>
+      <div class="form-group"><label>Email</label><input id="np-email" type="email" placeholder="correo@ejemplo.com"/></div>
+    </div>
+    <div class="form-group"><label>Dirección</label><input id="np-dir" type="text" placeholder="Calle, número, colonia, ciudad"/></div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin:1rem 0 .75rem">Información médica</div>
+    <div class="form-row3">
+      <div class="form-group">
+        <label>Tipo de sangre</label>
+        <select id="np-sangre"><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>Desconocido</option></select>
+      </div>
+      <div class="form-group"><label>Peso (kg)</label><input id="np-peso" type="number" step="0.1" min="1"/></div>
+      <div class="form-group"><label>Estatura (cm)</label><input id="np-talla" type="number" min="1"/></div>
+    </div>
+    <div class="form-group"><label>Alergias conocidas</label><input id="np-alergias" type="text" placeholder="Penicilina, polvo, latex… (separar con coma)"/></div>
+    <div class="form-group"><label>Enfermedades crónicas</label><input id="np-cronicas" type="text" placeholder="Diabetes tipo 2, hipertensión… (separar con coma)"/></div>
+    <div class="form-group"><label>Medicamentos actuales</label><input id="np-medicamentos" type="text" placeholder="Metformina 850mg, Enalapril 10mg…"/></div>
+    <div class="form-group"><label>Antecedentes familiares</label><input id="np-antfam" type="text" placeholder="Diabetes (papá), infarto (abuelo)…"/></div>
+    <div class="form-group"><label>Antecedentes personales relevantes</label><textarea id="np-antper" rows="2" placeholder="Cirugías, hospitalizaciones, traumas…"></textarea></div>
+    <div class="form-group"><label>Contacto de emergencia</label><input id="np-emergencia" type="text" placeholder="Nombre y teléfono"/></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-paciente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePaciente()">Registrar paciente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nueva Consulta -->
+<div class="modal-overlay hidden" id="modal-consulta">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title">Registrar consulta</span>
+      <button class="modal-close" onclick="closeModal('modal-consulta')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Paciente *</label><select id="con-pac"></select></div>
+      <div class="form-group"><label>Fecha *</label><input id="con-fecha" type="date"/></div>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.75rem">Signos vitales</div>
+    <div class="form-row3">
+      <div class="form-group"><label>Peso (kg)</label><input id="con-peso" type="number" step="0.1" placeholder="70.5"/></div>
+      <div class="form-group"><label>Talla (cm)</label><input id="con-talla" type="number" placeholder="168"/></div>
+      <div class="form-group"><label>Temperatura (°C)</label><input id="con-temp" type="number" step="0.1" placeholder="36.5"/></div>
+    </div>
+    <div class="form-row3">
+      <div class="form-group"><label>TA (mmHg)</label><input id="con-ta" type="text" placeholder="120/80"/></div>
+      <div class="form-group"><label>FC (lpm)</label><input id="con-fc" type="number" placeholder="72"/></div>
+      <div class="form-group"><label>SpO₂ (%)</label><input id="con-spo2" type="number" placeholder="98"/></div>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.75rem">Nota clínica (SOAP)</div>
+    <div class="form-group"><label>Motivo de consulta (Subjetivo)</label><textarea id="con-s" rows="2" placeholder="¿Por qué viene el paciente hoy?"></textarea></div>
+    <div class="form-group"><label>Exploración física (Objetivo)</label><textarea id="con-o" rows="2" placeholder="Hallazgos a la exploración…"></textarea></div>
+    <div class="form-group"><label>Diagnóstico (Análisis / Impresión)</label><textarea id="con-a" rows="2" placeholder="Diagnóstico principal y diferencial…"></textarea></div>
+    <div class="form-group"><label>Plan / Tratamiento</label><textarea id="con-p" rows="3" placeholder="Medicamentos, estudios solicitados, indicaciones…"></textarea></div>
+    <div class="form-group"><label>Indicaciones al paciente</label><textarea id="con-ind" rows="2" placeholder="Dieta, actividad física, cuidados en casa, fecha de regreso…"></textarea></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Seguimiento en (días)</label>
+        <select id="con-seg">
+          <option value="">Sin seguimiento</option>
+          <option value="7">7 días</option>
+          <option value="14">14 días</option>
+          <option value="21">21 días</option>
+          <option value="30">30 días</option>
+          <option value="60">60 días</option>
+          <option value="90">90 días</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Nota de seguimiento</label><input id="con-seg-nota" type="text" placeholder="Revisión de resultados, control de TA…"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-consulta')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveConsulta()">Guardar consulta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nueva Receta -->
+<div class="modal-overlay hidden" id="modal-receta">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title">Nueva receta</span>
+      <button class="modal-close" onclick="closeModal('modal-receta')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Paciente *</label><select id="rec-pac"></select></div>
+      <div class="form-group"><label>Diagnóstico</label><input id="rec-diag" type="text" placeholder="Diagnóstico breve"/></div>
+    </div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--faint);margin-bottom:.75rem">Medicamentos</div>
+    <div id="rec-meds-list"></div>
+    <button class="btn btn-sm" onclick="addMedRow()" style="margin-bottom:1rem">
+      <span class="material-symbols-outlined" style="font-size:14px;vertical-align:-2px">add</span> Agregar medicamento
+    </button>
+    <div class="form-group"><label>Indicaciones adicionales</label><textarea id="rec-ind" rows="2" placeholder="Dieta, reposo, cuidados…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-receta')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveReceta()">Guardar receta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pago -->
+<div class="modal-overlay hidden" id="modal-pago">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Registrar pago</span>
+      <button class="modal-close" onclick="closeModal('modal-pago')">✕</button>
+    </div>
+    <div class="form-group"><label>Paciente *</label><select id="pago-pac"></select></div>
+    <div class="form-row">
+      <div class="form-group"><label>Fecha</label><input id="pago-fecha" type="date"/></div>
+      <div class="form-group"><label>Monto (MXN) *</label><input id="pago-monto" type="number" min="0" step="50"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Concepto</label>
+        <select id="pago-concepto">
+          <option>Consulta general</option>
+          <option>Primera vez</option>
+          <option>Seguimiento</option>
+          <option>Urgencia</option>
+          <option>Procedimiento</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Método de pago</label>
+        <select id="pago-metodo">
+          <option>Efectivo</option>
+          <option>Transferencia</option>
+          <option>Tarjeta débito</option>
+          <option>Tarjeta crédito</option>
+          <option>Sin cargo</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="pago-estado">
+        <option value="pagado">Pagado</option>
+        <option value="pendiente">Pendiente</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-pago')">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePago()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Seguimiento -->
+<div class="modal-overlay hidden" id="modal-seguimiento">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title">Nuevo seguimiento</span>
+      <button class="modal-close" onclick="closeModal('modal-seguimiento')">✕</button>
+    </div>
+    <div class="form-group"><label>Paciente *</label><select id="seg-pac"></select></div>
+    <div class="form-group"><label>Fecha de seguimiento *</label><input id="seg-fecha" type="date"/></div>
+    <div class="form-group"><label>Nota / motivo</label><input id="seg-nota" type="text" placeholder="Control de glucosa, revisión de TA…"/></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-seguimiento')">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveSeguimiento()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Receta (print) -->
+<div class="modal-overlay hidden" id="modal-ver-receta">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title">Vista de receta</span>
+      <button class="modal-close" onclick="closeModal('modal-ver-receta')">✕</button>
+    </div>
+    <div id="receta-print" style="padding:1.5rem;border:1px solid var(--border);border-radius:var(--r)">
+      <div class="receta-header">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="receta-doctor-name" id="rp-nombre-med"></div>
+            <div style="font-size:12px;color:var(--muted)" id="rp-esp"></div>
+            <div style="font-size:12px;color:var(--muted)" id="rp-cedula"></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--muted)" id="rp-clinica"></div>
+            <div style="font-size:12px;color:var(--muted)" id="rp-dir"></div>
+            <div style="font-size:12px;color:var(--muted)" id="rp-tel"></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+        <div><span style="font-size:11px;color:var(--muted)">Paciente: </span><strong id="rp-paciente"></strong></div>
+        <div><span style="font-size:11px;color:var(--muted)">Fecha: </span><strong id="rp-fecha"></strong></div>
+      </div>
+      <div style="margin-bottom:.75rem"><span style="font-size:11px;color:var(--muted)">Diagnóstico: </span><span id="rp-diag"></span></div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.75rem">Medicamentos</div>
+      <div id="rp-meds"></div>
+      <div id="rp-ind-wrap" style="margin-top:1rem"></div>
+      <div style="margin-top:2.5rem;display:flex;justify-content:flex-end">
+        <div style="text-align:center;border-top:1px solid var(--border);min-width:200px;padding-top:.5rem">
+          <div id="rp-firma-nombre" style="font-size:12px;font-weight:700"></div>
+          <div id="rp-firma-ced" style="font-size:11px;color:var(--muted)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-ver-receta')">Cerrar</button>
+      <button class="btn btn-primary" onclick="window.print()">
+        <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">print</span> Imprimir / PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Paciente (expediente) -->
+<div class="modal-overlay hidden" id="modal-ver-paciente">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title" id="vp-titulo">Expediente del paciente</span>
+      <button class="modal-close" onclick="closeModal('modal-ver-paciente')">✕</button>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="vpTab('datos',this)">Datos personales</div>
+      <div class="tab" onclick="vpTab('historial',this)">Historial clínico</div>
+      <div class="tab" onclick="vpTab('recetas',this)">Recetas</div>
+    </div>
+    <div id="vp-datos"></div>
+    <div id="vp-historial" class="hidden"></div>
+    <div id="vp-recetas-tab" class="hidden"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-ver-paciente')">Cerrar</button>
+      <button class="btn btn-primary" onclick="openConsultaForPaciente()">
+        <span class="material-symbols-outlined" style="font-size:15px;vertical-align:-2px">add</span> Nueva consulta
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ver Consulta -->
+<div class="modal-overlay hidden" id="modal-ver-consulta">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <span class="modal-title">Detalle de consulta</span>
+      <button class="modal-close" onclick="closeModal('modal-ver-consulta')">✕</button>
+    </div>
+    <div id="vc-content"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-ver-consulta')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  STORE — localStorage wrapper
+// ══════════════════════════════════════════════════════
+const KEY = {
+  pac:'mcrm_pacientes', citas:'mcrm_citas', cons:'mcrm_consultas',
+  rec:'mcrm_recetas', pagos:'mcrm_pagos', seg:'mcrm_seguimientos',
+  aj:'mcrm_ajustes'
+};
+function get(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch{return []}}
+function getObj(k,def={}){try{return JSON.parse(localStorage.getItem(k))||def}catch{return def}}
+function set(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function uid(){return Date.now()+'_'+Math.random().toString(36).slice(2,7)}
+
+// ══════════════════════════════════════════════════════
+//  DATE HELPERS
+// ══════════════════════════════════════════════════════
+function today(){return new Date().toISOString().slice(0,10)}
+function fmtDate(d){if(!d)return '-';const[y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}
+function calcEdad(dob){if(!dob)return '-';const t=new Date(),n=new Date(dob);let a=t.getFullYear()-n.getFullYear();if(t<new Date(t.getFullYear(),n.getMonth(),n.getDate()))a--;return a}
+function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
+function daysDiff(d){const now=new Date();now.setHours(0,0,0,0);const dt=new Date(d);return Math.round((dt-now)/(1000*60*60*24))}
+
+// ══════════════════════════════════════════════════════
+//  DEMO DATA
+// ══════════════════════════════════════════════════════
+function initDemoData(){
+  if(localStorage.getItem('mcrm_init')){
+    // Patch seguimientos if missing
+    if(!localStorage.getItem(KEY.seg)){
+      set(KEY.seg, demoSeguimientos());
+    }
+    return;
+  }
+  const t=today();
+  const pac=[
+    {id:'p1',nombre:'María González López',dob:'1985-03-15',genero:'Femenino',tel:'444 123 4567',email:'maria@ejemplo.com',dir:'Av. Reforma 210, SLP',sangre:'O+',peso:62,talla:162,alergias:'Penicilina',cronicas:'Hipertensión arterial',medicamentos:'Enalapril 10mg c/24h',antfam:'Diabetes (madre), HTA (padre)',antper:'Cesárea 2012, apendicectomía 2018',emergencia:'Luis González 444 987 6543'},
+    {id:'p2',nombre:'Carlos Ramírez Torres',dob:'1972-11-08',genero:'Masculino',tel:'444 234 5678',email:'carlos@ejemplo.com',dir:'Calle Hidalgo 55, SLP',sangre:'A+',peso:88,talla:175,alergias:'Sulfas',cronicas:'Diabetes tipo 2, dislipidemia',medicamentos:'Metformina 850mg c/12h, Atorvastatina 20mg',antfam:'Diabetes (ambos padres), infarto (tío)',antper:'Ninguno relevante',emergencia:'Ana Ramírez 444 876 5432'},
+    {id:'p3',nombre:'Sofía Martínez Ruiz',dob:'1998-07-22',genero:'Femenino',tel:'444 345 6789',email:'sofia@ejemplo.com',dir:'Col. Centro 88, SLP',sangre:'B+',peso:55,talla:158,alergias:'Ninguna conocida',cronicas:'Ninguna',medicamentos:'Ninguno',antfam:'Sin antecedentes relevantes',antper:'Amigdalitis recurrente en infancia',emergencia:'Rosario Ruiz 444 765 4321'},
+    {id:'p4',nombre:'Roberto Pérez Sánchez',dob:'1960-01-30',genero:'Masculino',tel:'444 456 7890',email:'roberto@ejemplo.com',dir:'Fraccionamiento Real 300, SLP',sangre:'AB+',peso:95,talla:172,alergias:'AINEs (gastritis severa)',cronicas:'Diabetes tipo 2, HTA, obesidad grado 1',medicamentos:'Metformina 1g c/12h, Losartán 50mg, Omeprazol 20mg',antfam:'HTA, Ca. colorrectal (padre)',antper:'Colecistectomía 2005, internamiento por descompensación diabética 2019',emergencia:'Carmen Pérez 444 654 3210'}
+  ];
+  const citas=[
+    {id:uid(),pacId:'p1',fecha:t,hora:'09:00',tipo:'Control',dur:30,notas:'Control mensual de presión arterial',estado:'Completada'},
+    {id:uid(),pacId:'p3',fecha:t,hora:'10:30',tipo:'Primera vez',dur:45,notas:'Dolor de garganta recurrente',estado:'Confirmada'},
+    {id:uid(),pacId:'p2',fecha:t,hora:'11:30',tipo:'Seguimiento',dur:30,notas:'Revisión de glucosa',estado:'En consulta'},
+    {id:uid(),pacId:'p4',fecha:t,hora:'13:00',tipo:'Consulta general',dur:30,notas:'',estado:'Pendiente'},
+    {id:uid(),pacId:'p1',fecha:addDays(t,1),hora:'09:30',tipo:'Control',dur:30,notas:'Seguimiento HTA',estado:'Pendiente'},
+    {id:uid(),pacId:'p3',fecha:addDays(t,1),hora:'11:00',tipo:'Revisión de resultados',dur:20,notas:'Resultados de cultivo faríngeo',estado:'Confirmada'}
+  ];
+  const cons=[
+    {id:'c1',pacId:'p1',fecha:addDays(t,-30),peso:63,talla:162,temp:36.4,ta:'138/88',fc:76,spo2:98,s:'Paciente refiere cefalea occipital y sensación de calor. Refiere olvido de toma de medicamento 2 días.',o:'PA: 138/88. Bien hidratada, sin edemas. Campos pulmonares limpios. RsCs rítmicos sin soplos.',a:'HTA en mal control secundario a mal apego terapéutico.',p:'Reforzar apego a Enalapril 10mg c/24h. Dieta hiposódica. Ejercicio aeróbico 30 min x 5 días/semana.',ind:'No saltarse medicamentos. Regresar en 30 días con toma de TA diaria registrada.',seg:addDays(t,0),segNota:'Control de presión arterial'},
+    {id:'c2',pacId:'p2',fecha:addDays(t,-15),peso:87,talla:175,temp:36.6,ta:'122/80',fc:80,spo2:99,s:'Paciente diabético en control. Refiere polidipsia leve los últimos días. Trae resultados: Glucosa 148 mg/dL, HbA1c 7.8%.',o:'Consciente, orientado. Mucosas húmedas. Abdomen blando, sin datos de irritación. Sin datos de neuropatía periférica.',a:'DM2 en control parcial. HbA1c fuera de meta (<7%). Ajuste de tratamiento necesario.',p:'Incrementar Metformina a 1g c/12h. Mantener Atorvastatina. Dieta diabética estricta. Control en 15 días con glucosa en ayuno.',ind:'Registro de glucemia capilar 2x/día. Dieta: evitar azúcares simples. Actividad física mínima 30 min/día.',seg:t,segNota:'Revisión de glucosa y ajuste'},
+    {id:'c3',pacId:'p4',fecha:addDays(t,-7),peso:94,talla:172,temp:36.8,ta:'145/92',fc:84,spo2:97,s:'Paciente con DM2 e HTA. Refiere dolor en planta de pie derecho leve. Glucosa en casa: 160-200 mg/dL.',o:'PA: 145/92. Pie derecho: inspección normal, pulsos presentes, sensibilidad conservada. Índice tobillo-brazo normal.',a:'DM2 e HTA en mal control. Sin datos de pie diabético activo. Riesgo de úlcera por valores glucémicos elevados.',p:'Ajuste Losartán 100mg. Agregar Glimepirida 2mg c/24h. Remisión a nutrición. Cuidado de pies.',ind:'Revisión diaria de pies. Calzado adecuado. Hidratación de piel. Glucosa meta: <130 en ayuno.',seg:addDays(t,7),segNota:'Control pie diabético y TA'}
+  ];
+  const rec=[
+    {id:'r1',pacId:'p1',fecha:addDays(t,-30),diag:'HTA en mal control',meds:[{nombre:'Enalapril',pres:'Tabletas 10mg',dosis:'1 tableta',via:'Oral',freq:'Cada 24 horas (noche)',dur:'30 días'}],ind:'Dieta hiposódica. No saltarse dosis.'},
+    {id:'r2',pacId:'p2',fecha:addDays(t,-15),diag:'DM2, ajuste de tratamiento',meds:[{nombre:'Metformina',pres:'Tabletas 1g',dosis:'1 tableta',via:'Oral',freq:'Cada 12 horas con alimentos',dur:'30 días'},{nombre:'Atorvastatina',pres:'Tabletas 20mg',dosis:'1 tableta',via:'Oral',freq:'Cada 24 horas (noche)',dur:'30 días'}],ind:'Registro de glucosa 2x/día. Dieta diabética.'}
+  ];
+  const pagos=[
+    {id:uid(),pacId:'p1',fecha:addDays(t,-30),concepto:'Control',monto:500,metodo:'Efectivo',estado:'pagado'},
+    {id:uid(),pacId:'p2',fecha:addDays(t,-15),concepto:'Seguimiento',monto:500,metodo:'Transferencia',estado:'pagado'},
+    {id:uid(),pacId:'p4',fecha:addDays(t,-7),concepto:'Consulta general',monto:600,metodo:'Efectivo',estado:'pendiente'}
+  ];
+  const segs = demoSeguimientos(t, cons);
+  const aj={nombre:'Dr. Alejandro Hernández',esp:'Medicina General',cedula:'Cédula Prof. 12345678',tel:'444 608 5005',clinica:'Consultorio Médico Hernández',dir:'Av. Venustiano Carranza 500, SLP',horario:'Lun-Vie 9:00 - 18:00',costo:500};
+  set(KEY.pac,pac); set(KEY.citas,citas); set(KEY.cons,cons);
+  set(KEY.rec,rec); set(KEY.pagos,pagos); set(KEY.seg,segs); set(KEY.aj,aj);
+  localStorage.setItem('mcrm_init','1');
+}
+
+function demoSeguimientos(t, cons){
+  t = t || today();
+  return [
+    {id:uid(),pacId:'p1',fecha:t,nota:'Control de presión arterial',completado:false},
+    {id:uid(),pacId:'p2',fecha:t,nota:'Revisión de glucosa y ajuste',completado:false},
+    {id:uid(),pacId:'p4',fecha:addDays(t,7),nota:'Control pie diabético y TA',completado:false}
+  ];
+}
+
+// ══════════════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════════════
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value.trim();
+  if((u==='demo'&&p==='demo')||(u==='admin'&&p==='admin')){
+    initDemoData();
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-screen').classList.remove('hidden');
+    loadAjustesUI();
+    navTo('dashboard',document.getElementById('nav-dashboard'));
+  } else {
+    const err=document.getElementById('login-err');
+    err.textContent='Usuario o contraseña incorrectos';
+    err.classList.remove('hidden');
+  }
+}
+function logout(){
+  document.getElementById('app-screen').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-err').classList.add('hidden');
+}
+document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('login-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+// ══════════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════════
+const SECTIONS=['dashboard','agenda','pacientes','consultas','recetas','pagos','seguimientos','ajustes'];
+function navTo(name, el){
+  SECTIONS.forEach(s=>{
+    document.getElementById('sec-'+s).classList.toggle('hidden', s!==name);
+  });
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('top-section-name').textContent = el ? el.textContent.trim() : name;
+  closeSidebar();
+  // Render section
+  const renders={dashboard:renderDashboard, agenda:()=>renderAgenda('hoy'), pacientes:renderPacientes,
+    consultas:renderConsultas, recetas:renderRecetas, pagos:renderPagos,
+    seguimientos:renderSeguimientos, ajustes:loadAjustesUI};
+  if(renders[name]) renders[name]();
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open')}
+
+// ══════════════════════════════════════════════════════
+//  MODALS
+// ══════════════════════════════════════════════════════
+function openModal(id){
+  document.getElementById(id).classList.remove('hidden');
+  // Pre-fill common fields
+  if(id==='modal-cita'||id==='modal-pago'||id==='modal-seguimiento'){
+    const sel={
+      'modal-cita':'cita-pac','modal-pago':'pago-pac','modal-seguimiento':'seg-pac'
+    }[id];
+    fillPacienteSelect(sel);
+    if(id==='modal-cita') document.getElementById('cita-fecha').value=today();
+    if(id==='modal-pago'){
+      document.getElementById('pago-fecha').value=today();
+      const aj=getObj(KEY.aj);
+      document.getElementById('pago-monto').value=aj.costo||500;
+    }
+    if(id==='modal-seguimiento') document.getElementById('seg-fecha').value=addDays(today(),14);
+  }
+  if(id==='modal-paciente') clearPacienteForm();
+  if(id==='modal-consulta'){
+    fillPacienteSelect('con-pac');
+    document.getElementById('con-fecha').value=today();
+    if(id==='modal-receta') initMedRows();
+  }
+  if(id==='modal-receta'){
+    fillPacienteSelect('rec-pac');
+    initMedRows();
+  }
+}
+function closeModal(id){document.getElementById(id).classList.add('hidden')}
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.add('hidden')});
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(o=>o.classList.add('hidden'));
+  }
+});
+
+// ══════════════════════════════════════════════════════
+//  PACIENTES HELPERS
+// ══════════════════════════════════════════════════════
+function getPac(id){return get(KEY.pac).find(p=>p.id===id)}
+function pacNombre(id){const p=getPac(id);return p?p.nombre:'Desconocido'}
+function fillPacienteSelect(selId){
+  const sel=document.getElementById(selId);
+  if(!sel) return;
+  const pacs=get(KEY.pac);
+  sel.innerHTML=pacs.map(p=>`<option value="${p.id}">${p.nombre}</option>`).join('');
+}
+function clearPacienteForm(){
+  ['np-nombre','np-dob','np-tel','np-email','np-dir','np-alergias','np-cronicas','np-medicamentos','np-antfam','np-antper','np-emergencia','np-peso','np-talla'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+}
+function avatarColor(name){
+  const colors=['av-green','av-blue','av-amber','av-red'];
+  return colors[(name.charCodeAt(0)||0)%colors.length];
+}
+function initials(name){return name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase()}
+
+// ══════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════
+function renderDashboard(){
+  const t=today();
+  const d=new Date();
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('dash-fecha').textContent=`${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+
+  const citas=get(KEY.citas);
+  const cons=get(KEY.cons);
+  const pagos=get(KEY.pagos);
+  const segs=get(KEY.seg);
+
+  const citasHoy=citas.filter(c=>c.fecha===t);
+  const completadasHoy=citasHoy.filter(c=>c.estado==='Completada').length;
+  const pendHoy=citasHoy.filter(c=>c.estado==='Pendiente'||c.estado==='Confirmada').length;
+  const ingMes=pagos.filter(p=>p.fecha&&p.fecha.startsWith(t.slice(0,7))&&p.estado==='pagado').reduce((a,p)=>a+(+p.monto||0),0);
+  const pendPago=pagos.filter(p=>p.estado==='pendiente').reduce((a,p)=>a+(+p.monto||0),0);
+  const segPend=segs.filter(s=>!s.completado&&daysDiff(s.fecha)<=3).length;
+
+  document.getElementById('dash-metrics').innerHTML=`
+    <div class="metric accent">
+      <div class="metric-lbl"><span class="material-symbols-outlined">calendar_today</span>Citas hoy</div>
+      <div class="metric-val">${citasHoy.length}</div>
+      <div class="metric-sub">${completadasHoy} completadas · ${pendHoy} pendientes</div>
+    </div>
+    <div class="metric">
+      <div class="metric-lbl"><span class="material-symbols-outlined">medical_services</span>Consultas este mes</div>
+      <div class="metric-val">${cons.filter(c=>c.fecha&&c.fecha.startsWith(t.slice(0,7))).length}</div>
+      <div class="metric-sub">Total: ${cons.length} en el sistema</div>
+    </div>
+    <div class="metric">
+      <div class="metric-lbl"><span class="material-symbols-outlined">payments</span>Ingresos del mes</div>
+      <div class="metric-val">$${ingMes.toLocaleString('es-MX')}</div>
+      <div class="metric-sub" style="color:${pendPago>0?'var(--amber)':'var(--muted)'}">$${pendPago.toLocaleString('es-MX')} pendiente</div>
+    </div>
+    <div class="metric">
+      <div class="metric-lbl"><span class="material-symbols-outlined">people</span>Pacientes</div>
+      <div class="metric-val">${get(KEY.pac).length}</div>
+      <div class="metric-sub">${segPend>0?`<span style="color:var(--amber)">${segPend} seguimiento(s) urgente(s)</span>`:'Al día'}</div>
+    </div>
+  `;
+
+  // Citas de hoy
+  document.getElementById('dash-total-hoy').textContent=citasHoy.length;
+  if(citasHoy.length===0){
+    document.getElementById('dash-citas-hoy').innerHTML='<div class="empty" style="padding:1.5rem"><span class="material-symbols-outlined">event_busy</span>Sin citas programadas hoy</div>';
+  } else {
+    document.getElementById('dash-citas-hoy').innerHTML=citasHoy.sort((a,b)=>a.hora.localeCompare(b.hora)).map(c=>`
+      <div class="cita-row" onclick="verCita('${c.id}')">
+        <div class="cita-hora">${c.hora}</div>
+        <div class="cita-info">
+          <div class="cita-nombre">${pacNombre(c.pacId)}</div>
+          <div class="cita-tipo">${c.tipo} · ${c.dur} min</div>
+        </div>
+        <div>${estadoBadge(c.estado)}</div>
+      </div>`).join('');
+  }
+
+  // Seguimientos
+  const segsProx=segs.filter(s=>!s.completado&&daysDiff(s.fecha)<=7).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  if(segsProx.length===0){
+    document.getElementById('dash-seguimientos').innerHTML='<div class="empty" style="padding:1.5rem"><span class="material-symbols-outlined">check_circle</span>Sin seguimientos urgentes</div>';
+  } else {
+    document.getElementById('dash-seguimientos').innerHTML=segsProx.map(s=>{
+      const diff=daysDiff(s.fecha);
+      const cls=diff<0?'vencido':diff<=1?'proximo':'ok';
+      const label=diff<0?`Vencido (${Math.abs(diff)}d)`:diff===0?'Hoy':diff===1?'Mañana':`En ${diff} días`;
+      return `<div class="seg-row">
+        <div class="seg-fecha ${cls}">${label}</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${pacNombre(s.pacId)}</div><div style="font-size:12px;color:var(--muted)">${s.nota}</div></div>
+        <button class="btn btn-sm" onclick="completarSeg('${s.id}',event)">✓</button>
+      </div>`;
+    }).join('');
+  }
+  updateBadgeSeg();
+}
+
+function estadoBadge(e){
+  const m={Pendiente:'badge-gray',Confirmada:'badge-blue','En consulta':'badge-amber',Completada:'badge-green',Cancelada:'badge-red'};
+  return `<span class="badge ${m[e]||'badge-gray'}">${e}</span>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  AGENDA
+// ══════════════════════════════════════════════════════
+let agendaTabActual='hoy';
+function agendaTab(tab,el){
+  agendaTabActual=tab;
+  document.querySelectorAll('#sec-agenda .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderAgenda(tab);
+}
+function renderAgenda(tab){
+  agendaTabActual=tab||agendaTabActual;
+  const t=today();
+  let citas=get(KEY.citas);
+  if(tab==='hoy') citas=citas.filter(c=>c.fecha===t);
+  else if(tab==='semana'){
+    const fin=addDays(t,6);
+    citas=citas.filter(c=>c.fecha>=t&&c.fecha<=fin);
+  }
+  citas=citas.sort((a,b)=>a.fecha.localeCompare(b.fecha)||a.hora.localeCompare(b.hora));
+  const el=document.getElementById('agenda-content');
+  if(!citas.length){el.innerHTML='<div class="empty"><span class="material-symbols-outlined">event_available</span>Sin citas en este periodo</div>';return;}
+  // Group by date
+  const byDate={};
+  citas.forEach(c=>{if(!byDate[c.fecha])byDate[c.fecha]=[];byDate[c.fecha].push(c);});
+  el.innerHTML=Object.entries(byDate).map(([fecha,cs])=>`
+    <div class="agenda-day-hdr">${fecha===t?'Hoy':'Mañana'} — ${fmtDate(fecha)}</div>
+    ${cs.map(c=>`<div class="cita-row">
+      <div class="cita-hora">${c.hora}</div>
+      <div class="cita-info" onclick="verCita('${c.id}')">
+        <div class="cita-nombre">${pacNombre(c.pacId)}</div>
+        <div class="cita-tipo">${c.tipo} · ${c.dur} min${c.notas?` · <em>${c.notas}</em>`:''}</div>
+      </div>
+      <div class="cita-acciones">
+        ${estadoBadge(c.estado)}
+        <div style="position:relative">
+          <select class="btn btn-sm" onchange="cambiarEstadoCita('${c.id}',this.value)" style="font-size:11px;padding:3px 6px;width:auto">
+            ${['Pendiente','Confirmada','En consulta','Completada','Cancelada'].map(e=>`<option value="${e}"${c.estado===e?' selected':''}>${e}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>`).join('')}
+  `).join('');
+}
+function cambiarEstadoCita(id,estado){
+  const citas=get(KEY.citas);
+  const idx=citas.findIndex(c=>c.id===id);
+  if(idx>=0){citas[idx].estado=estado;set(KEY.citas,citas);}
+  renderAgenda();
+  renderDashboardIfActive();
+}
+function verCita(id){
+  const c=get(KEY.citas).find(x=>x.id===id);
+  if(!c) return;
+  const p=getPac(c.pacId);
+  // Open paciente modal filtered to this appointment context
+  if(p) verPaciente(p.id);
+}
+function renderDashboardIfActive(){
+  if(!document.getElementById('sec-dashboard').classList.contains('hidden')) renderDashboard();
+}
+
+// ══════════════════════════════════════════════════════
+//  PACIENTES
+// ══════════════════════════════════════════════════════
+function renderPacientes(){
+  const q=(document.getElementById('pac-search')||{}).value||'';
+  const pacs=get(KEY.pac).filter(p=>!q||p.nombre.toLowerCase().includes(q.toLowerCase())||p.tel.includes(q));
+  const cons=get(KEY.cons);
+  const tbody=document.getElementById('pac-tbody');
+  if(!pacs.length){
+    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted)">Sin resultados</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=pacs.map(p=>{
+    const ultCons=cons.filter(c=>c.pacId===p.id).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+    return `<tr onclick="verPaciente('${p.id}')">
+      <td><div style="display:flex;align-items:center;gap:10px">
+        <div class="avatar ${avatarColor(p.nombre)}">${initials(p.nombre)}</div>
+        <div><div style="font-weight:600">${p.nombre}</div><div style="font-size:11px;color:var(--muted)">${p.genero}</div></div>
+      </div></td>
+      <td>${calcEdad(p.dob)} años</td>
+      <td>${p.tel}</td>
+      <td>${ultCons?fmtDate(ultCons.fecha):'—'}</td>
+      <td>${p.cronicas&&p.cronicas!=='Ninguna'?`<span class="badge badge-amber">${p.cronicas.split(',')[0].trim()}</span>`:'<span class="badge badge-green">Sin crónicos</span>'}</td>
+      <td><button class="btn btn-sm" onclick="verPaciente('${p.id}');event.stopPropagation()">Ver expediente</button></td>
+    </tr>`;
+  }).join('');
+}
+function savePaciente(){
+  const nombre=document.getElementById('np-nombre').value.trim();
+  const tel=document.getElementById('np-tel').value.trim();
+  if(!nombre||!tel){alert('Nombre y teléfono son obligatorios');return;}
+  const p={
+    id:uid(),nombre,dob:document.getElementById('np-dob').value,
+    genero:document.getElementById('np-genero').value,tel,
+    email:document.getElementById('np-email').value,
+    dir:document.getElementById('np-dir').value,
+    sangre:document.getElementById('np-sangre').value,
+    peso:document.getElementById('np-peso').value,
+    talla:document.getElementById('np-talla').value,
+    alergias:document.getElementById('np-alergias').value,
+    cronicas:document.getElementById('np-cronicas').value,
+    medicamentos:document.getElementById('np-medicamentos').value,
+    antfam:document.getElementById('np-antfam').value,
+    antper:document.getElementById('np-antper').value,
+    emergencia:document.getElementById('np-emergencia').value
+  };
+  const pacs=get(KEY.pac); pacs.push(p); set(KEY.pac,pacs);
+  closeModal('modal-paciente');
+  renderPacientes();
+}
+
+let _vpPacId=null;
+function verPaciente(id){
+  _vpPacId=id;
+  const p=getPac(id);
+  if(!p) return;
+  document.getElementById('vp-titulo').textContent=p.nombre;
+  openModal('modal-ver-paciente');
+  vpTab('datos',document.querySelector('#modal-ver-paciente .tab'));
+}
+function vpTab(tab,el){
+  document.querySelectorAll('#modal-ver-paciente .tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  ['vp-datos','vp-historial','vp-recetas-tab'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  const p=getPac(_vpPacId);
+  if(!p) return;
+  if(tab==='datos'){
+    document.getElementById('vp-datos').classList.remove('hidden');
+    renderVPDatos(p);
+  } else if(tab==='historial'){
+    document.getElementById('vp-historial').classList.remove('hidden');
+    renderVPHistorial(p.id);
+  } else {
+    document.getElementById('vp-recetas-tab').classList.remove('hidden');
+    renderVPRecetas(p.id);
+  }
+}
+function renderVPDatos(p){
+  const chips=(txt)=>txt?txt.split(',').map(s=>`<span class="detail-chip">${s.trim()}</span>`).join(''):'<span style="color:var(--muted);font-size:12px">No registrado</span>';
+  document.getElementById('vp-datos').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div>
+        <div class="detail-section-title">Datos personales</div>
+        <table style="font-size:13px;width:100%">
+          <tr><td style="color:var(--muted);padding:3px 0;width:120px">Fecha nac.</td><td>${fmtDate(p.dob)} (${calcEdad(p.dob)} años)</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Género</td><td>${p.genero||'—'}</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Teléfono</td><td>${p.tel}</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Email</td><td>${p.email||'—'}</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Dirección</td><td>${p.dir||'—'}</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Emergencia</td><td>${p.emergencia||'—'}</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="detail-section-title">Datos médicos</div>
+        <table style="font-size:13px;width:100%">
+          <tr><td style="color:var(--muted);padding:3px 0;width:120px">Tipo sangre</td><td><strong style="color:var(--red)">${p.sangre||'—'}</strong></td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Peso</td><td>${p.peso?p.peso+' kg':'—'}</td></tr>
+          <tr><td style="color:var(--muted);padding:3px 0">Talla</td><td>${p.talla?p.talla+' cm':'—'}</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="detail-section-title">Alergias</div>
+    <div style="margin-bottom:.75rem">${chips(p.alergias)}</div>
+    <div class="detail-section-title">Enfermedades crónicas</div>
+    <div style="margin-bottom:.75rem">${chips(p.cronicas)}</div>
+    <div class="detail-section-title">Medicamentos actuales</div>
+    <div style="margin-bottom:.75rem">${p.medicamentos||'<span style="color:var(--muted);font-size:12px">Ninguno</span>'}</div>
+    <div class="detail-section-title">Antecedentes familiares</div>
+    <div style="margin-bottom:.75rem;font-size:13px">${p.antfam||'—'}</div>
+    <div class="detail-section-title">Antecedentes personales</div>
+    <div style="font-size:13px">${p.antper||'—'}</div>
+  `;
+}
+function renderVPHistorial(pacId){
+  const cons=get(KEY.cons).filter(c=>c.pacId===pacId).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const el=document.getElementById('vp-historial');
+  if(!cons.length){el.innerHTML='<div class="empty"><span class="material-symbols-outlined">medical_services</span>Sin consultas registradas</div>';return;}
+  el.innerHTML=cons.map(c=>`
+    <div class="consult-item" onclick="verConsulta('${c.id}')">
+      <div>
+        <div class="consult-dot"></div>
+        <div style="width:1px;height:100%;background:var(--border);margin:4px auto 0"></div>
+      </div>
+      <div class="consult-card" style="margin-bottom:.75rem">
+        <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
+          <span style="font-weight:700;font-size:13px">${fmtDate(c.fecha)}</span>
+          <span style="font-size:12px;color:var(--muted)">${c.ta?'TA: '+c.ta+' · ':''} ${c.peso?c.peso+' kg':''}</span>
+        </div>
+        <div style="font-size:13px;color:var(--text);margin-bottom:4px"><strong>Dx:</strong> ${c.a||'Sin diagnóstico'}</div>
+        <div style="font-size:12px;color:var(--muted)">${c.s||''}</div>
+      </div>
+    </div>`).join('');
+}
+function renderVPRecetas(pacId){
+  const recs=get(KEY.rec).filter(r=>r.pacId===pacId).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const el=document.getElementById('vp-recetas-tab');
+  if(!recs.length){el.innerHTML='<div class="empty"><span class="material-symbols-outlined">receipt_long</span>Sin recetas registradas</div>';return;}
+  el.innerHTML=recs.map(r=>`<div class="cita-row" onclick="verReceta('${r.id}')">
+    <div class="cita-info">
+      <div class="cita-nombre">${fmtDate(r.fecha)} — ${r.diag||'Sin diagnóstico'}</div>
+      <div class="cita-tipo">${r.meds?r.meds.length:0} medicamento(s)</div>
+    </div>
+    <button class="btn btn-sm" onclick="verReceta('${r.id}');event.stopPropagation()">Ver / Imprimir</button>
+  </div>`).join('');
+}
+function openConsultaForPaciente(){
+  closeModal('modal-ver-paciente');
+  openModal('modal-consulta');
+  if(_vpPacId){
+    fillPacienteSelect('con-pac');
+    document.getElementById('con-pac').value=_vpPacId;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  CITAS CRUD
+// ══════════════════════════════════════════════════════
+function saveCita(){
+  const pacId=document.getElementById('cita-pac').value;
+  const fecha=document.getElementById('cita-fecha').value;
+  const hora=document.getElementById('cita-hora').value;
+  if(!pacId||!fecha||!hora){alert('Completa los campos obligatorios');return;}
+  const c={
+    id:uid(),pacId,fecha,hora,
+    tipo:document.getElementById('cita-tipo').value,
+    dur:document.getElementById('cita-dur').value,
+    notas:document.getElementById('cita-notas').value,
+    estado:'Pendiente'
+  };
+  const citas=get(KEY.citas); citas.push(c); set(KEY.citas,citas);
+  closeModal('modal-cita');
+  renderDashboard();
+  if(!document.getElementById('sec-agenda').classList.contains('hidden')) renderAgenda();
+}
+
+// ══════════════════════════════════════════════════════
+//  CONSULTAS
+// ══════════════════════════════════════════════════════
+function renderConsultas(){
+  const q=(document.getElementById('cons-search')||{}).value||'';
+  let cons=get(KEY.cons).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  if(q) cons=cons.filter(c=>{
+    const p=getPac(c.pacId);
+    return (p&&p.nombre.toLowerCase().includes(q.toLowerCase()))||(c.a&&c.a.toLowerCase().includes(q.toLowerCase()));
+  });
+  const el=document.getElementById('cons-list');
+  if(!cons.length){el.innerHTML='<div class="empty"><span class="material-symbols-outlined">medical_services</span>Sin consultas. Crea la primera.</div>';return;}
+  el.innerHTML=cons.map(c=>{
+    const p=getPac(c.pacId);
+    return `<div class="cita-row" onclick="verConsulta('${c.id}')">
+      <div style="display:flex;align-items:center;gap:10px;flex:1">
+        <div class="avatar ${p?avatarColor(p.nombre):'av-green'}">${p?initials(p.nombre):'?'}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">${p?p.nombre:'Desconocido'} <span style="font-size:11px;font-weight:400;color:var(--muted)">— ${fmtDate(c.fecha)}</span></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px"><strong>Dx:</strong> ${c.a||'Sin diagnóstico'}</div>
+          <div style="font-size:12px;color:var(--faint);margin-top:1px">${c.s||''}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        ${c.ta?`<span class="badge badge-blue">TA: ${c.ta}</span>`:''}
+        ${c.peso?`<span class="badge badge-gray">${c.peso} kg</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function saveConsulta(){
+  const pacId=document.getElementById('con-pac').value;
+  const fecha=document.getElementById('con-fecha').value;
+  if(!pacId||!fecha){alert('Paciente y fecha son obligatorios');return;}
+  const c={
+    id:uid(),pacId,fecha,
+    peso:document.getElementById('con-peso').value,
+    talla:document.getElementById('con-talla').value,
+    temp:document.getElementById('con-temp').value,
+    ta:document.getElementById('con-ta').value,
+    fc:document.getElementById('con-fc').value,
+    spo2:document.getElementById('con-spo2').value,
+    s:document.getElementById('con-s').value,
+    o:document.getElementById('con-o').value,
+    a:document.getElementById('con-a').value,
+    p:document.getElementById('con-p').value,
+    ind:document.getElementById('con-ind').value
+  };
+  const cons=get(KEY.cons); cons.push(c); set(KEY.cons,cons);
+  // Seguimiento automático
+  const segDias=document.getElementById('con-seg').value;
+  const segNota=document.getElementById('con-seg-nota').value;
+  if(segDias){
+    const segs=get(KEY.seg);
+    segs.push({id:uid(),pacId,fecha:addDays(fecha,+segDias),nota:segNota||'Seguimiento',completado:false});
+    set(KEY.seg,segs);
+    updateBadgeSeg();
+  }
+  closeModal('modal-consulta');
+  renderConsultas();
+}
+function verConsulta(id){
+  const c=get(KEY.cons).find(x=>x.id===id);
+  if(!c) return;
+  const p=getPac(c.pacId);
+  document.getElementById('vc-content').innerHTML=`
+    <div style="margin-bottom:1rem">
+      <div style="font-weight:700;font-size:15px">${p?p.nombre:'Paciente'}</div>
+      <div style="font-size:12px;color:var(--muted)">${fmtDate(c.fecha)}</div>
+    </div>
+    <div class="vitals-grid" style="margin-bottom:1rem">
+      ${c.peso?`<div class="vital-box"><div class="vital-val">${c.peso} kg</div><div class="vital-lbl">Peso</div></div>`:''}
+      ${c.talla?`<div class="vital-box"><div class="vital-val">${c.talla} cm</div><div class="vital-lbl">Talla</div></div>`:''}
+      ${c.ta?`<div class="vital-box"><div class="vital-val">${c.ta}</div><div class="vital-lbl">TA mmHg</div></div>`:''}
+      ${c.fc?`<div class="vital-box"><div class="vital-val">${c.fc}</div><div class="vital-lbl">FC lpm</div></div>`:''}
+      ${c.temp?`<div class="vital-box"><div class="vital-val">${c.temp}°C</div><div class="vital-lbl">Temp</div></div>`:''}
+      ${c.spo2?`<div class="vital-box"><div class="vital-val">${c.spo2}%</div><div class="vital-lbl">SpO₂</div></div>`:''}
+    </div>
+    ${c.s?`<div class="soap-block"><div class="soap-label">S — Subjetivo (Motivo)</div><div class="soap-text">${c.s}</div></div>`:''}
+    ${c.o?`<div class="soap-block"><div class="soap-label">O — Objetivo (Exploración)</div><div class="soap-text">${c.o}</div></div>`:''}
+    ${c.a?`<div class="soap-block"><div class="soap-label">A — Análisis (Diagnóstico)</div><div class="soap-text">${c.a}</div></div>`:''}
+    ${c.p?`<div class="soap-block"><div class="soap-label">P — Plan / Tratamiento</div><div class="soap-text">${c.p}</div></div>`:''}
+    ${c.ind?`<div style="background:var(--green-lt);border-radius:var(--r);padding:.75rem 1rem;font-size:13px"><strong>Indicaciones al paciente:</strong> ${c.ind}</div>`:''}
+  `;
+  openModal('modal-ver-consulta');
+}
+
+// ══════════════════════════════════════════════════════
+//  RECETAS
+// ══════════════════════════════════════════════════════
+let medRowCount=0;
+function initMedRows(){
+  medRowCount=0;
+  document.getElementById('rec-meds-list').innerHTML='';
+  addMedRow();
+}
+function addMedRow(){
+  medRowCount++;
+  const div=document.createElement('div');
+  div.id=`med-row-${medRowCount}`;
+  div.style.cssText='background:var(--surface2);border-radius:var(--r);padding:.75rem;margin-bottom:.5rem';
+  div.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <span style="font-size:11px;font-weight:700;color:var(--muted)">Medicamento ${medRowCount}</span>
+      ${medRowCount>1?`<button class="btn btn-sm" onclick="document.getElementById('med-row-${medRowCount}').remove()" style="padding:2px 8px;font-size:11px">✕</button>`:''}
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Nombre del medicamento</label><input type="text" class="med-nombre" placeholder="Metformina"/></div>
+      <div class="form-group"><label>Presentación</label><input type="text" class="med-pres" placeholder="Tabletas 850mg"/></div>
+    </div>
+    <div class="form-row3">
+      <div class="form-group"><label>Dosis</label><input type="text" class="med-dosis" placeholder="1 tableta"/></div>
+      <div class="form-group"><label>Vía</label><input type="text" class="med-via" value="Oral"/></div>
+      <div class="form-group"><label>Frecuencia</label><input type="text" class="med-freq" placeholder="Cada 12 horas"/></div>
+    </div>
+    <div class="form-group"><label>Duración</label><input type="text" class="med-dur" placeholder="30 días"/></div>
+  `;
+  document.getElementById('rec-meds-list').appendChild(div);
+}
+function getMedRows(){
+  return Array.from(document.querySelectorAll('#rec-meds-list > div')).map(row=>({
+    nombre:row.querySelector('.med-nombre').value,
+    pres:row.querySelector('.med-pres').value,
+    dosis:row.querySelector('.med-dosis').value,
+    via:row.querySelector('.med-via').value,
+    freq:row.querySelector('.med-freq').value,
+    dur:row.querySelector('.med-dur').value
+  })).filter(m=>m.nombre.trim());
+}
+function saveReceta(){
+  const pacId=document.getElementById('rec-pac').value;
+  if(!pacId){alert('Selecciona un paciente');return;}
+  const meds=getMedRows();
+  if(!meds.length){alert('Agrega al menos un medicamento');return;}
+  const r={
+    id:uid(),pacId,fecha:today(),
+    diag:document.getElementById('rec-diag').value,
+    meds,
+    ind:document.getElementById('rec-ind').value
+  };
+  const recs=get(KEY.rec); recs.push(r); set(KEY.rec,recs);
+  closeModal('modal-receta');
+  renderRecetas();
+}
+function renderRecetas(){
+  const recs=get(KEY.rec).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const tbody=document.getElementById('rec-tbody');
+  if(!recs.length){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted)">Sin recetas registradas</td></tr>`;return;}
+  tbody.innerHTML=recs.map(r=>`<tr>
+    <td><div style="font-weight:600">${pacNombre(r.pacId)}</div></td>
+    <td>${fmtDate(r.fecha)}</td>
+    <td>${r.diag||'—'}</td>
+    <td>${r.meds?r.meds.map(m=>`<div style="font-size:12px">${m.nombre} ${m.pres}</div>`).join(''):'—'}</td>
+    <td><button class="btn btn-sm btn-primary" onclick="verReceta('${r.id}')">Ver / Imprimir</button></td>
+  </tr>`).join('');
+}
+function verReceta(id){
+  const r=get(KEY.rec).find(x=>x.id===id);
+  if(!r) return;
+  const p=getPac(r.pacId);
+  const aj=getObj(KEY.aj);
+  document.getElementById('rp-nombre-med').textContent=aj.nombre||'Dr. —';
+  document.getElementById('rp-esp').textContent=aj.esp||'';
+  document.getElementById('rp-cedula').textContent=aj.cedula||'';
+  document.getElementById('rp-clinica').textContent=aj.clinica||'';
+  document.getElementById('rp-dir').textContent=aj.dir||'';
+  document.getElementById('rp-tel').textContent=aj.tel||'';
+  document.getElementById('rp-paciente').textContent=p?`${p.nombre} (${calcEdad(p.dob)} años)`:'—';
+  document.getElementById('rp-fecha').textContent=fmtDate(r.fecha);
+  document.getElementById('rp-diag').textContent=r.diag||'—';
+  document.getElementById('rp-meds').innerHTML=(r.meds||[]).map((m,i)=>`
+    <div class="receta-med-row">
+      <div class="receta-num">${i+1}.</div>
+      <div>
+        <div style="font-weight:700;font-size:13px">${m.nombre} <span style="font-weight:400">${m.pres}</span></div>
+        <div style="font-size:12px;color:var(--muted)">${m.dosis} · Vía ${m.via} · ${m.freq} · ${m.dur}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('rp-ind-wrap').innerHTML=r.ind?`<div style="font-size:12px"><strong>Indicaciones:</strong> ${r.ind}</div>`:'';
+  document.getElementById('rp-firma-nombre').textContent=aj.nombre||'';
+  document.getElementById('rp-firma-ced').textContent=aj.cedula||'';
+  closeModal('modal-ver-paciente');
+  openModal('modal-ver-receta');
+}
+
+// ══════════════════════════════════════════════════════
+//  PAGOS
+// ══════════════════════════════════════════════════════
+function renderPagos(){
+  const pagos=get(KEY.pagos).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const t=today().slice(0,7);
+  const totalMes=pagos.filter(p=>p.fecha&&p.fecha.startsWith(t)&&p.estado==='pagado').reduce((a,p)=>a+(+p.monto||0),0);
+  const pendMes=pagos.filter(p=>p.fecha&&p.fecha.startsWith(t)&&p.estado==='pendiente').reduce((a,p)=>a+(+p.monto||0),0);
+  const totalGen=pagos.filter(p=>p.estado==='pagado').reduce((a,p)=>a+(+p.monto||0),0);
+  document.getElementById('pagos-summary').innerHTML=`
+    <div class="metric"><div class="metric-lbl"><span class="material-symbols-outlined">payments</span>Ingresos del mes</div><div class="metric-val" style="color:var(--green)">$${totalMes.toLocaleString('es-MX')}</div><div class="metric-sub">MXN cobrado</div></div>
+    <div class="metric"><div class="metric-lbl"><span class="material-symbols-outlined">pending</span>Pendiente del mes</div><div class="metric-val" style="color:var(--amber)">$${pendMes.toLocaleString('es-MX')}</div><div class="metric-sub">Por cobrar</div></div>
+    <div class="metric"><div class="metric-lbl"><span class="material-symbols-outlined">trending_up</span>Total histórico</div><div class="metric-val">$${totalGen.toLocaleString('es-MX')}</div><div class="metric-sub">Pagos confirmados</div></div>
+  `;
+  const tbody=document.getElementById('pagos-tbody');
+  if(!pagos.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Sin pagos registrados</td></tr>`;return;}
+  tbody.innerHTML=pagos.map(p=>`<tr>
+    <td><div style="font-weight:600">${pacNombre(p.pacId)}</div></td>
+    <td>${fmtDate(p.fecha)}</td>
+    <td>${p.concepto||'Consulta'}</td>
+    <td style="font-weight:700">$${(+p.monto||0).toLocaleString('es-MX')}</td>
+    <td>${p.metodo||'—'}</td>
+    <td>${p.estado==='pagado'?'<span class="badge badge-green">Pagado</span>':'<span class="badge badge-amber">Pendiente</span>'}</td>
+    <td>
+      ${p.estado==='pendiente'?`<button class="btn btn-sm btn-primary" onclick="marcarPagado('${p.id}')">Cobrar</button>`:''}
+      <button class="btn btn-sm" onclick="deletePago('${p.id}')" style="margin-left:4px">✕</button>
+    </td>
+  </tr>`).join('');
+}
+function savePago(){
+  const pacId=document.getElementById('pago-pac').value;
+  const monto=document.getElementById('pago-monto').value;
+  if(!pacId||!monto){alert('Paciente y monto son obligatorios');return;}
+  const p={
+    id:uid(),pacId,
+    fecha:document.getElementById('pago-fecha').value,
+    concepto:document.getElementById('pago-concepto').value,
+    monto:+monto,
+    metodo:document.getElementById('pago-metodo').value,
+    estado:document.getElementById('pago-estado').value
+  };
+  const pagos=get(KEY.pagos); pagos.push(p); set(KEY.pagos,pagos);
+  closeModal('modal-pago');
+  renderPagos();
+}
+function marcarPagado(id){
+  const pagos=get(KEY.pagos);
+  const idx=pagos.findIndex(p=>p.id===id);
+  if(idx>=0){pagos[idx].estado='pagado';set(KEY.pagos,pagos);renderPagos();}
+}
+function deletePago(id){
+  if(!confirm('¿Eliminar este pago?')) return;
+  set(KEY.pagos,get(KEY.pagos).filter(p=>p.id!==id));
+  renderPagos();
+}
+
+// ══════════════════════════════════════════════════════
+//  SEGUIMIENTOS
+// ══════════════════════════════════════════════════════
+function renderSeguimientos(){
+  const segs=get(KEY.seg).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const el=document.getElementById('seg-list');
+  if(!segs.length){el.innerHTML='<div class="empty"><span class="material-symbols-outlined">check_circle</span>Sin seguimientos pendientes</div>';return;}
+  const pend=segs.filter(s=>!s.completado);
+  const comp=segs.filter(s=>s.completado);
+  let html='';
+  if(pend.length){
+    html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.75rem">Pendientes</div>';
+    html+=pend.map(s=>{
+      const diff=daysDiff(s.fecha);
+      const cls=diff<0?'vencido':diff<=2?'proximo':'ok';
+      const label=diff<0?`Vencido hace ${Math.abs(diff)} días`:diff===0?'Hoy':diff===1?'Mañana':`En ${diff} días`;
+      return `<div class="seg-row">
+        <div class="seg-fecha ${cls}" style="min-width:130px">${fmtDate(s.fecha)}<br><small>${label}</small></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${pacNombre(s.pacId)}</div>
+          <div style="font-size:12px;color:var(--muted)">${s.nota||''}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-primary" onclick="completarSeg('${s.id}',event)">✓ Completar</button>
+          <button class="btn btn-sm" onclick="deleteSeg('${s.id}')">✕</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if(comp.length){
+    html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:1.5rem 0 .75rem">Completados</div>';
+    html+=comp.map(s=>`<div class="seg-row" style="opacity:.55">
+      <div class="seg-fecha ok" style="min-width:130px">${fmtDate(s.fecha)}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;text-decoration:line-through">${pacNombre(s.pacId)}</div>
+        <div style="font-size:12px;color:var(--muted)">${s.nota||''}</div>
+      </div>
+      <button class="btn btn-sm" onclick="deleteSeg('${s.id}')">✕</button>
+    </div>`).join('');
+  }
+  el.innerHTML=html;
+  updateBadgeSeg();
+}
+function saveSeguimiento(){
+  const pacId=document.getElementById('seg-pac').value;
+  const fecha=document.getElementById('seg-fecha').value;
+  if(!pacId||!fecha){alert('Selecciona paciente y fecha');return;}
+  const segs=get(KEY.seg);
+  segs.push({id:uid(),pacId,fecha,nota:document.getElementById('seg-nota').value,completado:false});
+  set(KEY.seg,segs);
+  closeModal('modal-seguimiento');
+  renderSeguimientos();
+}
+function completarSeg(id,e){
+  if(e) e.stopPropagation();
+  const segs=get(KEY.seg);
+  const idx=segs.findIndex(s=>s.id===id);
+  if(idx>=0){segs[idx].completado=true;set(KEY.seg,segs);}
+  renderSeguimientos();
+  renderDashboardIfActive();
+  updateBadgeSeg();
+}
+function deleteSeg(id){
+  if(!confirm('¿Eliminar seguimiento?')) return;
+  set(KEY.seg,get(KEY.seg).filter(s=>s.id!==id));
+  renderSeguimientos();
+  updateBadgeSeg();
+}
+function updateBadgeSeg(){
+  const n=get(KEY.seg).filter(s=>!s.completado&&daysDiff(s.fecha)<=3).length;
+  const b=document.getElementById('badge-seg');
+  b.textContent=n;
+  b.classList.toggle('hidden',n===0);
+}
+
+// ══════════════════════════════════════════════════════
+//  AJUSTES
+// ══════════════════════════════════════════════════════
+function loadAjustesUI(){
+  const aj=getObj(KEY.aj);
+  ['nombre','esp','cedula','tel','clinica','dir','horario','costo'].forEach(k=>{
+    const el=document.getElementById('aj-'+k);
+    if(el) el.value=aj[k]||'';
+  });
+  // Update sidebar
+  document.getElementById('sb-nombre').textContent=aj.nombre||'Doctor';
+  document.getElementById('sb-rol').textContent=aj.esp||'Medicina';
+  if(aj.nombre) document.getElementById('sb-avatar').textContent=initials(aj.nombre);
+  if(aj.clinica) document.getElementById('sidebar-clinica').textContent=aj.clinica;
+}
+function saveAjustes(){
+  const aj={};
+  ['nombre','esp','cedula','tel','clinica','dir','horario','costo'].forEach(k=>{
+    aj[k]=(document.getElementById('aj-'+k)||{}).value||'';
+  });
+  set(KEY.aj,aj);
+  loadAjustesUI();
+  const ok=document.getElementById('aj-ok');
+  ok.classList.remove('hidden');
+  setTimeout(()=>ok.classList.add('hidden'),2000);
+}
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+updateBadgeSeg();
+</script>
+</body>
+</html>
