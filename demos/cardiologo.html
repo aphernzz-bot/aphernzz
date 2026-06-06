@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <style>
     :root {
       --white: #ffffff;
@@ -400,6 +401,7 @@
       background: var(--blue-light);
     }
     .map-frame iframe { width: 100%; height: 100%; border: none; }
+    #mapa-consultorio { width: 100%; height: 100%; }
 
     /* ─── FOOTER ─── */
     footer {
@@ -792,11 +794,7 @@
         <a href="#agenda" class="btn-primary" style="display:inline-flex;margin-top:1.5rem">Agendar mi Cita</a>
       </div>
       <div class="map-frame fade-up" style="transition-delay:.1s">
-        <iframe
-          src="https://www.openstreetmap.org/export/embed.html?bbox=-99.2050%2C19.3068%2C-99.1750%2C19.3268&amp;layer=mapnik&amp;marker=19.3168%2C-99.1900"
-          allowfullscreen="" loading="lazy"
-          title="Ubicación del consultorio">
-        </iframe>
+        <div id="mapa-consultorio"></div>
       </div>
     </div>
   </div>
@@ -987,6 +985,19 @@
   document.getElementById('modalOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+  const mapaEl = document.getElementById('mapa-consultorio');
+  if (mapaEl) {
+    const map = L.map('mapa-consultorio', { scrollWheelZoom: false }).setView([19.3168, -99.1900], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    L.marker([19.3168, -99.1900]).addTo(map)
+      .bindPopup('<b>Dr. Alejandro Vega</b><br>Av. Insurgentes Sur 3700, Piso 8<br>Pedregal de San Ángel, CDMX')
+      .openPopup();
+  }
 </script>
 </body>
 </html>
