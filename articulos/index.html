@@ -340,6 +340,19 @@
       font-size: 2.5rem;
       border-bottom: 1px solid var(--border);
     }
+
+    .thumb-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      opacity: 0.28; z-index: 0; transition: opacity 0.3s;
+    }
+    .article-card:hover .thumb-img { opacity: 0.38; }
+    .article-thumb > i, .article-thumb > svg { position: relative; z-index: 2; }
+    .article-tag, .article-badge-overlay { z-index: 2; }
+    .featured-thumb .thumb-img { opacity: 0.22; }
+    .featured-thumb > i, .featured-thumb > svg { position: relative; z-index: 2; }
+    .featured-badge { z-index: 2; }
     .article-tag {
       position: absolute;
       bottom: 0.75rem; left: 0.75rem;
@@ -759,6 +772,7 @@
   <!-- ARTÍCULO DESTACADO -->
   <div class="featured-article fade-up">
     <div class="featured-thumb">
+      <img class="thumb-img" src="https://images.unsplash.com/photo-1504639725590-34d0984388bd?fm=jpg&q=75&w=800&auto=format&fit=crop" alt="Desarrollador trabajando en automatización con Zapier" loading="lazy" />
       <span class="featured-badge"><i data-lucide="star"></i> Destacado</span>
       <i data-lucide="zap"></i>
     </div>
@@ -786,6 +800,7 @@
   <div class="articles-grid-3">
     <div class="article-card fade-up" data-category="python">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Código Python en pantalla — web scraping" loading="lazy" />
         <i data-lucide="code-2"></i>
         <span class="article-tag tag-python">Python</span>
       </div>
@@ -799,6 +814,7 @@
 
     <div class="article-card fade-up" data-category="datos">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Dashboard de analítica — Power BI" loading="lazy" />
         <i data-lucide="bar-chart-2"></i>
         <span class="article-tag tag-datos">Power BI</span>
       </div>
@@ -812,6 +828,7 @@
 
     <div class="article-card fade-up" data-category="automatizacion">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Laptop abierto — comparativa Make vs Zapier" loading="lazy" />
         <i data-lucide="link"></i>
         <span class="article-tag tag-auto">Automatización</span>
       </div>
@@ -825,6 +842,7 @@
 
     <div class="article-card fade-up" data-category="ia">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Circuito electrónico — inteligencia artificial Claude API" loading="lazy" />
         <i data-lucide="bot"></i>
         <span class="article-tag tag-ia">IA</span>
       </div>
@@ -838,6 +856,7 @@
 
     <div class="article-card fade-up" data-category="diseno">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1561070791-2526d30994b5?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Paleta de colores — identidad visual de startups" loading="lazy" />
         <i data-lucide="palette"></i>
         <span class="article-tag tag-diseno">Diseño</span>
       </div>
@@ -851,6 +870,7 @@
 
     <div class="article-card fade-up" data-category="python">
       <div class="article-thumb">
+        <img class="thumb-img" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?fm=jpg&q=75&w=600&auto=format&fit=crop" alt="Análisis de datos en laptop — Pandas y Python" loading="lazy" />
         <i data-lucide="trending-up"></i>
         <span class="article-tag tag-python">Python</span>
       </div>
