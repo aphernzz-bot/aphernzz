@@ -23,15 +23,48 @@
     "@context": "https://schema.org",
     "@type": "Service",
     "name": "Tecnología Médica para Consultorios — Aphernzz",
-    "description": "Expediente clínico digital, CRM médico, perfil profesional con agenda y bot de WhatsApp para médicos y consultorios en San Luis Potosí.",
+    "description": "Paquetes de tecnología para médicos y consultorios en San Luis Potosí: perfil web profesional, expediente clínico digital, CRM, agenda online, bot de WhatsApp y facturación CFDI.",
     "provider": {
       "@type": "LocalBusiness",
       "name": "Aphernzz",
       "url": "https://aphernzz.com/",
+      "priceRange": "Desde $6,300 MXN",
+      "currenciesAccepted": "MXN",
+      "paymentAccepted": "Transferencia bancaria, tarjeta de crédito, efectivo",
       "address": { "@type": "PostalAddress", "addressLocality": "San Luis Potosí", "addressRegion": "SLP", "addressCountry": "MX" }
     },
     "areaServed": { "@type": "State", "name": "San Luis Potosí" },
-    "serviceType": "Software médico y soluciones digitales para consultorios"
+    "serviceType": "Software médico y soluciones digitales para consultorios",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Paquetes de Tecnología Médica",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "name": "Paquete Esencial",
+          "price": "6300",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "PriceSpecification", "price": "6300", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $9,000 MXN)" },
+          "itemOffered": { "@type": "Service", "name": "Paquete Esencial — Perfil Web + Agenda + Bot de WhatsApp + Receta", "description": "Perfil web profesional, agenda online 24/7, bot de WhatsApp con respuestas automáticas y diseño de receta médica" }
+        },
+        {
+          "@type": "Offer",
+          "name": "Paquete Profesional",
+          "price": "12600",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "PriceSpecification", "price": "12600", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $18,000 MXN)" },
+          "itemOffered": { "@type": "Service", "name": "Paquete Profesional — Esencial + CRM + Expediente Clínico", "description": "Todo el Esencial más expediente clínico digital, historial completo de pacientes y recordatorios automáticos" }
+        },
+        {
+          "@type": "Offer",
+          "name": "Paquete Integral",
+          "price": "21000",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "PriceSpecification", "price": "21000", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $30,000 MXN)" },
+          "itemOffered": { "@type": "Service", "name": "Paquete Integral — Profesional + ERP + CFDI + Reportes", "description": "Todo el Profesional más ERP de ventas e inventario, facturación electrónica CFDI y reportes en tiempo real" }
+        }
+      ]
+    }
   }
   </script>
   <meta name="description" content="Sistemas digitales diseñados para el sector médico: expediente clínico, ERP para consultorios, perfil profesional con agenda, punto de venta para farmacias y más.">
@@ -260,6 +293,12 @@
       flex-shrink: 0;
       margin-top: 3px;
     }
+    .service-price-block { margin: 1.2rem 0 0.85rem; }
+    .service-price-original { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; margin-bottom: 0.15rem; }
+    .service-price-new { font-size: 1.65rem; font-weight: 800; color: var(--text); letter-spacing: -0.03em; font-family: 'Syne', sans-serif; line-height: 1; }
+    .service-price-new .price-cur { font-size: 0.95rem; font-weight: 600; vertical-align: top; margin-top: 0.25rem; display: inline-block; }
+    .service-price-new .price-mxn { font-size: 0.8rem; font-weight: 500; color: var(--muted); margin-left: 0.3rem; }
+    .service-price-badge { display: inline-flex; align-items: center; background: rgba(0,151,107,0.1); border: 1px solid rgba(0,151,107,0.25); color: var(--accent); font-size: 0.68rem; font-weight: 800; padding: 0.18rem 0.55rem; border-radius: 999px; margin-left: 0.5rem; letter-spacing: 0.05em; vertical-align: middle; }
     .service-tag {
       display: inline-flex;
       align-items: center;
@@ -694,19 +733,55 @@
   </div>
   <div class="services-grid">
 
-    <!-- 1 EXPEDIENTE CRM -->
+    <!-- ESENCIAL -->
+    <div class="service-card fade-up">
+      <div class="service-icon"><i data-lucide="user-check"></i></div>
+      <div class="service-target">Para Doctores</div>
+      <div class="service-name">Paquete Esencial</div>
+      <div class="service-desc">Tu presencia digital lista para recibir pacientes. Página web profesional, agenda automática 24/7 y bot de WhatsApp que trabaja mientras tú consultas.</div>
+      <div class="service-price-block">
+        <div class="service-price-original">$9,000 MXN</div>
+        <div class="service-price-new">
+          <span class="price-cur">$</span>6,300 <span class="price-mxn">MXN</span>
+          <span class="service-price-badge">30% OFF</span>
+        </div>
+      </div>
+      <ul class="service-features">
+        <li><i data-lucide="check"></i>Perfil web profesional con especialidad y CV</li>
+        <li><i data-lucide="check"></i>Agenda online 24/7 (pacientes agendan solos)</li>
+        <li><i data-lucide="check"></i>Bot de WhatsApp con respuestas automáticas</li>
+        <li><i data-lucide="check"></i>Diseño de receta médica personalizada</li>
+        <li><i data-lucide="check"></i>Google Maps y Google My Business configurado</li>
+      </ul>
+      <div class="service-card-actions">
+        <a href="../demos/cardiologo" class="btn-demo" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Ver perfil demo →
+        </a>
+        <span class="service-tag">Base ideal</span>
+      </div>
+    </div>
+
+    <!-- PROFESIONAL -->
     <div class="service-card highlight fade-up">
       <div class="service-icon"><i data-lucide="folder-open"></i></div>
-      <div class="service-target">Para Doctores & Consultorios</div>
-      <div class="service-name">Expediente Clínico Digital (CRM)</div>
-      <div class="service-desc">Olvídate del papel. Un sistema organizado para gestionar tus pacientes, su historial clínico y sus citas — todo desde cualquier dispositivo.</div>
+      <div class="service-target">Para Consultorios</div>
+      <div class="service-name">Paquete Profesional</div>
+      <div class="service-desc">Todo lo del Esencial más la gestión digital completa de tu consultorio: expediente clínico, historial de pacientes y recordatorios que se envían solos.</div>
+      <div class="service-price-block">
+        <div class="service-price-original">$18,000 MXN</div>
+        <div class="service-price-new">
+          <span class="price-cur">$</span>12,600 <span class="price-mxn">MXN</span>
+          <span class="service-price-badge">30% OFF</span>
+        </div>
+      </div>
       <ul class="service-features">
-        <li><i data-lucide="check"></i>Registro y búsqueda de pacientes en segundos</li>
-        <li><i data-lucide="check"></i>Historial clínico por consulta (notas, diagnósticos, recetas)</li>
-        <li><i data-lucide="check"></i>Agenda de citas con recordatorios automáticos por WhatsApp</li>
-        <li><i data-lucide="check"></i>Alertas de seguimiento y próximas citas</li>
+        <li><i data-lucide="check"></i>Todo lo del Paquete Esencial</li>
+        <li><i data-lucide="check"></i>Expediente clínico digital (CRM médico)</li>
+        <li><i data-lucide="check"></i>Historial completo de pacientes por consulta</li>
+        <li><i data-lucide="check"></i>Notas SOAP, diagnósticos y recetas digitales</li>
+        <li><i data-lucide="check"></i>Recordatorios automáticos de citas por WhatsApp</li>
         <li><i data-lucide="check"></i>Acceso desde celular, tablet o computadora</li>
-        <li><i data-lucide="check"></i>Respaldo automático de datos</li>
       </ul>
       <div class="service-card-actions">
         <a href="crm/" class="btn-demo" target="_blank">
@@ -716,61 +791,30 @@
       </div>
     </div>
 
-    <!-- 2 ERP CONSULTORIOS -->
+    <!-- INTEGRAL -->
     <div class="service-card fade-up">
-      <div class="service-icon"><i data-lucide="receipt"></i></div>
-      <div class="service-target">Para Consultorios</div>
-      <div class="service-name">ERP de Ventas y Facturación</div>
-      <div class="service-desc">Controla los ingresos de tu consultorio con un sistema sencillo de cobros y facturación. Sin contadores complicados, sin software caro.</div>
-      <ul class="service-features">
-        <li><i data-lucide="check"></i>Registro de consultas y cobros por servicio</li>
-        <li><i data-lucide="check"></i>Facturación electrónica (CFDI) integrada</li>
-        <li><i data-lucide="check"></i>Control de honorarios y gastos del consultorio</li>
-        <li><i data-lucide="check"></i>Reportes mensuales de ingresos</li>
-        <li><i data-lucide="check"></i>Múltiples formas de pago (efectivo, tarjeta, transferencia)</li>
-        <li><i data-lucide="check"></i>Panel de resumen financiero</li>
-      </ul>
-      <span class="service-tag">Cotización personalizada</span>
-    </div>
-
-    <!-- 3 PERFIL DOCTOR -->
-    <div class="service-card fade-up">
-      <div class="service-icon"><i data-lucide="user-check"></i></div>
-      <div class="service-target">Para Doctores</div>
-      <div class="service-name">Perfil Profesional + Agenda + Bot de WhatsApp</div>
-      <div class="service-desc">Tu presencia digital como médico: una página web que transmite confianza, con agenda online y un asistente de WhatsApp que responde automáticamente las 24/7.</div>
-      <ul class="service-features">
-        <li><i data-lucide="check"></i>Página web profesional con tu especialidad y CV</li>
-        <li><i data-lucide="check"></i>Formulario de citas o agenda integrada (Calendly/propia)</li>
-        <li><i data-lucide="check"></i>Bot de WhatsApp: confirmaciones, recordatorios, preguntas frecuentes</li>
-        <li><i data-lucide="check"></i>Google Maps y Google My Business configurado</li>
-        <li><i data-lucide="check"></i>Testimonios y galería de consultorio</li>
-        <li><i data-lucide="check"></i>Diseño de receta médica personalizada incluido</li>
-      </ul>
-      <div class="service-card-actions">
-        <a href="../demos/cardiologo" class="btn-demo" target="_blank">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-          Ver perfil demo →
-        </a>
-        <span class="service-tag">Todo en uno</span>
+      <div class="service-icon"><i data-lucide="layout-dashboard"></i></div>
+      <div class="service-target">Para Consultorios Completos</div>
+      <div class="service-name">Paquete Integral</div>
+      <div class="service-desc">La solución más completa: desde la agenda y el expediente hasta la facturación CFDI y los reportes financieros en tiempo real.</div>
+      <div class="service-price-block">
+        <div class="service-price-original">$30,000 MXN</div>
+        <div class="service-price-new">
+          <span class="price-cur">$</span>21,000 <span class="price-mxn">MXN</span>
+          <span class="service-price-badge">30% OFF</span>
+        </div>
       </div>
-    </div>
-
-    <!-- 4 FARMACIA -->
-    <div class="service-card fade-up">
-      <div class="service-icon"><i data-lucide="pill"></i></div>
-      <div class="service-target">Para Farmacias</div>
-      <div class="service-name">Punto de Venta para Farmacia</div>
-      <div class="service-desc">Un POS ágil y confiable para tu farmacia: controla tu inventario, genera tickets, administra proveedores y ten tus reportes siempre al día.</div>
       <ul class="service-features">
-        <li><i data-lucide="check"></i>Catálogo de medicamentos con código de barras</li>
-        <li><i data-lucide="check"></i>Control de inventario y alertas de stock bajo</li>
-        <li><i data-lucide="check"></i>Caja: ventas, devoluciones y cortes de caja</li>
-        <li><i data-lucide="check"></i>Registro de proveedores y compras</li>
-        <li><i data-lucide="check"></i>Reporte de ventas diario, semanal y mensual</li>
-        <li><i data-lucide="check"></i>Multiusuario con roles (cajero, administrador)</li>
+        <li><i data-lucide="check"></i>Todo lo del Paquete Profesional</li>
+        <li><i data-lucide="check"></i>ERP de ventas e inventario del consultorio</li>
+        <li><i data-lucide="check"></i>Facturación electrónica CFDI integrada</li>
+        <li><i data-lucide="check"></i>Reportes financieros en tiempo real</li>
+        <li><i data-lucide="check"></i>Control de gastos y honorarios</li>
+        <li><i data-lucide="check"></i>Panel administrativo completo</li>
       </ul>
-      <span class="service-tag">Proyecto activo</span>
+      <a href="/#contact" class="btn-demo" style="margin-top:1.5rem;display:inline-flex;">
+        <i data-lucide="mail"></i> Cotizar →
+      </a>
     </div>
 
   </div>
