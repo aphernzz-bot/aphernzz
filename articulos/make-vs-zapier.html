@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Make vs Zapier: ¿Cuál elegir para tu negocio? | Aphernzz</title>
+  <meta name="description" content="Comparativa honesta entre Make y Zapier: precios, capacidades, casos de uso y cuál conviene según tu nivel técnico y presupuesto." />
+  <link rel="icon" href="../assets/img/favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <style>
+    :root{--bg:#080b10;--surface:#0e1318;--surface2:#141c24;--accent:#00e5ff;--accent2:#7b61ff;--text:#e8edf2;--muted:#6b7a8d;--border:rgba(255,255,255,0.07);--border-accent:rgba(0,229,255,0.2);--radius:1.5rem;--radius-sm:0.75rem;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7;}
+    .bg-gradient{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;background:linear-gradient(45deg,var(--bg),#0a1128,var(--surface2),var(--bg));background-size:400% 400%;animation:gm 15s ease infinite;}
+    @keyframes gm{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 6vw;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,11,16,0.85);}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none;}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{font-size:0.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:linear-gradient(135deg,var(--accent),#00b8cc)!important;color:#080b10!important;padding:0.5rem 1.4rem!important;border-radius:999px!important;font-weight:700!important;}
+    .article-header{padding:8rem 6vw 4rem;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .article-header::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 10% 50%,black 30%,transparent 100%);}
+    .article-header-inner{max-width:780px;margin:0 auto;position:relative;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--accent);text-decoration:none;}
+    .article-category{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:999px;padding:0.3rem 0.85rem;margin-bottom:1.25rem;}
+    .article-title{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:1.25rem;}
+    .article-lead{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2rem;}
+    .article-meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .meta-author{display:flex;align-items:center;gap:0.65rem;}
+    .meta-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#080b10;flex-shrink:0;}
+    .meta-name{font-size:0.85rem;font-weight:600;}
+    .meta-date{font-size:0.8rem;color:var(--muted);}
+    .meta-sep{color:var(--border);font-size:1.2rem;}
+    .meta-reading{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--muted);}
+    .meta-reading svg{width:14px;height:14px;stroke:var(--muted);}
+    .article-wrapper{max-width:780px;margin:0 auto;padding:4rem 6vw 6rem;}
+    .article-body h2{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-0.02em;margin:2.5rem 0 1rem;color:var(--text);}
+    .article-body h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.75rem;color:var(--text);}
+    .article-body p{font-size:0.97rem;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;}
+    .article-body p strong{color:var(--text);font-weight:600;}
+    .article-body ul,.article-body ol{margin:1rem 0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.55rem;}
+    .article-body li{font-size:0.95rem;color:var(--muted);line-height:1.7;}
+    .article-body li strong{color:var(--text);}
+    .callout{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.18);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1.25rem 1.5rem;margin:2rem 0;display:flex;gap:0.85rem;align-items:flex-start;}
+    .callout svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;margin-top:2px;}
+    .callout p{margin:0;font-size:0.9rem;line-height:1.7;}
+    .compare-table{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.88rem;}
+    .compare-table th{padding:0.85rem 1rem;text-align:left;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-bottom:1px solid var(--border);}
+    .compare-table td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);color:var(--muted);vertical-align:top;line-height:1.6;}
+    .compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+    .compare-table td:first-child{color:var(--text);font-weight:500;}
+    .tag-win{color:var(--accent);font-weight:600;}
+    .tag-neutral{color:var(--muted);}
+    .verdict{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.75rem;margin:1.5rem 0;}
+    .verdict-label{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem;}
+    .verdict h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:0.5rem;}
+    .verdict p{margin:0;font-size:0.88rem;color:var(--muted);line-height:1.7;}
+    .divider{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+    .cta-box{background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(123,97,255,0.06));border:1px solid var(--border-accent);border-radius:var(--radius);padding:2.5rem;text-align:center;margin-top:3rem;}
+    .cta-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.65rem;}
+    .cta-box p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;}
+    .btn-cta{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--accent),#00b8cc);color:#080b10;font-weight:700;font-size:0.88rem;padding:0.75rem 1.75rem;border-radius:999px;text-decoration:none;transition:box-shadow 0.3s,transform 0.2s;}
+    .btn-cta:hover{box-shadow:0 0 28px rgba(0,229,255,0.4);transform:translateY(-1px);}
+    footer{border-top:1px solid var(--border);padding:2rem 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--bg);}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);font-size:1rem;text-decoration:none;}
+    footer p{font-size:0.8rem;color:var(--muted);}
+    .footer-links{display:flex;gap:1.5rem;list-style:none;}
+    .footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<nav>
+  <a href="/" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/#services">Servicios</a></li>
+    <li><a href="/articulos/" style="color:var(--accent)">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+</nav>
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a><span>/</span><a href="/articulos/">Artículos</a><span>/</span><span>Make vs Zapier</span>
+    </div>
+    <div class="article-category">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Automatización
+    </div>
+    <h1 class="article-title">Make vs Zapier: ¿Cuál elegir según tu caso de uso?</h1>
+    <p class="article-lead">Dos de las plataformas de automatización más populares del mercado, pero con enfoques muy distintos. Esta comparativa te ayuda a elegir sin perderte en detalles técnicos.</p>
+    <div class="article-meta-row">
+      <div class="meta-author">
+        <div class="meta-avatar">AH</div>
+        <div><div class="meta-name">Ángel Hernández</div><div class="meta-date">Enero 2026</div></div>
+      </div>
+      <span class="meta-sep">|</span>
+      <div class="meta-reading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        7 minutos de lectura
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article-wrapper">
+  <div class="article-body">
+
+    <p>Cuando buscas automatizar procesos en tu negocio, tarde o temprano llegas a Make y Zapier. Ambas hacen lo mismo en esencia: conectar aplicaciones para que trabajen solas. Pero la forma en que lo hacen, el precio que cobran y el nivel de control que te dan son bastante diferentes.</p>
+
+    <p>He trabajado con las dos plataformas en proyectos reales y esta comparativa refleja lo que me hubiera gustado saber antes de decidir.</p>
+
+    <h2>Qué es cada una, en términos simples</h2>
+
+    <p><strong>Zapier</strong> nació en 2011 con una filosofía clara: que cualquier persona pueda automatizar sin saber programar. Su interfaz es lineal: disparador → acción. Punto. Es lo más sencillo que existe en el mercado.</p>
+
+    <p><strong>Make</strong> (antes Integromat) tiene un enfoque visual basado en diagramas de flujo. Puedes construir procesos con múltiples rutas, condiciones, bucles y transformaciones de datos. Es más potente, pero también requiere más tiempo de aprendizaje.</p>
+
+    <h2>Comparativa directa</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Criterio</th>
+          <th>Zapier</th>
+          <th>Make</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Curva de aprendizaje</td>
+          <td class="tag-win">Muy baja — intuitivo desde el día uno</td>
+          <td>Media — requiere práctica para dominarlo</td>
+        </tr>
+        <tr>
+          <td>Plan gratuito</td>
+          <td>100 tareas/mes, 5 zaps</td>
+          <td class="tag-win">1,000 operaciones/mes, escenarios ilimitados</td>
+        </tr>
+        <tr>
+          <td>Precio de entrada (pago)</td>
+          <td>~$20 USD/mes</td>
+          <td class="tag-win">~$9 USD/mes</td>
+        </tr>
+        <tr>
+          <td>Número de integraciones</td>
+          <td class="tag-win">+6,000 apps</td>
+          <td>+1,500 apps</td>
+        </tr>
+        <tr>
+          <td>Lógica condicional</td>
+          <td>Básica (filtros y rutas simples)</td>
+          <td class="tag-win">Avanzada (rutas múltiples, bucles, iteradores)</td>
+        </tr>
+        <tr>
+          <td>Transformación de datos</td>
+          <td>Limitada</td>
+          <td class="tag-win">Completa (funciones de texto, número, fecha, JSON)</td>
+        </tr>
+        <tr>
+          <td>Manejo de errores</td>
+          <td>Básico</td>
+          <td class="tag-win">Rutas de error configurables</td>
+        </tr>
+        <tr>
+          <td>Velocidad de ejecución</td>
+          <td class="tag-win">Más rápido en planes básicos</td>
+          <td>Depende del plan</td>
+        </tr>
+        <tr>
+          <td>Ideal para</td>
+          <td>Equipos sin perfil técnico</td>
+          <td class="tag-win">Casos complejos o con presupuesto ajustado</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>¿Cuándo elegir Zapier?</h2>
+
+    <p>Zapier es la mejor opción cuando:</p>
+    <ul>
+      <li>Eres dueño de negocio o parte de un equipo sin perfil técnico y quieres resultados rápidos</li>
+      <li>Necesitas conectar apps muy específicas o de nicho (tiene el catálogo más amplio del mercado)</li>
+      <li>El proceso que quieres automatizar es lineal: pasa A, entonces haz B</li>
+      <li>El tiempo de configuración importa más que el costo mensual</li>
+    </ul>
+
+    <div class="verdict">
+      <div class="verdict-label">Ejemplo concreto</div>
+      <h4>Formulario de contacto → Google Sheets + correo de bienvenida</h4>
+      <p>En Zapier esto se configura en menos de 10 minutos sin tocar código. En Make puedes hacerlo también, pero la curva inicial es más pronunciada si nunca has usado la plataforma.</p>
+    </div>
+
+    <h2>¿Cuándo elegir Make?</h2>
+
+    <p>Make es la mejor opción cuando:</p>
+    <ul>
+      <li>Necesitas procesar o transformar datos de forma compleja antes de enviarlos a otra app</li>
+      <li>Tu flujo tiene condiciones: "si el cliente es de México, manda esto; si es de otro país, manda aquello"</li>
+      <li>Manejas volúmenes altos de operaciones y el costo importa (Make es considerablemente más barato)</li>
+      <li>Quieres manejar APIs personalizadas o webhooks con control total del request/response</li>
+    </ul>
+
+    <div class="verdict">
+      <div class="verdict-label">Ejemplo concreto</div>
+      <h4>Proceso de onboarding multi-etapa con lógica de segmentación</h4>
+      <p>Cuando un cliente se registra: verificar si ya existe en el CRM, si existe actualizar sus datos, si no existe crear el contacto, asignar etiquetas según el plan comprado, enviar correos diferentes según el plan y crear tarea en el sistema de proyectos. Esto en Zapier requiere muchos zaps encadenados. En Make, un solo escenario lo resuelve.</p>
+    </div>
+
+    <h2>El factor precio, sin rodeos</h2>
+
+    <p>Si automatizas un volumen moderado de operaciones (digamos, 10,000 por mes), en Zapier estarías en un plan de $49 USD/mes. En Make, el mismo volumen cuesta alrededor de $16 USD/mes.</p>
+
+    <p>La diferencia parece pequeña, pero a lo largo de un año son casi $400 USD. Para un negocio pequeño, eso importa.</p>
+
+    <div class="callout">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Tanto Make como Zapier ofrecen planes gratuitos con los que puedes probar antes de pagar. Mi recomendación: prueba Zapier primero si eres nuevo en automatización. Si en un mes sientes que te quedas corto, explora Make.</p>
+    </div>
+
+    <h2>¿Y si ninguna de las dos alcanza?</h2>
+
+    <p>Hay casos donde ninguna plataforma no-code resuelve el problema: lógica muy específica del negocio, integración con sistemas internos, procesamiento de grandes volúmenes de datos, o simplemente que el costo acumulado de suscripciones supera lo que costaría desarrollar la solución a medida.</p>
+
+    <p>En esos casos, Python con sus librerías de automatización (requests, schedule, Celery) o un pequeño servicio en la nube es la respuesta más eficiente a largo plazo.</p>
+
+    <hr class="divider">
+
+    <p>Si todavía no estás seguro cuál usar en tu caso específico, <a href="/#contact">cuéntame qué proceso quieres automatizar</a> y te digo cuál encaja mejor.</p>
+
+    <div class="cta-box">
+      <h3>¿Tu negocio ya debería estar automatizando?</h3>
+      <p>Agenda una sesión de diagnóstico gratuita y revisamos juntos qué procesos tienen mayor impacto.</p>
+      <a href="/#contact" class="btn-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Solicitar diagnóstico
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Aphernzz</a>
+  <ul class="footer-links">
+    <li><a href="/articulos/">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact">Contacto</a></li>
+  </ul>
+  <p>© 2026 Ángel Hernández</p>
+</footer>
+</body>
+</html>

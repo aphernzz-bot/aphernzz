@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 tareas que debes automatizar hoy con Zapier | Aphernzz</title>
+  <meta name="description" content="Descubre los 5 flujos de automatización más efectivos con Zapier para recuperar hasta 10 horas semanales en tu negocio sin conocimientos técnicos." />
+  <link rel="icon" href="../assets/img/favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <style>
+    :root {
+      --bg:#080b10;--surface:#0e1318;--surface2:#141c24;
+      --accent:#00e5ff;--accent2:#7b61ff;
+      --text:#e8edf2;--muted:#6b7a8d;
+      --border:rgba(255,255,255,0.07);--border-accent:rgba(0,229,255,0.2);
+      --radius:1.5rem;--radius-sm:0.75rem;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7;}
+    .bg-gradient{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;background:linear-gradient(45deg,var(--bg),#0a1128,var(--surface2),var(--bg));background-size:400% 400%;animation:gradientMove 15s ease infinite;}
+    @keyframes gradientMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 6vw;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,11,16,0.85);}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none;}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{font-size:0.85rem;font-weight:500;color:var(--muted);text-decoration:none;letter-spacing:0.04em;text-transform:uppercase;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:linear-gradient(135deg,var(--accent),#00b8cc)!important;color:#080b10!important;padding:0.5rem 1.4rem!important;border-radius:999px!important;font-weight:700!important;text-transform:none!important;letter-spacing:0!important;}
+
+    /* ARTICLE HEADER */
+    .article-header{padding:8rem 6vw 4rem;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .article-header::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 10% 50%,black 30%,transparent 100%);}
+    .article-header-inner{max-width:780px;margin:0 auto;position:relative;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--accent);text-decoration:none;}
+    .article-category{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);border-radius:999px;padding:0.3rem 0.85rem;margin-bottom:1.25rem;}
+    .article-title{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:1.25rem;}
+    .article-lead{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2rem;}
+    .article-meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .meta-author{display:flex;align-items:center;gap:0.65rem;}
+    .meta-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#080b10;flex-shrink:0;}
+    .meta-name{font-size:0.85rem;font-weight:600;}
+    .meta-date{font-size:0.8rem;color:var(--muted);}
+    .meta-sep{color:var(--border);font-size:1.2rem;}
+    .meta-reading{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--muted);}
+    .meta-reading svg{width:14px;height:14px;stroke:var(--muted);}
+
+    /* ARTICLE BODY */
+    .article-wrapper{max-width:780px;margin:0 auto;padding:4rem 6vw 6rem;}
+    .article-body h2{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-0.02em;margin:2.5rem 0 1rem;color:var(--text);}
+    .article-body h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.75rem;color:var(--text);}
+    .article-body p{font-size:0.97rem;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;}
+    .article-body p strong{color:var(--text);font-weight:600;}
+    .article-body ul,
+    .article-body ol{margin:1rem 0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.55rem;}
+    .article-body li{font-size:0.95rem;color:var(--muted);line-height:1.7;}
+    .article-body li strong{color:var(--text);}
+    .article-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;}
+
+    .callout{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.18);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1.25rem 1.5rem;margin:2rem 0;display:flex;gap:0.85rem;align-items:flex-start;}
+    .callout svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;margin-top:2px;}
+    .callout p{margin:0;font-size:0.9rem;line-height:1.7;}
+
+    .step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.75rem;margin:1.25rem 0;display:flex;gap:1.25rem;align-items:flex-start;transition:border-color 0.3s;}
+    .step-card:hover{border-color:var(--border-accent);}
+    .step-num{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#080b10;flex-shrink:0;}
+    .step-content h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:0.45rem;color:var(--text);}
+    .step-content p{margin:0;font-size:0.88rem;color:var(--muted);line-height:1.7;}
+
+    .code-block{background:#0a0f18;border:1px solid var(--border);border-radius:var(--radius-sm);padding:1.5rem;margin:1.5rem 0;overflow-x:auto;}
+    .code-block pre{font-family:'Courier New',monospace;font-size:0.82rem;color:#a8d8ea;line-height:1.7;white-space:pre;}
+    .code-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;}
+
+    .divider{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+
+    .cta-box{background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(123,97,255,0.06));border:1px solid var(--border-accent);border-radius:var(--radius);padding:2.5rem;text-align:center;margin-top:3rem;}
+    .cta-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.65rem;}
+    .cta-box p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;}
+    .btn-cta{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--accent),#00b8cc);color:#080b10;font-weight:700;font-size:0.88rem;padding:0.75rem 1.75rem;border-radius:999px;text-decoration:none;transition:box-shadow 0.3s,transform 0.2s;}
+    .btn-cta:hover{box-shadow:0 0 28px rgba(0,229,255,0.4);transform:translateY(-1px);}
+
+    footer{border-top:1px solid var(--border);padding:2rem 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--bg);}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);font-size:1rem;text-decoration:none;}
+    footer p{font-size:0.8rem;color:var(--muted);}
+    .footer-links{display:flex;gap:1.5rem;list-style:none;}
+    .footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<nav>
+  <a href="/" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/#services">Servicios</a></li>
+    <li><a href="/articulos/" style="color:var(--accent)">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+</nav>
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a><span>/</span>
+      <a href="/articulos/">Artículos</a><span>/</span>
+      <span>Automatización con Zapier</span>
+    </div>
+    <div class="article-category">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Automatización
+    </div>
+    <h1 class="article-title">5 tareas que debes automatizar hoy mismo con Zapier</h1>
+    <p class="article-lead">Si pasas más de una hora al día moviendo datos entre aplicaciones, respondiendo correos repetitivos o haciendo seguimiento manual, este artículo es para ti. Te muestro cinco flujos concretos que puedes implementar esta semana.</p>
+    <div class="article-meta-row">
+      <div class="meta-author">
+        <div class="meta-avatar">AH</div>
+        <div>
+          <div class="meta-name">Ángel Hernández</div>
+          <div class="meta-date">Junio 2026</div>
+        </div>
+      </div>
+      <span class="meta-sep">|</span>
+      <div class="meta-reading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        8 minutos de lectura
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article-wrapper">
+  <div class="article-body">
+
+    <p>Zapier es una herramienta de automatización que conecta más de 6,000 aplicaciones entre sí. La idea central es sencilla: cuando algo ocurre en una app (un disparador), Zapier hace algo en otra (una acción). No necesitas saber programar para usarlo.</p>
+
+    <p>Lo interesante no es la tecnología en sí, sino lo que te permite dejar de hacer. Un negocio que automatiza bien sus procesos repetitivos libera tiempo real para lo que genera valor: atender clientes, cerrar ventas, mejorar el producto.</p>
+
+    <p>Estas son las cinco tareas donde la automatización genera el mayor retorno desde el primer día.</p>
+
+    <h2>1. Capturar leads de formularios directo a tu CRM y correo</h2>
+
+    <p>El flujo más común y también el que más impacto inmediato tiene. Cada vez que alguien llena un formulario en tu sitio web (Typeform, Google Forms, o el formulario de contacto de tu landing page), Zapier puede:</p>
+
+    <ul>
+      <li>Guardar los datos automáticamente en una hoja de Google Sheets o en tu CRM</li>
+      <li>Enviar un correo de bienvenida personalizado a la persona que se registró</li>
+      <li>Notificarte a ti (o a tu equipo) en Slack o WhatsApp con los datos del lead</li>
+    </ul>
+
+    <p>Sin automatización, esto implica revisar el correo, copiar los datos, pegarlos en otro lugar y recordar mandar un mensaje de bienvenida. Con el zap configurado, todo ocurre en segundos y tú no haces nada.</p>
+
+    <div class="callout">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Un lead que recibe respuesta en los primeros cinco minutos tiene <strong>21 veces más probabilidades de convertirse en cliente</strong> que uno que espera 30 minutos. La automatización lo hace posible a cualquier hora del día.</p>
+    </div>
+
+    <h2>2. Notificaciones automáticas de nuevas ventas o pagos</h2>
+
+    <p>Cuando alguien compra en tu tienda Shopify, paga una factura en Stripe, o confirma una reserva en Calendly, ¿tu equipo se entera en tiempo real? En la mayoría de los negocios pequeños, esta información llega tarde o incompleta.</p>
+
+    <p>Con Zapier puedes configurar que cada venta confirmada genere automáticamente:</p>
+
+    <ul>
+      <li>Un mensaje en el grupo de WhatsApp de tu equipo con el nombre del cliente, el producto y el monto</li>
+      <li>Una fila nueva en tu hoja de control de ventas con todos los datos</li>
+      <li>Una tarea en Trello o Notion para que operaciones prepare el pedido</li>
+    </ul>
+
+    <p>El resultado es que todo el equipo trabaja con información actualizada sin que nadie tenga que copiar y pegar nada.</p>
+
+    <h2>3. Sincronizar contactos entre tu CRM y tu lista de email</h2>
+
+    <p>Este es uno de los problemas más frecuentes en negocios que usan varias herramientas: los contactos viven en diferentes lugares y nadie tiene la versión actualizada. Alguien cambia de correo en el CRM pero sigue recibiendo campañas al correo viejo. O peor, un cliente que ya compró sigue recibiendo correos de prospecto.</p>
+
+    <p>Zapier puede mantener sincronizadas automáticamente:</p>
+
+    <ul>
+      <li>Cuando un contacto avanza de etapa en tu CRM → actualiza su tag en Mailchimp o ActiveCampaign</li>
+      <li>Cuando alguien se da de baja del correo → lo marca en el CRM para no llamarle</li>
+      <li>Cuando un lead se convierte en cliente → lo mueve a la lista de clientes y lo saca de la lista de prospectos</li>
+    </ul>
+
+    <p><strong>El resultado práctico:</strong> tus campañas de email llegan a las personas correctas con el mensaje adecuado según en qué parte del proceso están.</p>
+
+    <h2>4. Publicación programada y multi-canal en redes sociales</h2>
+
+    <p>Si gestionas las redes sociales de tu negocio, sabes que publicar el mismo contenido en diferentes plataformas puede consumir más tiempo del que debería. Zapier (en combinación con Buffer o directamente con las APIs de algunas redes) permite:</p>
+
+    <ul>
+      <li>Escribir el contenido una sola vez en una hoja de Google Sheets o Notion y que se publique automáticamente en el horario definido</li>
+      <li>Cuando publicas en Instagram, que el mismo post aparezca en Facebook y se guarde en tu biblioteca de contenido</li>
+      <li>Recibir una notificación cuando alguien comenta o menciona tu marca, sin tener que revisar cada plataforma manualmente</li>
+    </ul>
+
+    <h2>5. Recordatorios automáticos de seguimiento a clientes</h2>
+
+    <p>El seguimiento es donde se cierran la mayoría de las ventas, y también donde más falla la mayoría de los negocios. No por falta de intención, sino porque es imposible recordar en qué punto quedó cada conversación cuando manejas decenas de prospectos.</p>
+
+    <p>Un flujo básico de seguimiento con Zapier funciona así:</p>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Disparador: nuevo lead en el CRM</h4>
+        <p>Cuando entra un contacto nuevo, Zapier inicia el contador de seguimiento.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Acción a los 2 días: correo de seguimiento</h4>
+        <p>Si el lead no ha respondido, se envía un correo de recordatorio personalizado con su nombre.</p>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Acción a los 5 días: alerta interna</h4>
+        <p>Si todavía no hay respuesta, te llega una notificación para hacer seguimiento manual o cambiar la estrategia.</p>
+      </div>
+    </div>
+
+    <p>Este tipo de flujo, que en un equipo de ventas profesional puede costar miles de pesos en CRM avanzados, se puede implementar con Zapier y Gmail de forma prácticamente gratuita.</p>
+
+    <hr class="divider">
+
+    <h2>¿Por dónde empezar?</h2>
+
+    <p>Si nunca has usado Zapier, el plan gratuito te da 100 tareas por mes y permite crear hasta 5 zaps simultáneos. Es suficiente para comenzar con los flujos más básicos y ver el impacto antes de invertir en un plan de pago.</p>
+
+    <p>Mi recomendación es empezar por el flujo que más tiempo te roba actualmente. Identifica una tarea que haces más de tres veces por semana y que consiste básicamente en mover información de un lugar a otro. Ese es el candidato perfecto para tu primer zap.</p>
+
+    <p>Si quieres ir más allá de Zapier o necesitas automatizaciones más complejas con lógica condicional, Make (antes Integromat) es una alternativa más potente. Pero para el 80% de los casos de negocios pequeños y medianos, Zapier resuelve el problema sin complicaciones.</p>
+
+    <div class="cta-box">
+      <h3>¿Tienes un proceso que crees que se puede automatizar?</h3>
+      <p>Cuéntame en qué consiste y te digo si tiene solución con Zapier, Make o Python.</p>
+      <a href="/#contact" class="btn-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Hablemos de tu caso
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Aphernzz</a>
+  <ul class="footer-links">
+    <li><a href="/articulos/">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact">Contacto</a></li>
+  </ul>
+  <p>© 2026 Ángel Hernández</p>
+</footer>
+</body>
+</html>

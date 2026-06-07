@@ -607,6 +607,76 @@
       color: var(--muted);
     }
 
+    /* REGISTRATION MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      max-width: 440px;
+      width: 100%;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: none; border: none;
+      color: var(--muted); cursor: pointer; padding: 4px;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25);
+      color: var(--accent); font-size: 0.72rem; font-weight: 700;
+      padding: 0.3rem 0.75rem; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem;
+    }
+    .modal-box h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800;
+      line-height: 1.2; margin-bottom: 0.5rem;
+    }
+    .modal-sub { color: var(--muted); font-size: 0.88rem; line-height: 1.7; margin-bottom: 1.75rem; }
+    .modal-course-name { font-weight: 700; color: var(--accent); }
+    .modal-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .modal-form input {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 0.75rem; padding: 0.75rem 1.1rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; outline: none; transition: border-color 0.2s;
+    }
+    .modal-form input:focus { border-color: var(--border-accent); }
+    .modal-form input::placeholder { color: var(--muted); }
+    .btn-modal-submit {
+      background: linear-gradient(135deg, var(--accent), #00b8cc);
+      color: #080b10; font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.9rem; padding: 0.85rem 1.5rem; border: none;
+      border-radius: 999px; cursor: pointer; transition: box-shadow 0.3s, transform 0.2s;
+      margin-top: 0.25rem;
+    }
+    .btn-modal-submit:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4); transform: translateY(-1px); }
+    .btn-modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .modal-note { font-size: 0.73rem; color: var(--muted); text-align: center; margin-top: 0.25rem; }
+    .modal-success { text-align: center; padding: 1.5rem 0; }
+    .modal-success-icon {
+      width: 56px; height: 56px;
+      background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem; color: var(--accent);
+    }
+    .modal-success h4 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .modal-success p { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+
     /* Lucide icon sizing */
     .plan-icon svg, .cat-icon svg, .addon-icon svg, .article-thumb svg,
     .salud-icon svg, .plus-icon svg, .service-icon svg, .hero-float-icon svg,
@@ -690,7 +760,7 @@
       </div>
       <h2>5 tareas que debes automatizar hoy mismo con Zapier</h2>
       <p>Descubre los flujos de trabajo más efectivos para recuperar hasta 10 horas a la semana en tu negocio. Desde notificaciones automáticas hasta sincronización de CRM, esta guía cubre casos reales.</p>
-      <span class="article-link coming-soon">Próximamente</span>
+      <a class="article-link" href="/articulos/5-tareas-automatizar-zapier.html">Leer artículo →</a>
     </div>
   </div>
 
@@ -712,7 +782,7 @@
         <div class="article-meta">Marzo 2026 · 6 min</div>
         <h3>Cómo estructurar scripts de Python para extraer datos web</h3>
         <p>Guía paso a paso sobre web scraping con BeautifulSoup y Pandas de forma ética y eficiente.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/python-web-scraping.html">Leer artículo →</a>
       </div>
     </div>
 
@@ -725,7 +795,7 @@
         <div class="article-meta">Febrero 2026 · 5 min</div>
         <h3>Métricas que todo negocio debería medir en un dashboard</h3>
         <p>Un repaso por los KPIs más accionables y cómo visualizarlos en Power BI sin complicarte la vida.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/metricas-dashboard-powerbi.html">Leer artículo →</a>
       </div>
     </div>
 
@@ -738,7 +808,7 @@
         <div class="article-meta">Enero 2026 · 7 min</div>
         <h3>Make vs Zapier: ¿Cuál elegir según tu caso de uso?</h3>
         <p>Comparativa honesta de las dos plataformas más populares de automatización no-code en 2026.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/make-vs-zapier.html">Leer artículo →</a>
       </div>
     </div>
 
@@ -751,7 +821,7 @@
         <div class="article-meta">Enero 2026 · 9 min</div>
         <h3>Cómo usar Claude API para automatizar respuestas de clientes</h3>
         <p>Implementa un asistente de atención al cliente inteligente conectado a tu CRM con menos de 100 líneas de Python.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/claude-api-clientes.html">Leer artículo →</a>
       </div>
     </div>
 
@@ -764,7 +834,7 @@
         <div class="article-meta">Diciembre 2025 · 4 min</div>
         <h3>Los 5 errores más comunes en identidad visual de startups</h3>
         <p>Una revisión de los errores que hacen perder credibilidad y cómo corregirlos antes de salir al mercado.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/errores-identidad-visual.html">Leer artículo →</a>
       </div>
     </div>
 
@@ -777,7 +847,7 @@
         <div class="article-meta">Noviembre 2025 · 10 min</div>
         <h3>Análisis exploratorio de datos con Pandas desde cero</h3>
         <p>Todo lo que necesitas saber para limpiar, explorar y entender cualquier dataset antes de modelarlo.</p>
-        <span class="article-link coming-soon">Próximamente</span>
+        <a class="article-link" href="/articulos/analisis-exploratorio-pandas.html">Leer artículo →</a>
       </div>
     </div>
   </div>
@@ -794,7 +864,7 @@
     <div class="course-card fade-up">
       <div class="course-accent"></div>
       <div class="course-body">
-        <div class="course-status">Lista de espera abierta</div>
+        <div class="course-status">7 días gratis</div>
         <h3>Bootcamp: De cero a experto creando Dashboards en Power BI</h3>
         <p>Aprende a conectar bases de datos, modelar información y construir visualizaciones que impacten la toma de decisiones de tu empresa.</p>
         <div class="course-tags">
@@ -803,14 +873,14 @@
           <span class="course-tag">DAX</span>
           <span class="course-tag">8 semanas</span>
         </div>
-        <a href="/#contact" class="btn-course btn-waitlist">Unirme a la lista →</a>
+        <a href="/articulos/cursos/powerbi-bootcamp.html" class="btn-course">Empezar gratis →</a>
       </div>
     </div>
 
     <div class="course-card fade-up">
       <div class="course-accent" style="background: linear-gradient(180deg, var(--accent2), #5b41e0);"></div>
       <div class="course-body">
-        <div class="course-status" style="color: #a78bfa;">Próximamente</div>
+        <div class="course-status" style="color: #a78bfa;">7 días gratis</div>
         <h3>Automatización de Negocios con Make y Python</h3>
         <p>Domina la automatización no-code y low-code para digitalizar procesos completos en tu empresa sin necesidad de un equipo de IT.</p>
         <div class="course-tags">
@@ -819,7 +889,7 @@
           <span class="course-tag">APIs</span>
           <span class="course-tag">6 semanas</span>
         </div>
-        <a href="/#contact" class="btn-course btn-waitlist" style="border-color: rgba(123,97,255,0.3); color: #a78bfa;">Notifícame →</a>
+        <a href="/articulos/cursos/automatizacion-make-python.html" class="btn-course" style="background: linear-gradient(135deg, var(--accent2), #5b41e0);">Empezar gratis →</a>
       </div>
     </div>
   </div>
@@ -851,6 +921,38 @@
     <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
   </div>
 </footer>
+
+<!-- REGISTRATION MODAL -->
+<div class="modal-overlay" id="regModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div id="modalFormView">
+      <div class="modal-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        7 días gratis
+      </div>
+      <h3 id="modalTitle">Accede al curso completo gratis</h3>
+      <p class="modal-sub">Regístrate para empezar los primeros 7 días sin costo. Solo necesito tu nombre y correo para enviarte el acceso a <span class="modal-course-name" id="modalCourseName"></span>.</p>
+      <form class="modal-form" id="regForm" novalidate>
+        <input type="text" id="regName" placeholder="Tu nombre" autocomplete="name" required />
+        <input type="email" id="regEmail" placeholder="tu@correo.com" autocomplete="email" required />
+        <button type="submit" class="btn-modal-submit" id="regSubmit">Quiero mis 7 días gratis →</button>
+        <p class="modal-note">Sin tarjeta de crédito. Sin compromisos.</p>
+      </form>
+    </div>
+    <div id="modalSuccessView" style="display:none">
+      <div class="modal-success">
+        <div class="modal-success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h4>¡Listo! Revisa tu correo</h4>
+        <p>Te enviamos el acceso a tu bandeja de entrada. Si no lo encuentras en unos minutos, revisa la carpeta de spam.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://unpkg.com/lucide@1.16.0/dist/umd/lucide.min.js"></script>
 <script>
@@ -888,6 +990,87 @@
     });
   });
   lucide.createIcons();
+
+  // Registration modal
+  const regModal = document.getElementById('regModal');
+  const modalClose = document.getElementById('modalClose');
+  const regForm = document.getElementById('regForm');
+  const regSubmit = document.getElementById('regSubmit');
+  const modalFormView = document.getElementById('modalFormView');
+  const modalSuccessView = document.getElementById('modalSuccessView');
+
+  function openModal(courseName) {
+    document.getElementById('modalCourseName').textContent = courseName;
+    regModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalFormView.style.display = '';
+    modalSuccessView.style.display = 'none';
+    regForm.reset();
+    regSubmit.disabled = false;
+    regSubmit.textContent = 'Quiero mis 7 días gratis →';
+  }
+  function closeModal() {
+    regModal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  modalClose.addEventListener('click', closeModal);
+  regModal.addEventListener('click', e => { if (e.target === regModal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  document.querySelectorAll('[data-course-modal]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      openModal(btn.dataset.courseModal);
+    });
+  });
+
+  regForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    if (!name || !email) return;
+    regSubmit.disabled = true;
+    regSubmit.textContent = 'Enviando...';
+    const courseName = document.getElementById('modalCourseName').textContent;
+    const stored = JSON.parse(localStorage.getItem('aphernzz_courses_registered') || '[]');
+    if (!stored.find(r => r.email === email)) {
+      stored.push({ name, email, course: courseName, date: new Date().toISOString() });
+      localStorage.setItem('aphernzz_courses_registered', JSON.stringify(stored));
+    }
+    try {
+      await fetch('https://formsubmit.co/ajax/aphernzz@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ nombre: name, correo: email, curso: courseName, _subject: 'Nueva inscripción a curso — Aphernzz' })
+      });
+    } catch (_) {}
+    modalFormView.style.display = 'none';
+    modalSuccessView.style.display = '';
+    setTimeout(closeModal, 3500);
+  });
+
+  // Newsletter form
+  const nlForm = document.querySelector('.newsletter-form');
+  if (nlForm) {
+    const nlInput = nlForm.querySelector('input[type="email"]');
+    const nlBtn = nlForm.querySelector('button');
+    nlBtn.addEventListener('click', async () => {
+      const email = nlInput.value.trim();
+      if (!email) return;
+      nlBtn.disabled = true;
+      nlBtn.textContent = 'Enviando...';
+      try {
+        await fetch('https://formsubmit.co/ajax/aphernzz@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ correo: email, _subject: 'Nueva suscripción al newsletter — Aphernzz' })
+        });
+      } catch (_) {}
+      nlBtn.textContent = '¡Suscrito!';
+      nlInput.value = '';
+      setTimeout(() => { nlBtn.disabled = false; nlBtn.textContent = 'Suscribirme →'; }, 3000);
+    });
+  }
 </script>
 </body>
 </html>

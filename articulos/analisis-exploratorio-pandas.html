@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análisis exploratorio de datos con Pandas desde cero | Aphernzz</title>
+  <meta name="description" content="Todo lo que necesitas para limpiar, explorar y entender cualquier dataset antes de analizarlo, con Pandas paso a paso." />
+  <link rel="icon" href="../assets/img/favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <style>
+    :root{--bg:#080b10;--surface:#0e1318;--surface2:#141c24;--accent:#00e5ff;--accent2:#7b61ff;--text:#e8edf2;--muted:#6b7a8d;--border:rgba(255,255,255,0.07);--border-accent:rgba(0,229,255,0.2);--radius:1.5rem;--radius-sm:0.75rem;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7;}
+    .bg-gradient{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;background:linear-gradient(45deg,var(--bg),#0a1128,var(--surface2),var(--bg));background-size:400% 400%;animation:gm 15s ease infinite;}
+    @keyframes gm{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 6vw;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,11,16,0.85);}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none;}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{font-size:0.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:linear-gradient(135deg,var(--accent),#00b8cc)!important;color:#080b10!important;padding:0.5rem 1.4rem!important;border-radius:999px!important;font-weight:700!important;}
+    .article-header{padding:8rem 6vw 4rem;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .article-header::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 10% 50%,black 30%,transparent 100%);}
+    .article-header-inner{max-width:780px;margin:0 auto;position:relative;}
+    .article-wrapper{max-width:780px;margin:0 auto;padding:4rem 6vw 6rem;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--accent);text-decoration:none;}
+    .article-category{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a78bfa;background:rgba(123,97,255,0.08);border:1px solid rgba(123,97,255,0.2);border-radius:999px;padding:0.3rem 0.85rem;margin-bottom:1.25rem;}
+    .article-title{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:1.25rem;}
+    .article-lead{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2rem;}
+    .article-meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .meta-author{display:flex;align-items:center;gap:0.65rem;}
+    .meta-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#080b10;flex-shrink:0;}
+    .meta-name{font-size:0.85rem;font-weight:600;} .meta-date{font-size:0.8rem;color:var(--muted);}
+    .meta-sep{color:var(--border);font-size:1.2rem;}
+    .meta-reading{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--muted);}
+    .meta-reading svg{width:14px;height:14px;stroke:var(--muted);}
+    .article-body h2{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-0.02em;margin:2.5rem 0 1rem;}
+    .article-body h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.75rem;}
+    .article-body p{font-size:0.97rem;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;}
+    .article-body p strong{color:var(--text);font-weight:600;}
+    .article-body ul,.article-body ol{margin:1rem 0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.55rem;}
+    .article-body li{font-size:0.95rem;color:var(--muted);line-height:1.7;}
+    .article-body li strong{color:var(--text);}
+    .code-block{background:#050810;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:1.5rem;margin:1.5rem 0;overflow-x:auto;}
+    .code-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+    .code-label svg{width:14px;height:14px;stroke:var(--muted);}
+    .code-block pre{font-family:'Courier New',Courier,monospace;font-size:0.83rem;line-height:1.75;white-space:pre;color:#a8d8ea;}
+    .kw{color:#7b61ff;} .fn{color:#00e5ff;} .st{color:#a8ff78;} .cm{color:#4a5568;font-style:italic;} .nm{color:#ffb347;}
+    .callout{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.18);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1.25rem 1.5rem;margin:2rem 0;display:flex;gap:0.85rem;align-items:flex-start;}
+    .callout svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;margin-top:2px;}
+    .callout p{margin:0;font-size:0.9rem;line-height:1.7;}
+    .divider{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+    .cta-box{background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(123,97,255,0.06));border:1px solid var(--border-accent);border-radius:var(--radius);padding:2.5rem;text-align:center;margin-top:3rem;}
+    .cta-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.65rem;}
+    .cta-box p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;}
+    .btn-cta{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--accent),#00b8cc);color:#080b10;font-weight:700;font-size:0.88rem;padding:0.75rem 1.75rem;border-radius:999px;text-decoration:none;transition:box-shadow 0.3s,transform 0.2s;}
+    .btn-cta:hover{box-shadow:0 0 28px rgba(0,229,255,0.4);transform:translateY(-1px);}
+    footer{border-top:1px solid var(--border);padding:2rem 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--bg);}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);font-size:1rem;text-decoration:none;}
+    footer p{font-size:0.8rem;color:var(--muted);}
+    .footer-links{display:flex;gap:1.5rem;list-style:none;}
+    .footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<nav>
+  <a href="/" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/articulos/" style="color:var(--accent)">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+</nav>
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb"><a href="/">Inicio</a><span>/</span><a href="/articulos/">Artículos</a><span>/</span><span>Análisis con Pandas</span></div>
+    <div class="article-category">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Python
+    </div>
+    <h1 class="article-title">Análisis exploratorio de datos con Pandas desde cero</h1>
+    <p class="article-lead">Antes de construir cualquier modelo o visualización, necesitas entender tus datos. El análisis exploratorio es ese paso, y Pandas lo hace sorprendentemente sencillo si sabes por dónde empezar.</p>
+    <div class="article-meta-row">
+      <div class="meta-author">
+        <div class="meta-avatar">AH</div>
+        <div><div class="meta-name">Ángel Hernández</div><div class="meta-date">Noviembre 2025</div></div>
+      </div>
+      <span class="meta-sep">|</span>
+      <div class="meta-reading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        10 minutos de lectura
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article-wrapper">
+  <div class="article-body">
+
+    <p>El análisis exploratorio de datos (EDA por sus siglas en inglés) es el proceso de entender un dataset antes de hacer cualquier análisis formal. Es como leer un libro nuevo: antes de sacar conclusiones, necesitas saber de qué trata, qué tan larga es la historia y si hay páginas faltantes.</p>
+
+    <p>La mayoría de los errores en proyectos de datos ocurren por saltarse este paso. Se construye un modelo con datos sucios, se crea una visualización con categorías duplicadas, o se toman decisiones basadas en datos que tienen valores extremos no detectados.</p>
+
+    <h2>Cargar el dataset</h2>
+
+    <p>Pandas puede leer prácticamente cualquier formato de datos: CSV, Excel, JSON, SQL. El más común es CSV:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python</div>
+      <pre><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+<span class="cm"># Cargar desde archivo local</span>
+df = pd.<span class="fn">read_csv</span>(<span class="st">"ventas_2026.csv"</span>)
+
+<span class="cm"># O desde Excel</span>
+df = pd.<span class="fn">read_excel</span>(<span class="st">"ventas.xlsx"</span>, sheet_name=<span class="st">"Hoja1"</span>)
+
+<span class="cm"># Primeras 5 filas para ver la estructura</span>
+df.<span class="fn">head</span>()</pre>
+    </div>
+
+    <h2>Las primeras preguntas que siempre hago</h2>
+
+    <p>Una vez cargado el dataset, hay cinco preguntas que respondo siempre antes de continuar:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python</div>
+      <pre><span class="cm"># 1. ¿Cuántas filas y columnas tiene?</span>
+<span class="fn">print</span>(df.shape)  <span class="cm"># (filas, columnas)</span>
+
+<span class="cm"># 2. ¿Qué tipo de dato es cada columna?</span>
+<span class="fn">print</span>(df.dtypes)
+
+<span class="cm"># 3. ¿Hay valores nulos?</span>
+<span class="fn">print</span>(df.<span class="fn">isnull</span>().<span class="fn">sum</span>())
+
+<span class="cm"># 4. ¿Cómo se distribuyen los valores numéricos?</span>
+<span class="fn">print</span>(df.<span class="fn">describe</span>())
+
+<span class="cm"># 5. ¿Hay duplicados?</span>
+<span class="fn">print</span>(<span class="kw">f</span><span class="st">"Duplicados: {df.duplicated().sum()}"</span>)</pre>
+    </div>
+
+    <h2>Limpiar el dataset</h2>
+
+    <p>En el 90% de los datasets reales hay algo que limpiar. Estos son los casos más frecuentes:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python — limpieza</div>
+      <pre><span class="cm"># Eliminar filas completamente vacías</span>
+df = df.<span class="fn">dropna</span>(how=<span class="st">"all"</span>)
+
+<span class="cm"># Rellenar valores nulos en una columna numérica con la mediana</span>
+df[<span class="st">"precio"</span>] = df[<span class="st">"precio"</span>].<span class="fn">fillna</span>(df[<span class="st">"precio"</span>].<span class="fn">median</span>())
+
+<span class="cm"># Eliminar duplicados exactos</span>
+df = df.<span class="fn">drop_duplicates</span>()
+
+<span class="cm"># Limpiar espacios en columnas de texto</span>
+df[<span class="st">"nombre"</span>] = df[<span class="st">"nombre"</span>].<span class="fn">str</span>.<span class="fn">strip</span>().<span class="fn">str</span>.<span class="fn">lower</span>()
+
+<span class="cm"># Convertir columna de fecha a tipo datetime</span>
+df[<span class="st">"fecha_venta"</span>] = pd.<span class="fn">to_datetime</span>(df[<span class="st">"fecha_venta"</span>], dayfirst=<span class="kw">True</span>)</pre>
+    </div>
+
+    <h2>Explorar con agrupaciones</h2>
+
+    <p>Una vez limpio el dataset, las agrupaciones son la herramienta más útil para encontrar patrones. Ejemplos concretos:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python — análisis</div>
+      <pre><span class="cm"># Ventas totales por categoría de producto</span>
+ventas_cat = df.<span class="fn">groupby</span>(<span class="st">"categoria"</span>)[<span class="st">"total"</span>].<span class="fn">sum</span>().<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>)
+<span class="fn">print</span>(ventas_cat)
+
+<span class="cm"># Ticket promedio por mes</span>
+df[<span class="st">"mes"</span>] = df[<span class="st">"fecha_venta"</span>].dt.to_period(<span class="st">"M"</span>)
+ticket_mes = df.<span class="fn">groupby</span>(<span class="st">"mes"</span>)[<span class="st">"total"</span>].<span class="fn">mean</span>()
+<span class="fn">print</span>(ticket_mes)
+
+<span class="cm"># Top 10 clientes por compras acumuladas</span>
+top_clientes = (
+    df.<span class="fn">groupby</span>(<span class="st">"cliente"</span>)[<span class="st">"total"</span>]
+    .<span class="fn">sum</span>()
+    .<span class="fn">sort_values</span>(ascending=<span class="kw">False</span>)
+    .<span class="fn">head</span>(<span class="nm">10</span>)
+)
+<span class="fn">print</span>(top_clientes)</pre>
+    </div>
+
+    <div class="callout">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Si trabajas con Google Sheets como fuente de datos, puedes leerlos directamente con <code>pd.read_csv(url_publicada)</code> sin necesidad de descargar el archivo. Esto hace que el análisis se actualice automáticamente cuando actualizas la hoja.</p>
+    </div>
+
+    <h2>El resumen completo en una sola función</h2>
+
+    <p>Esta función combina todo lo anterior para darte un diagnóstico inicial de cualquier dataset en segundos:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python</div>
+      <pre><span class="kw">def</span> <span class="fn">diagnostico</span>(df):
+    <span class="fn">print</span>(<span class="st">"=== DIAGNÓSTICO DEL DATASET ==="</span>)
+    <span class="fn">print</span>(<span class="kw">f</span><span class="st">"Filas: {df.shape[0]:,} | Columnas: {df.shape[1]}"</span>)
+    <span class="fn">print</span>(<span class="kw">f</span><span class="st">"Duplicados: {df.duplicated().sum()}"</span>)
+    <span class="fn">print</span>(<span class="st">"\nValores nulos por columna:"</span>)
+    nulos = df.<span class="fn">isnull</span>().<span class="fn">sum</span>()
+    <span class="fn">print</span>(nulos[nulos > <span class="nm">0</span>])
+    <span class="fn">print</span>(<span class="st">"\nResumen estadístico:"</span>)
+    <span class="fn">print</span>(df.<span class="fn">describe</span>())
+
+<span class="fn">diagnostico</span>(df)</pre>
+    </div>
+
+    <hr class="divider">
+
+    <div class="cta-box">
+      <h3>¿Tienes datos sin explotar en Excel o Google Sheets?</h3>
+      <p>Puedo ayudarte a convertirlos en insights accionables con un dashboard en Power BI o un análisis en Python.</p>
+      <a href="/#contact" class="btn-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Analicemos tus datos
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Aphernzz</a>
+  <ul class="footer-links"><li><a href="/articulos/">Artículos</a></li><li><a href="/paquetes/">Paquetes</a></li><li><a href="/#contact">Contacto</a></li></ul>
+  <p>© 2026 Ángel Hernández</p>
+</footer>
+</body>
+</html>

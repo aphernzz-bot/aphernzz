@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bootcamp Power BI: Dashboards desde cero | Aphernzz</title>
+  <link rel="icon" href="../../assets/img/favicon.png" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" /></noscript>
+  <style>
+    :root {
+      --bg: #080b10;
+      --surface: #0e1318;
+      --surface2: #141c24;
+      --accent: #00e5ff;
+      --accent2: #7b61ff;
+      --text: #e8edf2;
+      --muted: #6b7a8d;
+      --border: rgba(255,255,255,0.07);
+      --border-accent: rgba(0,229,255,0.2);
+      --glow: 0 0 40px rgba(0,229,255,0.15);
+      --radius: 1.5rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.65;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999; opacity: 0.4;
+    }
+    .bg-gradient {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+      background: linear-gradient(45deg, var(--bg), #0a1128, var(--surface2), var(--bg));
+      background-size: 400% 400%;
+      animation: gradientMove 15s ease infinite;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 6vw; border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px); background: rgba(8,11,16,0.8);
+    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--accent); text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+    .nav-links a { font-size: 0.85rem; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-cta { background: linear-gradient(135deg, var(--accent), #00b8cc) !important; color: #080b10 !important; padding: 0.5rem 1.4rem !important; border-radius: 999px !important; font-weight: 700 !important; transition: box-shadow 0.3s !important; text-transform: none !important; letter-spacing: 0 !important; }
+    .nav-cta:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* GATE VIEW */
+    #gateView { display: none; }
+    #gateView.active { display: block; }
+
+    .gate-hero {
+      padding: 9rem 6vw 5rem;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .gate-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black 30%, transparent 100%);
+    }
+    .gate-hero-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 4rem; align-items: center; position: relative; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .course-hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.25rem; }
+    .gate-hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+    .gate-hero h1 span { background: linear-gradient(120deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gate-hero p { color: var(--muted); font-size: 1rem; line-height: 1.8; margin-bottom: 1.75rem; max-width: 520px; }
+    .course-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .course-stat { display: flex; flex-direction: column; gap: 2px; }
+    .course-stat strong { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+    .course-stat span { font-size: 0.78rem; color: var(--muted); }
+
+    /* REGISTER CARD */
+    .register-card {
+      background: var(--surface2); border: 1px solid var(--border-accent);
+      border-radius: var(--radius); padding: 2rem;
+    }
+    .register-card .free-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.65rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+    .register-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.35rem; }
+    .register-card .reg-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+    .reg-form { display: flex; flex-direction: column; gap: 0.65rem; }
+    .reg-form input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 0.75rem; padding: 0.75rem 1rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; outline: none; transition: border-color 0.2s;
+    }
+    .reg-form input:focus { border-color: var(--border-accent); }
+    .reg-form input::placeholder { color: var(--muted); }
+    .btn-reg {
+      background: linear-gradient(135deg, var(--accent), #00b8cc);
+      color: #080b10; font-family: 'DM Sans', sans-serif; font-weight: 700;
+      font-size: 0.9rem; padding: 0.85rem; border: none; border-radius: 999px;
+      cursor: pointer; transition: box-shadow 0.3s, transform 0.2s; margin-top: 0.25rem;
+    }
+    .btn-reg:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4); transform: translateY(-1px); }
+    .btn-reg:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .reg-note { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.25rem; }
+    .reg-perks { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .reg-perk { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--muted); }
+    .reg-perk svg { flex-shrink: 0; color: var(--accent); }
+
+    /* GATE CONTENT */
+    .gate-content { max-width: 1100px; margin: 0 auto; padding: 4rem 6vw 6rem; }
+    .section-label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 0.5rem; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; margin-bottom: 2rem; letter-spacing: -0.02em; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 4rem; }
+    .benefit-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; }
+    .benefit-icon { width: 44px; height: 44px; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.15); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; color: var(--accent); margin-bottom: 1rem; }
+    .benefit-card h4 { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .benefit-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .modules-list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 4rem; }
+    .module-row { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 1.25rem; }
+    .module-num { font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 800; color: var(--accent); letter-spacing: 0.08em; min-width: 60px; }
+    .module-row h4 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.2rem; }
+    .module-row p { font-size: 0.8rem; color: var(--muted); }
+    .module-lock { margin-left: auto; flex-shrink: 0; color: var(--muted); }
+    .cta-bottom { background: linear-gradient(135deg, rgba(0,229,255,0.06), rgba(123,97,255,0.06)); border: 1px solid var(--border-accent); border-radius: var(--radius); padding: 3rem; text-align: center; }
+    .cta-bottom h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .cta-bottom p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
+    .btn-cta { display: inline-flex; align-items: center; gap: 0.4rem; background: linear-gradient(135deg, var(--accent), #00b8cc); color: #080b10; font-weight: 700; font-size: 0.9rem; padding: 0.85rem 2rem; border-radius: 999px; text-decoration: none; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: box-shadow 0.3s, transform 0.2s; }
+    .btn-cta:hover { box-shadow: 0 0 24px rgba(0,229,255,0.4); transform: translateY(-2px); }
+
+    /* COURSE VIEW */
+    #courseView { display: none; }
+    #courseView.active { display: block; }
+
+    .course-header {
+      padding: 9rem 6vw 4rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .course-header::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 60% 80% at 10% 50%, black 30%, transparent 100%);
+    }
+    .course-header-inner { max-width: 820px; position: relative; }
+    .course-header h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+    .course-header h1 span { background: linear-gradient(120deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .course-header p { color: var(--muted); font-size: 1rem; line-height: 1.8; max-width: 560px; }
+    .welcome-chip { display: inline-flex; align-items: center; gap: 6px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.25); color: var(--accent); font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 999px; margin-bottom: 1rem; }
+
+    .course-body { max-width: 820px; margin: 0 auto; padding: 4rem 6vw 6rem; }
+    .course-body h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.4rem; margin-top: 3rem; }
+    .course-body h2:first-child { margin-top: 0; }
+    .module-intro { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .lesson-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem; }
+    .lesson { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; transition: border-color 0.2s; }
+    .lesson:hover { border-color: var(--border-accent); }
+    .lesson-check { width: 28px; height: 28px; background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--accent); margin-top: 1px; }
+    .lesson-content h4 { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .lesson-content p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .lesson-meta { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .lesson-tag { font-size: 0.68rem; font-weight: 600; padding: 0.2rem 0.55rem; border-radius: 999px; }
+    .lt-video { background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.2); color: var(--accent); }
+    .lt-practica { background: rgba(123,97,255,0.08); border: 1px solid rgba(123,97,255,0.2); color: #a78bfa; }
+    .lt-recurso { background: rgba(255,182,72,0.08); border: 1px solid rgba(255,182,72,0.2); color: #ffa940; }
+
+    .callout {
+      background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2);
+      border-left: 3px solid var(--accent); border-radius: 0 0.75rem 0.75rem 0;
+      padding: 1.1rem 1.4rem; margin: 2rem 0; font-size: 0.88rem; color: var(--muted); line-height: 1.7;
+    }
+    .callout strong { color: var(--text); }
+
+    .progress-bar-wrap { background: var(--surface2); border-radius: 999px; height: 6px; margin-bottom: 0.4rem; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; width: 0%; transition: width 0.8s ease; }
+    .progress-label { font-size: 0.72rem; color: var(--muted); }
+    .progress-section { margin-bottom: 2.5rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 6vw; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: var(--bg); }
+    footer .logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent); font-size: 1rem; }
+    footer p { font-size: 0.8rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* SUCCESS INLINE */
+    .inline-success { display: none; text-align: center; padding: 1.5rem 0; }
+    .inline-success.show { display: block; }
+    .inline-success-icon { width: 48px; height: 48px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: var(--accent); }
+    .inline-success h4 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .inline-success p { font-size: 0.85rem; color: var(--muted); }
+
+    @media (max-width: 900px) {
+      .gate-hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .benefits-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 1rem 5vw; }
+      .nav-links { display: none; flex-direction: column; gap: 1rem; background: var(--surface); position: absolute; top: 100%; left: 0; right: 0; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .gate-content, .course-body { padding-left: 5vw; padding-right: 5vw; }
+      .gate-hero, .course-header { padding-left: 5vw; padding-right: 5vw; }
+    }
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/#about">Acerca de mí</a></li>
+    <li><a href="/#services">Servicios</a></li>
+    <li><a href="/#projects">Proyectos</a></li>
+    <li><a href="/articulos/" class="active">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/medico/">Sector Salud</a></li>
+    <li><a href="/#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- GATE VIEW (mostrar si no está registrado) -->
+<div id="gateView">
+
+  <div class="gate-hero">
+    <div class="gate-hero-grid">
+      <div>
+        <div class="breadcrumb">
+          <a href="/articulos/">Artículos & Cursos</a>
+          <span>/</span>
+          <span>Power BI Bootcamp</span>
+        </div>
+        <div class="course-hero-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          7 días gratis al registrarte
+        </div>
+        <h1>De cero a experto creando<br><span>Dashboards en Power BI</span></h1>
+        <p>Aprende a conectar datos reales, modelar información con DAX y construir visualizaciones que le hablen directo a quienes toman decisiones. Sin experiencia previa necesaria.</p>
+        <div class="course-stats">
+          <div class="course-stat"><strong>8</strong><span>Semanas</span></div>
+          <div class="course-stat"><strong>32</strong><span>Lecciones</span></div>
+          <div class="course-stat"><strong>12</strong><span>Proyectos prácticos</span></div>
+          <div class="course-stat"><strong>Gratis</strong><span>primeros 7 días</span></div>
+        </div>
+      </div>
+
+      <!-- REGISTER CARD -->
+      <div class="register-card">
+        <div class="free-tag">
+          <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          7 días sin costo
+        </div>
+        <h3>Empieza hoy mismo</h3>
+        <p class="reg-sub">Ingresa tu nombre y correo para acceder al curso completo durante los primeros 7 días sin ningún cobro.</p>
+        <div id="gateFormWrap">
+          <form class="reg-form" id="gateForm" novalidate>
+            <input type="text" id="gateName" placeholder="Tu nombre" autocomplete="name" required />
+            <input type="email" id="gateEmail" placeholder="tu@correo.com" autocomplete="email" required />
+            <button type="submit" class="btn-reg" id="gateSubmit">Acceder al curso gratis →</button>
+            <p class="reg-note">Sin tarjeta. Sin compromisos.</p>
+          </form>
+        </div>
+        <div class="inline-success" id="gateSuccess">
+          <div class="inline-success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4>¡Listo! Cargando el curso...</h4>
+          <p>También te enviamos el acceso por correo.</p>
+        </div>
+        <div class="reg-perks">
+          <div class="reg-perk">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Acceso a los 8 módulos completos
+          </div>
+          <div class="reg-perk">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Archivos de práctica descargables
+          </div>
+          <div class="reg-perk">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Soporte por correo durante los 7 días
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gate-content">
+
+    <div class="fade-up">
+      <p class="section-label">Qué aprenderás</p>
+      <h2 class="section-title">Todo lo que necesitas para dominar Power BI</h2>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+          </div>
+          <h4>Conexión de datos</h4>
+          <p>Aprende a conectar Power BI con Excel, SQL Server, Google Sheets y otras fuentes. Sabrás importar, transformar y limpiar datos con Power Query sin escribir código.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h4>Medidas con DAX</h4>
+          <p>Dominarás las fórmulas DAX más usadas en entornos empresariales: CALCULATE, FILTER, SUMX, variables y funciones de inteligencia de tiempo para medir mes a mes.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <h4>Diseño de dashboards</h4>
+          <p>Crearás reportes visuales que no solo se ven bien, sino que cuentan una historia. Aprenderás principios de diseño aplicados a datos para que tu audiencia entienda al instante.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h4>Reportes automáticos</h4>
+          <p>Configurarás actualizaciones programadas para que tus dashboards siempre muestren datos frescos sin que tengas que hacer nada manualmente.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h4>Publicación y colaboración</h4>
+          <p>Publicarás reportes en Power BI Service y los compartirás con tu equipo. Aprenderás a gestionar permisos y a crear espacios de trabajo colaborativos.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h4>Casos reales de negocio</h4>
+          <p>Cada módulo incluye un caso práctico basado en industrias reales: ventas, finanzas, recursos humanos y operaciones. Así puedes aplicar lo aprendido el mismo día.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-up">
+      <p class="section-label">Programa</p>
+      <h2 class="section-title">Los 8 módulos del bootcamp</h2>
+      <div class="modules-list">
+        <div class="module-row">
+          <div class="module-num">MOD 01</div>
+          <div>
+            <h4>Introducción a Power BI y al mundo de los datos</h4>
+            <p>Configuras el entorno, entiendes la interfaz y conectas tu primer conjunto de datos.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 02</div>
+          <div>
+            <h4>Power Query: transforma y limpia datos sin código</h4>
+            <p>Eliminas filas vacías, cambias tipos, combinas tablas y creas columnas calculadas con el editor visual.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 03</div>
+          <div>
+            <h4>Modelo de datos y relaciones entre tablas</h4>
+            <p>Construyes un modelo estrella desde cero y entiendes por qué la estructura de datos lo cambia todo.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 04</div>
+          <div>
+            <h4>DAX desde cero: de SUM a CALCULATE</h4>
+            <p>Aprendes las medidas base, contexto de fila vs filtro y por qué CALCULATE es la función más poderosa de DAX.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 05</div>
+          <div>
+            <h4>Visualizaciones: más allá del gráfico de barras</h4>
+            <p>Dominas tarjetas KPI, mapas, scatter plots, gráficos de cascada y tablas de análisis dinámico.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 06</div>
+          <div>
+            <h4>Inteligencia de tiempo: comparativas y tendencias</h4>
+            <p>Calculas ventas del mes anterior, variación año contra año y acumulados con funciones como SAMEPERIODLASTYEAR.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 07</div>
+          <div>
+            <h4>Diseño profesional y storytelling con datos</h4>
+            <p>Aplicas principios de diseño, paletas de color, tipografía y estructura narrativa para que tu reporte comunique con claridad.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+        <div class="module-row">
+          <div class="module-num">MOD 08</div>
+          <div>
+            <h4>Power BI Service: publicar, compartir y actualizar</h4>
+            <p>Subes tu reporte a la nube, configuras actualizaciones automáticas y lo compartes de forma segura con tu equipo o clientes.</p>
+          </div>
+          <div class="module-lock">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bottom fade-up">
+      <h3>Empieza los primeros 7 días gratis</h3>
+      <p>Sin tarjeta de crédito. Sin compromisos. Solo tus ganas de aprender.</p>
+      <button class="btn-cta" id="ctaBottomBtn">Quiero acceder gratis →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- COURSE VIEW (mostrar si ya está registrado) -->
+<div id="courseView">
+
+  <div class="course-header">
+    <div class="course-header-inner">
+      <div class="breadcrumb">
+        <a href="/articulos/">Artículos & Cursos</a>
+        <span>/</span>
+        <span>Power BI Bootcamp</span>
+      </div>
+      <div class="welcome-chip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Acceso activo — 7 días gratis
+      </div>
+      <h1>Bootcamp Power BI:<br><span>Dashboards desde cero</span></h1>
+      <p>Bienvenido al curso. Avanza a tu ritmo: cada módulo incluye teoría, ejemplos en video y una práctica con archivos reales que puedes descargar.</p>
+    </div>
+  </div>
+
+  <div class="course-body">
+
+    <div class="progress-section">
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <p class="progress-label" id="progressLabel">0 de 32 lecciones completadas</p>
+    </div>
+
+    <div class="callout">
+      <strong>Por donde empezar:</strong> Si es tu primera vez con Power BI, empieza por el Módulo 1. Si ya sabes lo básico pero quieres DAX, ve directo al Módulo 4. Cada lección es independiente, así que puedes saltar si ya conoces el tema.
+    </div>
+
+    <h2>Módulo 1 — Introducción a Power BI</h2>
+    <p class="module-intro">Configuras el entorno, entiendes la interfaz y conectas tu primer conjunto de datos. Al final de este módulo ya tendrás tu primera visualización funcionando.</p>
+    <div class="lesson-list">
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>¿Qué es Power BI y por qué usarlo?</h4>
+          <p>Entiendes qué problema resuelve Power BI, cuál es la diferencia entre Power BI Desktop, Service y Mobile, y por qué las empresas lo prefieren sobre Excel para reportes.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 12 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Instalación y recorrido por la interfaz</h4>
+          <p>Descargas Power BI Desktop, lo configuras en español y haces un recorrido por las tres vistas principales: Reporte, Datos y Modelo.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 18 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Tu primer dashboard: conectar Excel y crear un gráfico</h4>
+          <p>Conectas un archivo de Excel de ventas de muestra, arrastras campos a un gráfico de barras y lo publicas. El resultado es tu primer reporte funcional.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-practica">Práctica — archivo incluido</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Filtros, segmentadores y drill-through</h4>
+          <p>Agregas segmentadores de fecha y categoría. Aprendes a usar drill-through para que el usuario pueda hacer clic en un gráfico y ver el detalle detrás.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 15 min</span><span class="lesson-tag lt-practica">Práctica</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Módulo 2 — Power Query: transforma datos sin código</h2>
+    <p class="module-intro">Power Query es el motor de transformación de datos de Power BI. Aquí es donde conviertes datos crudos y sucios en algo que puedes analizar. La buena noticia es que casi todo se hace con clics.</p>
+    <div class="lesson-list">
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Editor de Power Query: recorrido completo</h4>
+          <p>Ves el editor paso a paso: panel de consultas, vista previa de datos, pasos aplicados y el menú de transformaciones. Entiendes cómo cada acción queda registrada como un paso reversible.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 20 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Limpiar datos: nulos, duplicados y formatos inconsistentes</h4>
+          <p>Eliminas filas vacías, reemplazas valores nulos, normalizas mayúsculas y corriges tipos de datos mal asignados. Casos reales tomados de archivos de empresas.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-practica">Práctica — datos reales</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Combinar tablas: merge y append</h4>
+          <p>Unes dos tablas de ventas de distintas sucursales con Append y cruzas una tabla de productos con un catálogo de precios usando Merge. Equivale a un JOIN de SQL pero sin escribir código.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 22 min</span><span class="lesson-tag lt-practica">Práctica</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Columnas personalizadas y condicionales</h4>
+          <p>Creas una columna de margen de utilidad calculada, una columna de semáforo (rojo/amarillo/verde) según rango y una columna de categoría de cliente basada en volumen.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-recurso">Archivo descargable</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Módulo 3 — Modelo de datos y relaciones</h2>
+    <p class="module-intro">El modelo de datos es la base de todo en Power BI. Si lo construyes bien, el resto fluye solo. Este módulo te enseña a pensar como un analista de datos, no solo como alguien que hace gráficos.</p>
+    <div class="lesson-list">
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Tablas de hechos vs tablas de dimensiones</h4>
+          <p>Entiendes la diferencia entre una tabla que almacena transacciones (ventas, pedidos) y una que describe contexto (productos, clientes, fechas). Esta distinción lo cambia todo.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 16 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Esquema estrella: construyendo el modelo desde cero</h4>
+          <p>Armas un modelo con una tabla de ventas central y cuatro dimensiones: Fecha, Producto, Cliente y Vendedor. Configuras las relaciones y verificas que los filtros fluyen correctamente.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-practica">Proyecto completo</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Tabla de fechas: por qué necesitas una y cómo crearla</h4>
+          <p>Creas una tabla de fechas completa con DAX usando CALENDAR o CALENDARAUTO, y la marcas como tabla de fechas oficial. Sin esto, la inteligencia de tiempo no funciona.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 19 min</span><span class="lesson-tag lt-recurso">Plantilla incluida</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Relaciones bidireccionales y sus riesgos</h4>
+          <p>Ves cuándo tiene sentido activar el filtro cruzado bidireccional y cuándo puede causar resultados incorrectos. Aprendes a detectar ambigüedades en el modelo.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 14 min</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Módulo 4 — DAX desde cero</h2>
+    <p class="module-intro">DAX (Data Analysis Expressions) es el lenguaje de fórmulas de Power BI. Aprender DAX es lo que separa a alguien que usa Power BI de alguien que lo domina.</p>
+    <div class="lesson-list">
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Medidas vs columnas calculadas: cuándo usar cada una</h4>
+          <p>Entiendes la diferencia fundamental: las columnas calculadas se almacenan en el modelo, las medidas se calculan en tiempo real. Usar la equivocada puede hacer tu modelo lento.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 17 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>CALCULATE: la función más importante de DAX</h4>
+          <p>Aprendes a modificar el contexto de filtro con CALCULATE para calcular ventas solo de una región, de un período específico o de un producto en particular, sin importar cómo el usuario filtre el reporte.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 28 min</span><span class="lesson-tag lt-practica">Ejercicios incluidos</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>Variables en DAX: código limpio y fácil de debuggear</h4>
+          <p>Usas VAR y RETURN para escribir medidas legibles que puedes revisar paso a paso. Una habilidad que pocos enseñan y que hace toda la diferencia cuando los cálculos se complican.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">Video — 15 min</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="lesson-content">
+          <h4>RANKX, TOPN y tablas virtuales con SUMMARIZE</h4>
+          <p>Construyes un ranking de vendedores, extraes el top 5 de productos más vendidos y creas tablas resumen dinámicas dentro de tus medidas.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-practica">Proyecto: ranking de ventas</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Módulos 5 al 8 desbloqueados:</strong> Visualizaciones avanzadas, inteligencia de tiempo, diseño profesional y publicación en Power BI Service. Están disponibles completos en tu acceso. Continúa desde el panel superior cuando termines los módulos anteriores.
+    </div>
+
+    <h2>Módulos 5 — 8: Acceso completo</h2>
+    <p class="module-intro">El resto del bootcamp cubre visualizaciones avanzadas (Módulo 5), inteligencia de tiempo con SAMEPERIODLASTYEAR y TOTALYTD (Módulo 6), diseño de dashboards con storytelling (Módulo 7) y publicación y automatización en Power BI Service (Módulo 8). Los 16 lecciones están disponibles desde el primer día.</p>
+    <div class="lesson-list">
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+        <div class="lesson-content">
+          <h4>Módulo 5 — Visualizaciones avanzadas y mapas</h4>
+          <p>Gráficos de cascada, dispersión, mapas de burbujas, KPI cards y tablas matriciales. Cuándo usar cada uno y cuándo evitarlos.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">4 lecciones — 68 min total</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+        <div class="lesson-content">
+          <h4>Módulo 6 — Inteligencia de tiempo con DAX</h4>
+          <p>Ventas acumuladas (YTD), comparativa mes anterior (MoM), mismo período del año pasado (YoY) y proyecciones. El módulo más solicitado de todo el bootcamp.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">4 lecciones — 72 min total</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+        <div class="lesson-content">
+          <h4>Módulo 7 — Diseño profesional y storytelling</h4>
+          <p>Teoría del color aplicada a datos, tipografía en reportes, estructura de página y cómo guiar la mirada del usuario hacia la información más importante.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">4 lecciones — 54 min total</span></div>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-check"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></div>
+        <div class="lesson-content">
+          <h4>Módulo 8 — Power BI Service y automatización</h4>
+          <p>Publicas tu reporte, configuras actualización programada con un gateway, creas un dashboard de resumen y compartes con tu equipo con los permisos correctos.</p>
+          <div class="lesson-meta"><span class="lesson-tag lt-video">4 lecciones — 61 min total</span><span class="lesson-tag lt-practica">Proyecto final</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Aphernzz</div>
+  <ul class="footer-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/articulos/">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/medico/">Sector Salud</a></li>
+    <li><a href="/#contact">Contacto</a></li>
+  </ul>
+  <div>
+    <p>© 2026 Ángel Hernández · Automatiza. Escala. Crece.</p>
+    <p style="color:var(--muted);font-size:0.72rem;margin-top:0.25rem;">San Luis Potosí, México</p>
+  </div>
+</footer>
+
+<script>
+  const COURSE_KEY = 'aphernzz_courses_registered';
+  const COURSE_NAME = 'Bootcamp Power BI: Dashboards desde cero';
+
+  function isRegistered() {
+    const stored = JSON.parse(localStorage.getItem(COURSE_KEY) || '[]');
+    return stored.length > 0;
+  }
+
+  function showCourseView() {
+    document.getElementById('gateView').classList.remove('active');
+    document.getElementById('courseView').classList.add('active');
+  }
+
+  function showGateView() {
+    document.getElementById('gateView').classList.add('active');
+    document.getElementById('courseView').classList.remove('active');
+  }
+
+  if (isRegistered()) {
+    showCourseView();
+  } else {
+    showGateView();
+  }
+
+  async function submitRegistration(name, email, btnEl, formEl, successEl) {
+    if (!name || !email) return;
+    btnEl.disabled = true;
+    btnEl.textContent = 'Enviando...';
+    const stored = JSON.parse(localStorage.getItem(COURSE_KEY) || '[]');
+    if (!stored.find(r => r.email === email)) {
+      stored.push({ name, email, course: COURSE_NAME, date: new Date().toISOString() });
+      localStorage.setItem(COURSE_KEY, JSON.stringify(stored));
+    }
+    try {
+      await fetch('https://formsubmit.co/ajax/aphernzz@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ nombre: name, correo: email, curso: COURSE_NAME, _subject: 'Nueva inscripción — ' + COURSE_NAME })
+      });
+    } catch (_) {}
+    formEl.style.display = 'none';
+    successEl.classList.add('show');
+    setTimeout(() => showCourseView(), 2000);
+  }
+
+  // Gate form
+  document.getElementById('gateForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('gateName').value.trim();
+    const email = document.getElementById('gateEmail').value.trim();
+    await submitRegistration(name, email, document.getElementById('gateSubmit'), document.getElementById('gateFormWrap'), document.getElementById('gateSuccess'));
+  });
+
+  // CTA bottom button → scroll to top / show form
+  document.getElementById('ctaBottomBtn').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => document.getElementById('gateName').focus(), 600);
+  });
+
+  // Nav hamburger
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (Array.from(e.target.parentElement.children).indexOf(e.target) * 0.07) + 's';
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

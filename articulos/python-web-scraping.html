@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómo estructurar scripts de Python para extraer datos web | Aphernzz</title>
+  <meta name="description" content="Guía práctica de web scraping con BeautifulSoup y Pandas: desde el primer request hasta guardar los datos en Excel." />
+  <link rel="icon" href="../assets/img/favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" />
+  <style>
+    :root{--bg:#080b10;--surface:#0e1318;--surface2:#141c24;--accent:#00e5ff;--accent2:#7b61ff;--text:#e8edf2;--muted:#6b7a8d;--border:rgba(255,255,255,0.07);--border-accent:rgba(0,229,255,0.2);--radius:1.5rem;--radius-sm:0.75rem;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.7;}
+    .bg-gradient{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-2;background:linear-gradient(45deg,var(--bg),#0a1128,var(--surface2),var(--bg));background-size:400% 400%;animation:gm 15s ease infinite;}
+    @keyframes gm{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 6vw;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:rgba(8,11,16,0.85);}
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none;}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+    .nav-links a{font-size:0.85rem;font-weight:500;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:linear-gradient(135deg,var(--accent),#00b8cc)!important;color:#080b10!important;padding:0.5rem 1.4rem!important;border-radius:999px!important;font-weight:700!important;}
+    .article-header{padding:8rem 6vw 4rem;background:var(--surface);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+    .article-header::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 70% at 10% 50%,black 30%,transparent 100%);}
+    .article-header-inner{max-width:780px;margin:0 auto;position:relative;}
+    .article-wrapper{max-width:780px;margin:0 auto;padding:4rem 6vw 6rem;}
+    .breadcrumb{display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;}
+    .breadcrumb a{color:var(--accent);text-decoration:none;}
+    .article-category{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#a78bfa;background:rgba(123,97,255,0.08);border:1px solid rgba(123,97,255,0.2);border-radius:999px;padding:0.3rem 0.85rem;margin-bottom:1.25rem;}
+    .article-title{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,3.5vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:1.25rem;}
+    .article-lead{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:640px;margin-bottom:2rem;}
+    .article-meta-row{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .meta-author{display:flex;align-items:center;gap:0.65rem;}
+    .meta-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#080b10;flex-shrink:0;}
+    .meta-name{font-size:0.85rem;font-weight:600;} .meta-date{font-size:0.8rem;color:var(--muted);}
+    .meta-sep{color:var(--border);font-size:1.2rem;}
+    .meta-reading{display:flex;align-items:center;gap:0.4rem;font-size:0.8rem;color:var(--muted);}
+    .meta-reading svg{width:14px;height:14px;stroke:var(--muted);}
+    .article-body h2{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-0.02em;margin:2.5rem 0 1rem;}
+    .article-body h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:700;margin:2rem 0 0.75rem;}
+    .article-body p{font-size:0.97rem;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;}
+    .article-body p strong{color:var(--text);font-weight:600;}
+    .article-body ul,.article-body ol{margin:1rem 0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.55rem;}
+    .article-body li{font-size:0.95rem;color:var(--muted);line-height:1.7;}
+    .article-body li strong{color:var(--text);}
+    .code-block{background:#050810;border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:1.5rem;margin:1.5rem 0;overflow-x:auto;}
+    .code-label{font-size:0.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+    .code-label svg{width:14px;height:14px;stroke:var(--muted);}
+    .code-block pre{font-family:'Courier New',Courier,monospace;font-size:0.83rem;line-height:1.75;white-space:pre;color:#a8d8ea;}
+    .kw{color:#7b61ff;} .fn{color:#00e5ff;} .st{color:#a8ff78;} .cm{color:#4a5568;font-style:italic;} .nm{color:#ffb347;}
+    .callout{background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.18);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:1.25rem 1.5rem;margin:2rem 0;display:flex;gap:0.85rem;align-items:flex-start;}
+    .callout svg{width:20px;height:20px;stroke:var(--accent);flex-shrink:0;margin-top:2px;}
+    .callout p{margin:0;font-size:0.9rem;line-height:1.7;}
+    .warn{background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.2);border-left:3px solid #ff6b6b;}
+    .warn svg{stroke:#ff6b6b;}
+    .divider{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+    .cta-box{background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(123,97,255,0.06));border:1px solid var(--border-accent);border-radius:var(--radius);padding:2.5rem;text-align:center;margin-top:3rem;}
+    .cta-box h3{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.65rem;}
+    .cta-box p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;}
+    .btn-cta{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--accent),#00b8cc);color:#080b10;font-weight:700;font-size:0.88rem;padding:0.75rem 1.75rem;border-radius:999px;text-decoration:none;transition:box-shadow 0.3s,transform 0.2s;}
+    .btn-cta:hover{box-shadow:0 0 28px rgba(0,229,255,0.4);transform:translateY(-1px);}
+    footer{border-top:1px solid var(--border);padding:2rem 6vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;background:var(--bg);}
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;color:var(--accent);font-size:1rem;text-decoration:none;}
+    footer p{font-size:0.8rem;color:var(--muted);}
+    .footer-links{display:flex;gap:1.5rem;list-style:none;}
+    .footer-links a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+    .footer-links a:hover{color:var(--accent);}
+  </style>
+</head>
+<body>
+<div class="bg-gradient"></div>
+<nav>
+  <a href="/" class="nav-logo">Aphernzz</a>
+  <ul class="nav-links">
+    <li><a href="/">Inicio</a></li>
+    <li><a href="/articulos/" style="color:var(--accent)">Artículos</a></li>
+    <li><a href="/paquetes/">Paquetes</a></li>
+    <li><a href="/#contact" class="nav-cta">Contáctame</a></li>
+  </ul>
+</nav>
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb"><a href="/">Inicio</a><span>/</span><a href="/articulos/">Artículos</a><span>/</span><span>Python web scraping</span></div>
+    <div class="article-category">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      Python
+    </div>
+    <h1 class="article-title">Cómo estructurar scripts de Python para extraer datos web</h1>
+    <p class="article-lead">Web scraping es la técnica de extraer información de sitios web de forma automática. En esta guía aprenderás a hacerlo de forma ética y efectiva con BeautifulSoup y Pandas, desde cero.</p>
+    <div class="article-meta-row">
+      <div class="meta-author">
+        <div class="meta-avatar">AH</div>
+        <div><div class="meta-name">Ángel Hernández</div><div class="meta-date">Marzo 2026</div></div>
+      </div>
+      <span class="meta-sep">|</span>
+      <div class="meta-reading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        6 minutos de lectura
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article-wrapper">
+  <div class="article-body">
+
+    <p>Imagina que necesitas los precios de 200 productos de un sitio de la competencia, o que quieres monitorear las vacantes de empleo en tu sector cada día. Hacerlo manualmente tomaría horas. Con un script de Python bien estructurado, lo haces en segundos.</p>
+
+    <p>Antes de entrar al código, hay dos reglas que siempre aplico:</p>
+
+    <ul>
+      <li>Revisa el archivo <strong>robots.txt</strong> del sitio (agrega /robots.txt a la URL) para ver qué páginas no quieren que se extraigan</li>
+      <li>No hagas peticiones tan rápido que sobrecargues el servidor. Un delay de 1-2 segundos entre requests es suficiente para ser respetuoso</li>
+    </ul>
+
+    <div class="callout warn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <p>El scraping de datos personales o contenido protegido por derechos de autor puede tener implicaciones legales. Usa esta técnica solo sobre información pública y para fines de análisis propios.</p>
+    </div>
+
+    <h2>Las herramientas que vamos a usar</h2>
+
+    <p>Solo necesitas dos librerías instaladas con pip:</p>
+
+    <div class="code-block">
+      <div class="code-label">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Terminal
+      </div>
+      <pre>pip install requests beautifulsoup4 pandas openpyxl</pre>
+    </div>
+
+    <ul>
+      <li><strong>requests</strong> — hace las peticiones HTTP al sitio web y trae el HTML</li>
+      <li><strong>beautifulsoup4</strong> — parsea el HTML y te permite navegar su estructura con Python</li>
+      <li><strong>pandas</strong> — organiza los datos en una tabla y los exporta a Excel o CSV</li>
+    </ul>
+
+    <h2>Estructura base de un script de scraping</h2>
+
+    <p>Todo script de scraping bien estructurado tiene estas tres partes: obtener el HTML, extraer los datos y guardarlos.</p>
+
+    <div class="code-block">
+      <div class="code-label">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        scraper.py
+      </div>
+      <pre><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> time
+
+<span class="cm"># 1. Definir la URL objetivo</span>
+URL = <span class="st">"https://ejemplo.com/productos"</span>
+HEADERS = {<span class="st">"User-Agent"</span>: <span class="st">"Mozilla/5.0 (compatible; MiBot/1.0)"</span>}
+
+<span class="cm"># 2. Obtener el HTML</span>
+<span class="kw">def</span> <span class="fn">obtener_pagina</span>(url):
+    respuesta = requests.<span class="fn">get</span>(url, headers=HEADERS, timeout=<span class="nm">10</span>)
+    respuesta.raise_for_status()  <span class="cm"># error si el sitio falla</span>
+    <span class="kw">return</span> BeautifulSoup(respuesta.text, <span class="st">"html.parser"</span>)
+
+<span class="cm"># 3. Extraer los datos</span>
+<span class="kw">def</span> <span class="fn">extraer_productos</span>(soup):
+    productos = []
+    <span class="kw">for</span> tarjeta <span class="kw">in</span> soup.<span class="fn">find_all</span>(<span class="st">"div"</span>, class_=<span class="st">"producto-card"</span>):
+        nombre = tarjeta.<span class="fn">find</span>(<span class="st">"h2"</span>)
+        precio = tarjeta.<span class="fn">find</span>(<span class="st">"span"</span>, class_=<span class="st">"precio"</span>)
+        productos.<span class="fn">append</span>({
+            <span class="st">"nombre"</span>: nombre.text.<span class="fn">strip</span>() <span class="kw">if</span> nombre <span class="kw">else</span> <span class="st">""</span>,
+            <span class="st">"precio"</span>: precio.text.<span class="fn">strip</span>() <span class="kw">if</span> precio <span class="kw">else</span> <span class="st">""</span>,
+        })
+    <span class="kw">return</span> productos
+
+<span class="cm"># 4. Guardar en Excel</span>
+<span class="kw">def</span> <span class="fn">guardar_datos</span>(datos, archivo):
+    df = pd.<span class="fn">DataFrame</span>(datos)
+    df.<span class="fn">to_excel</span>(archivo, index=<span class="kw">False</span>)
+    <span class="fn">print</span>(<span class="kw">f</span><span class="st">"Guardados {len(df)} registros en {archivo}"</span>)
+
+<span class="cm"># Ejecución principal</span>
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    soup = <span class="fn">obtener_pagina</span>(URL)
+    datos = <span class="fn">extraer_productos</span>(soup)
+    <span class="fn">guardar_datos</span>(datos, <span class="st">"productos.xlsx"</span>)
+</pre>
+    </div>
+
+    <h2>Cómo identificar los selectores correctos</h2>
+
+    <p>La parte que más confunde a los principiantes es encontrar los selectores CSS correctos para extraer los datos. El proceso es simple:</p>
+
+    <ul>
+      <li>Abre el sitio en Chrome o Firefox</li>
+      <li>Haz clic derecho sobre el elemento que quieres extraer → "Inspeccionar"</li>
+      <li>Observa la clase o etiqueta HTML del elemento en el panel de DevTools</li>
+      <li>Usa esa clase en tu <code>find_all()</code></li>
+    </ul>
+
+    <p>Por ejemplo, si el precio está en <code>&lt;span class="precio-actual"&gt;$299&lt;/span&gt;</code>, tu código sería:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python</div>
+      <pre>precio = tarjeta.<span class="fn">find</span>(<span class="st">"span"</span>, class_=<span class="st">"precio-actual"</span>)
+valor = precio.text.<span class="fn">strip</span>() <span class="kw">if</span> precio <span class="kw">else</span> <span class="st">"Sin precio"</span></pre>
+    </div>
+
+    <h2>Scraping de múltiples páginas</h2>
+
+    <p>La mayoría de los sitios pagina sus resultados. Para recorrer varias páginas, modifica la URL con el número de página y repite el proceso:</p>
+
+    <div class="code-block">
+      <div class="code-label"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Python</div>
+      <pre>todos_los_datos = []
+
+<span class="kw">for</span> pagina <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">11</span>):  <span class="cm"># páginas 1 a 10</span>
+    url = <span class="kw">f</span><span class="st">"https://ejemplo.com/productos?page={pagina}"</span>
+    soup = <span class="fn">obtener_pagina</span>(url)
+    datos = <span class="fn">extraer_productos</span>(soup)
+    todos_los_datos.<span class="fn">extend</span>(datos)
+    time.<span class="fn">sleep</span>(<span class="nm">1.5</span>)  <span class="cm"># espera entre peticiones</span>
+    <span class="fn">print</span>(<span class="kw">f</span><span class="st">"Página {pagina} completada — {len(datos)} productos"</span>)
+
+<span class="fn">guardar_datos</span>(todos_los_datos, <span class="st">"todos_productos.xlsx"</span>)</pre>
+    </div>
+
+    <div class="callout">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p>Si el sitio usa JavaScript para renderizar su contenido (lo que verás como una página en blanco si haces Ctrl+U en el navegador), BeautifulSoup no será suficiente. En ese caso, necesitas Playwright o Selenium para controlar un navegador real.</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="cta-box">
+      <h3>¿Tienes datos que extraer de forma recurrente?</h3>
+      <p>Puedo ayudarte a construir el scraper y automatizarlo para que se ejecute solo a la hora que necesites.</p>
+      <a href="/#contact" class="btn-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Hablemos de tu proyecto
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/" class="footer-logo">Aphernzz</a>
+  <ul class="footer-links"><li><a href="/articulos/">Artículos</a></li><li><a href="/paquetes/">Paquetes</a></li><li><a href="/#contact">Contacto</a></li></ul>
+  <p>© 2026 Ángel Hernández</p>
+</footer>
+</body>
+</html>
