@@ -1,0 +1,24 @@
+# Credenciales y configuración sensible
+.env
+*.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# Bases de datos locales
+*.db
+*.sqlite
+
+# Backups
+*.bak
+*.sql.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/

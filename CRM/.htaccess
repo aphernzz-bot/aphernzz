@@ -1,2 +1,33 @@
-RewriteEngine On
-RewriteRule ^api/(.*)$ proxy.php [QSA,L]
+Options -Indexes
+
+# ── Solo estos archivos son accesibles desde el navegador ────
+<FilesMatch "^(aphernzz_crm\.html|api\.php|proxy\.php)$">
+  Allow from all
+</FilesMatch>
+
+# ── Bloquear archivos sensibles explícitamente ───────────────
+<FilesMatch "(\.env|package(-lock)?\.json|server\.js|seed\.js|auth\.js|\.sql|\.log|\.bak|\.md)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# ── Bloquear acceso a subdirectorios sensibles ───────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^(db|middleware|routes|node_modules)/ - [F,L]
+</IfModule>
+
+# ── Rate limiting (si mod_evasive disponible en el servidor) ─
+<IfModule mod_evasive20.c>
+  DOSHashTableSize    2048
+  DOSPageCount        15
+  DOSPageInterval     2
+  DOSSiteCount        100
+  DOSSiteInterval     2
+  DOSBlockingPeriod   600
+</IfModule>

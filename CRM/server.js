@@ -13,7 +13,8 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ─── Middleware ───────────────────────────────────────────
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+const _corsOrigins = (process.env.CORS_ORIGIN || 'https://aphernzz.com').split(',').map(s => s.trim());
+app.use(cors({ origin: (origin, cb) => (!origin || _corsOrigins.includes(origin)) ? cb(null, true) : cb(new Error('CORS bloqueado')) }));
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static(path.join(__dirname)));   // sirve el HTML
 
@@ -730,12 +731,16 @@ async function initDB() {
     // Usuario admin
     const [[exist]] = await conn.execute('SELECT id FROM usuarios WHERE email=?', ['admin@aphernzz.com']);
     if (!exist) {
-      const hash = await bcrypt.hash('aphernzz2024', 10);
-      await conn.execute(
-        'INSERT INTO usuarios (nombre,email,password_hash,rol_id) VALUES (?,?,?,1)',
-        ['Admin Principal','admin@aphernzz.com', hash]
-      );
-      console.log('  ✓ Usuario admin creado: admin@aphernzz.com');
+      const initPass = process.env.ADMIN_INIT_PASSWORD;
+      if (!initPass) { console.warn('  ⚠ ADMIN_INIT_PASSWORD no definido — usuario admin no creado. Defínelo en .env y reinicia.'); }
+      else {
+        const hash = await bcrypt.hash(initPass, 10);
+        await conn.execute(
+          'INSERT INTO usuarios (nombre,email,password_hash,rol_id) VALUES (?,?,?,1)',
+          ['Admin Principal','admin@aphernzz.com', hash]
+        );
+        console.log('  ✓ Usuario admin creado: admin@aphernzz.com');
+      }
     }
     console.log('  ✓ Base de datos lista\n');
   } finally {

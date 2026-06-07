@@ -1,25 +1,65 @@
 <?php
 // ============================================================
 //  CRM Aphernzz — API PHP  (Hostgator / cPanel)
-//  Sube este archivo a:  public_html/CRM/api.php
-//  Ruta de llamadas:     /CRM/api.php?_p=/api/...
+//  Ruta de llamadas:  /CRM/api.php?_p=/api/...
+//  Credenciales:      definir en CRM/.env (ver .env.example)
 // ============================================================
 
-// ── CREDENCIALES ────────────────────────────────────────────
-// Rellena con los datos de tu MySQL en cPanel
-define('DB_HOST', 'localhost');
-define('DB_USER', 'fbbeaaem_adminap');    // ← cPanel → MySQL → Usuarios
-define('DB_PASS', 'Alwasy@1009');   // ← el password que asignaste
-define('DB_NAME', 'fbbeaaem_crm_aphernzz');    // ← p.ej. aphernzz_crm
-define('JWT_SECRET', '19dc637c4b6947d8c7919ad2cd443cb9370e9cbc19c820fcb3d98322bc1a7a619e1d37694f2543c28b5594b37972d1df');
-define('JWT_EXP', 86400); // 24 horas
+// ── CARGAR .env (nunca subir .env a git) ─────────────────────
+$_ef = __DIR__ . '/.env';
+if (file_exists($_ef)) {
+    foreach (file($_ef, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $_ln) {
+        if ($_ln[0] === '#' || strpos($_ln, '=') === false) continue;
+        [$_k, $_v] = explode('=', $_ln, 2);
+        putenv(trim($_k) . '=' . trim($_v, " \t\r\"'"));
+    }
+} unset($_ef, $_ln, $_k, $_v);
 
-// ── HEADERS ─────────────────────────────────────────────────
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+// ── CREDENCIALES (desde variables de entorno) ────────────────
+define('DB_HOST',    getenv('CRM_DB_HOST')   ?: 'localhost');
+define('DB_USER',    getenv('CRM_DB_USER')   ?: '');
+define('DB_PASS',    getenv('CRM_DB_PASS')   ?: '');
+define('DB_NAME',    getenv('CRM_DB_NAME')   ?: '');
+define('JWT_SECRET', getenv('CRM_JWT_SECRET')?: '');
+define('JWT_EXP', 86400);
+
+if (!DB_USER || !DB_PASS || !DB_NAME || !JWT_SECRET) {
+    http_response_code(503);
+    echo json_encode(['error' => 'Configuración del servidor incompleta']);
+    exit;
+}
+
+// ── CORS ─────────────────────────────────────────────────────
+$_allowed = ['https://aphernzz.com', 'https://www.aphernzz.com'];
+$_origin  = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($_origin, $_allowed, true)) {
+    header('Access-Control-Allow-Origin: ' . $_origin);
+} elseif (php_sapi_name() === 'cli' || str_starts_with($_SERVER['REMOTE_ADDR'] ?? '', '127.')) {
+    header('Access-Control-Allow-Origin: *'); // local dev only
+}
+header('Vary: Origin');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json; charset=utf-8');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+
+// ── RATE LIMITING (login brute-force) ────────────────────────
+function rateLimitLogin(string $ip): void {
+    $key  = sys_get_temp_dir() . '/crmrl_' . md5($ip);
+    $now  = time();
+    $d    = ['n' => 0, 'win' => $now, 'block' => 0];
+    if (file_exists($key)) { $raw = @json_decode(file_get_contents($key), true); if ($raw) $d = $raw; }
+    if ($d['block'] > $now) {
+        header('Retry-After: ' . ($d['block'] - $now));
+        http_response_code(429);
+        echo json_encode(['error' => 'Demasiados intentos. Espera ' . ceil(($d['block'] - $now) / 60) . ' minuto(s).']);
+        exit;
+    }
+    if ($now - $d['win'] > 900) { $d = ['n' => 0, 'win' => $now, 'block' => 0]; }
+    $d['n']++;
+    if ($d['n'] > 10) { $d['block'] = $now + 1800; @file_put_contents($key, json_encode($d), LOCK_EX); http_response_code(429); echo json_encode(['error' => 'Demasiados intentos. Espera 30 minutos.']); exit; }
+    @file_put_contents($key, json_encode($d), LOCK_EX);
+}
 
 // ── HELPERS ─────────────────────────────────────────────────
 function out($data, $code = 200) {
@@ -65,7 +105,8 @@ function db() {
              PDO::ATTR_EMULATE_PREPARES   => false]
         );
     } catch (PDOException $e) {
-        err('Error de base de datos: '.$e->getMessage(), 503);
+        error_log('[CRM-DB] ' . $e->getMessage()); // solo en error_log del servidor
+        err('Error de conexión. Contacta al administrador.', 503);
     }
     return $pdo;
 }
@@ -116,6 +157,7 @@ $action = $seg[3] ?? ''; // 4.º segmento: 'validar','estado', etc.
 if ($base === 'auth') {
     // POST /api/auth/login
     if ($sub === 'login' && $method === 'POST') {
+        rateLimitLogin($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
         $b = body();
         $u = row('SELECT u.*, r.nombre AS rol, r.permisos FROM usuarios u JOIN roles r ON r.id=u.rol_id WHERE u.email=? AND u.activo=1', [trim($b['email'] ?? '')]);
         if (!$u || !password_verify($b['password'] ?? '', $u['password_hash'])) err('Email o contraseña incorrectos', 401);

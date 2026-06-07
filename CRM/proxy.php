@@ -1,5 +1,16 @@
 <?php
-$RENDER = 'https://TU-APP.up.railway.app'; // ← reemplaza con tu URL de Railway
+// URL del backend Node.js — definir en CRM/.env como PROXY_TARGET
+$_ef = __DIR__ . '/.env';
+if (file_exists($_ef)) {
+    foreach (file($_ef, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $_ln) {
+        if ($_ln[0] === '#' || strpos($_ln, '=') === false) continue;
+        [$_k, $_v] = explode('=', $_ln, 2);
+        putenv(trim($_k) . '=' . trim($_v, " \t\r\"'"));
+    }
+} unset($_ef, $_ln, $_k, $_v);
+
+$RENDER = getenv('PROXY_TARGET') ?: '';
+if (!$RENDER) { http_response_code(503); echo json_encode(['error' => 'Proxy no configurado']); exit; }
 
 $path  = urldecode($_GET['_p'] ?? '/');
 $query = $_GET;
@@ -39,8 +50,9 @@ curl_close($ch);
 header('Content-Type: application/json; charset=utf-8');
 
 if ($curl_err) {
+    error_log('[CRM-PROXY] ' . $curl_err . ' — ' . $url);
     http_response_code(502);
-    echo json_encode(['error' => 'proxy_error', 'detail' => $curl_err, 'code' => $curl_errno, 'url' => $url]);
+    echo json_encode(['error' => 'Error de conexión con el servidor. Intenta más tarde.']);
     exit;
 }
 
