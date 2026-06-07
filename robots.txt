@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aphernzz.com/sitemap.xml
+
+# Disallow private areas
+Disallow: /medico/crm/

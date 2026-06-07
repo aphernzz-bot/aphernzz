@@ -9,8 +9,23 @@ Options -Indexes
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; img-src 'self' https://images.unsplash.com https://aphernzz.com https://*.tile.openstreetmap.org https://unpkg.com data:; connect-src 'self' https://formsubmit.co https://*.tile.openstreetmap.org; form-action 'self' https://formsubmit.co;"
 </IfModule>
 
-# DirectoryIndex — serve index.html from subdirectories
+# DirectoryIndex
 DirectoryIndex index.html
+
+# Clean URLs (remove .html extension)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 301: Redirect /path/file.html → /path/file (permanent, for SEO)
+  RewriteCond %{THE_REQUEST} \s(.+?)\.html[\s?] [NC]
+  RewriteRule ^ %1 [R=301,NE,L]
+
+  # Internal rewrite: serve .html file for clean URLs
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^ %{REQUEST_URI}.html [L]
+</IfModule>
 
 # Cache static assets
 <IfModule mod_expires.c>
@@ -21,4 +36,5 @@ DirectoryIndex index.html
   ExpiresByType image/jpeg "access plus 6 months"
   ExpiresByType image/svg+xml "access plus 6 months"
   ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType application/xml "access plus 1 day"
 </IfModule>
