@@ -44,7 +44,10 @@
           "name": "Paquete Esencial",
           "price": "6300",
           "priceCurrency": "MXN",
-          "priceSpecification": { "@type": "PriceSpecification", "price": "6300", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $9,000 MXN)" },
+          "priceSpecification": [
+            { "@type": "PriceSpecification", "price": "6300", "priceCurrency": "MXN", "description": "Pago inicial con 30% de descuento (precio regular $9,000 MXN)" },
+            { "@type": "UnitPriceSpecification", "price": "600", "priceCurrency": "MXN", "unitText": "MES", "description": "Mensualidad de mantenimiento — restricciones aplican" }
+          ],
           "itemOffered": { "@type": "Service", "name": "Paquete Esencial — Perfil Web + Agenda + Bot de WhatsApp + Receta", "description": "Perfil web profesional, agenda online 24/7, bot de WhatsApp con respuestas automáticas y diseño de receta médica" }
         },
         {
@@ -52,7 +55,10 @@
           "name": "Paquete Profesional",
           "price": "12600",
           "priceCurrency": "MXN",
-          "priceSpecification": { "@type": "PriceSpecification", "price": "12600", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $18,000 MXN)" },
+          "priceSpecification": [
+            { "@type": "PriceSpecification", "price": "12600", "priceCurrency": "MXN", "description": "Pago inicial con 30% de descuento (precio regular $18,000 MXN)" },
+            { "@type": "UnitPriceSpecification", "price": "1200", "priceCurrency": "MXN", "unitText": "MES", "description": "Mensualidad de mantenimiento — restricciones aplican" }
+          ],
           "itemOffered": { "@type": "Service", "name": "Paquete Profesional — Esencial + CRM + Expediente Clínico", "description": "Todo el Esencial más expediente clínico digital, historial completo de pacientes y recordatorios automáticos" }
         },
         {
@@ -60,8 +66,35 @@
           "name": "Paquete Integral",
           "price": "21000",
           "priceCurrency": "MXN",
-          "priceSpecification": { "@type": "PriceSpecification", "price": "21000", "priceCurrency": "MXN", "description": "Precio con 30% de descuento (precio regular $30,000 MXN)" },
+          "priceSpecification": [
+            { "@type": "PriceSpecification", "price": "21000", "priceCurrency": "MXN", "description": "Pago inicial con 30% de descuento (precio regular $30,000 MXN)" },
+            { "@type": "UnitPriceSpecification", "price": "2500", "priceCurrency": "MXN", "unitText": "MES", "description": "Mensualidad de mantenimiento — restricciones aplican" }
+          ],
           "itemOffered": { "@type": "Service", "name": "Paquete Integral — Profesional + ERP + CFDI + Reportes", "description": "Todo el Profesional más ERP de ventas e inventario, facturación electrónica CFDI y reportes en tiempo real" }
+        },
+        {
+          "@type": "Offer",
+          "name": "Diseño de Receta Médica",
+          "price": "1050",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "PriceSpecification", "price": "1050", "priceCurrency": "MXN", "description": "Pago único con 30% de descuento (precio regular $1,500 MXN)" },
+          "itemOffered": { "@type": "Service", "name": "Diseño de Receta Médica", "description": "Receta profesional con membrete, logotipo, especialidad y cédula. Formato imprimible y digital." }
+        },
+        {
+          "@type": "Offer",
+          "name": "Tarjeta de Presentación",
+          "price": "840",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "PriceSpecification", "price": "840", "priceCurrency": "MXN", "description": "Pago único con 30% de descuento (precio regular $1,200 MXN)" },
+          "itemOffered": { "@type": "Service", "name": "Tarjeta de Presentación Médica", "description": "Diseño digital y para imprenta de tarjeta profesional coherente con identidad visual médica." }
+        },
+        {
+          "@type": "Offer",
+          "name": "Marketing y Redes Sociales",
+          "price": "3500",
+          "priceCurrency": "MXN",
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": "3500", "priceCurrency": "MXN", "unitText": "MES", "description": "Precio fijo mensual. Se adapta a las necesidades del consultorio. Sin permanencia mínima." },
+          "itemOffered": { "@type": "Service", "name": "Marketing Digital y Redes Sociales para Médicos", "description": "Gestión de contenido, diseño de publicaciones y estrategia digital para Instagram y Facebook de consultorios." }
         }
       ]
     }
@@ -293,6 +326,34 @@
       flex-shrink: 0;
       margin-top: 3px;
     }
+    .service-price-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem; }
+    .service-price-monthly { font-size: 0.83rem; color: var(--muted); margin-top: 0.45rem; }
+    .service-price-monthly strong { color: var(--text); font-weight: 700; }
+    .service-price-note { font-size: 0.68rem; color: var(--muted); margin-top: 0.2rem; opacity: 0.65; }
+    .service-diag-tag { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.74rem; color: var(--accent); font-weight: 700; margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.85rem; width: 100%; }
+    .service-diag-tag svg { width: 13px; height: 13px; flex-shrink: 0; }
+    /* EXTRAS */
+    .extras-section { padding: 4.5rem 6vw; background: var(--surface2); }
+    .extras-header { text-align: center; margin-bottom: 2.5rem; }
+    .extras-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; }
+    .extra-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.4rem; display: flex; flex-direction: column; }
+    .extra-icon { color: var(--accent); margin-bottom: 0.85rem; display: flex; }
+    .extra-icon svg { width: 22px; height: 22px; stroke: var(--accent); }
+    .extra-name { font-weight: 700; font-size: 0.97rem; color: var(--text); margin-bottom: 0.35rem; }
+    .extra-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; margin-bottom: auto; padding-bottom: 1.1rem; }
+    .extra-price-block { border-top: 1px solid var(--border); padding-top: 0.85rem; margin-top: 0.5rem; }
+    .extra-price-original { font-size: 0.75rem; color: var(--muted); text-decoration: line-through; margin-bottom: 0.1rem; }
+    .extra-price-new { font-size: 1.25rem; font-weight: 800; color: var(--text); font-family: 'Syne', sans-serif; letter-spacing: -0.02em; display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem; }
+    .extra-price-new .price-mxn { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+    .extra-price-badge { background: rgba(0,151,107,0.1); border: 1px solid rgba(0,151,107,0.25); color: var(--accent); font-size: 0.62rem; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 999px; letter-spacing: 0.05em; }
+    .extra-price-note { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+    /* Diagnóstico banner */
+    .diag-banner { margin-top: 2.5rem; background: rgba(0,151,107,0.06); border: 1px solid rgba(0,151,107,0.2); border-radius: var(--radius-sm); padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .diag-banner svg { width: 22px; height: 22px; stroke: var(--accent); flex-shrink: 0; }
+    .diag-banner-text { flex: 1; min-width: 200px; font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+    .diag-banner-text strong { color: var(--accent); font-weight: 700; }
+    .btn-diag { display: inline-flex; align-items: center; gap: 5px; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); color: #fff; padding: 0.55rem 1.2rem; border-radius: 999px; font-size: 0.81rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: opacity 0.2s; }
+    .btn-diag:hover { opacity: 0.88; }
     .service-price-block { margin: 1.2rem 0 0.85rem; }
     .service-price-original { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; margin-bottom: 0.15rem; }
     .service-price-new { font-size: 1.65rem; font-weight: 800; color: var(--text); letter-spacing: -0.03em; font-family: 'Syne', sans-serif; line-height: 1; }
@@ -740,11 +801,14 @@
       <div class="service-name">Paquete Esencial</div>
       <div class="service-desc">Tu presencia digital lista para recibir pacientes. Página web profesional, agenda automática 24/7 y bot de WhatsApp que trabaja mientras tú consultas.</div>
       <div class="service-price-block">
+        <div class="service-price-label">Pago inicial</div>
         <div class="service-price-original">$9,000 MXN</div>
         <div class="service-price-new">
           <span class="price-cur">$</span>6,300 <span class="price-mxn">MXN</span>
           <span class="service-price-badge">30% OFF</span>
         </div>
+        <div class="service-price-monthly">después <strong>$600</strong>/mes</div>
+        <div class="service-price-note">*Restricciones aplican</div>
       </div>
       <ul class="service-features">
         <li><i data-lucide="check"></i>Perfil web profesional con especialidad y CV</li>
@@ -760,6 +824,7 @@
         </a>
         <span class="service-tag">Base ideal</span>
       </div>
+      <div class="service-diag-tag"><i data-lucide="clock-3"></i> Diagnóstico gratuito en 24 hrs</div>
     </div>
 
     <!-- PROFESIONAL -->
@@ -769,11 +834,14 @@
       <div class="service-name">Paquete Profesional</div>
       <div class="service-desc">Todo lo del Esencial más la gestión digital completa de tu consultorio: expediente clínico, historial de pacientes y recordatorios que se envían solos.</div>
       <div class="service-price-block">
+        <div class="service-price-label">Pago inicial</div>
         <div class="service-price-original">$18,000 MXN</div>
         <div class="service-price-new">
           <span class="price-cur">$</span>12,600 <span class="price-mxn">MXN</span>
           <span class="service-price-badge">30% OFF</span>
         </div>
+        <div class="service-price-monthly">después <strong>$1,200</strong>/mes</div>
+        <div class="service-price-note">*Restricciones aplican</div>
       </div>
       <ul class="service-features">
         <li><i data-lucide="check"></i>Todo lo del Paquete Esencial</li>
@@ -789,6 +857,7 @@
         </a>
         <span class="service-tag"><i data-lucide="star"></i> Más solicitado</span>
       </div>
+      <div class="service-diag-tag"><i data-lucide="clock-3"></i> Diagnóstico gratuito en 24 hrs</div>
     </div>
 
     <!-- INTEGRAL -->
@@ -798,11 +867,14 @@
       <div class="service-name">Paquete Integral</div>
       <div class="service-desc">La solución más completa: desde la agenda y el expediente hasta la facturación CFDI y los reportes financieros en tiempo real.</div>
       <div class="service-price-block">
+        <div class="service-price-label">Pago inicial</div>
         <div class="service-price-original">$30,000 MXN</div>
         <div class="service-price-new">
           <span class="price-cur">$</span>21,000 <span class="price-mxn">MXN</span>
           <span class="service-price-badge">30% OFF</span>
         </div>
+        <div class="service-price-monthly">después <strong>$2,500</strong>/mes</div>
+        <div class="service-price-note">*Restricciones aplican</div>
       </div>
       <ul class="service-features">
         <li><i data-lucide="check"></i>Todo lo del Paquete Profesional</li>
@@ -815,8 +887,74 @@
       <a href="/#contact" class="btn-demo" style="margin-top:1.5rem;display:inline-flex;">
         <i data-lucide="mail"></i> Cotizar →
       </a>
+      <div class="service-diag-tag"><i data-lucide="clock-3"></i> Diagnóstico gratuito en 24 hrs</div>
     </div>
 
+  </div>
+</section>
+<div class="section-divider"></div>
+
+<!-- SERVICIOS ADICIONALES -->
+<section class="extras-section">
+  <div class="extras-header fade-up">
+    <p class="section-label">Servicios adicionales</p>
+    <h2 class="section-title">Complementa tu paquete</h2>
+    <p class="section-body" style="margin:0 auto;">Agrégalos a cualquier paquete o contrátalos de forma independiente.</p>
+  </div>
+  <div class="extras-grid">
+
+    <!-- Diseño de receta -->
+    <div class="extra-card fade-up">
+      <div class="extra-icon"><i data-lucide="file-text"></i></div>
+      <div class="extra-name">Diseño de Receta Médica</div>
+      <div class="extra-desc">Receta profesional con tu membrete, logotipo, especialidad y cédula. Formato imprimible y digital listo para usar.</div>
+      <div class="extra-price-block">
+        <div class="extra-price-original">$1,500 MXN</div>
+        <div class="extra-price-new">
+          <span>$</span>1,050 <span class="price-mxn">MXN</span>
+          <span class="extra-price-badge">30% OFF</span>
+        </div>
+        <div class="extra-price-note">Pago único · Entrega en 3 días hábiles</div>
+      </div>
+    </div>
+
+    <!-- Tarjeta de presentación -->
+    <div class="extra-card fade-up">
+      <div class="extra-icon"><i data-lucide="credit-card"></i></div>
+      <div class="extra-name">Tarjeta de Presentación</div>
+      <div class="extra-desc">Diseño digital y para imprenta de tu tarjeta profesional con identidad visual coherente a tu marca médica.</div>
+      <div class="extra-price-block">
+        <div class="extra-price-original">$1,200 MXN</div>
+        <div class="extra-price-new">
+          <span>$</span>840 <span class="price-mxn">MXN</span>
+          <span class="extra-price-badge">30% OFF</span>
+        </div>
+        <div class="extra-price-note">Pago único · Archivos en PDF, PNG y AI</div>
+      </div>
+    </div>
+
+    <!-- Marketing y redes sociales -->
+    <div class="extra-card fade-up">
+      <div class="extra-icon"><i data-lucide="trending-up"></i></div>
+      <div class="extra-name">Marketing y Redes Sociales</div>
+      <div class="extra-desc">Gestión mensual de contenido, diseño de publicaciones y estrategia digital para Instagram y Facebook. Se adapta a las necesidades de tu consultorio.</div>
+      <div class="extra-price-block">
+        <div class="extra-price-new" style="font-size:1.15rem;">
+          <span>$</span>3,500 <span class="price-mxn">MXN/mes</span>
+        </div>
+        <div class="extra-price-note">Precio fijo · Sin permanencia mínima</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Diagnóstico gratuito -->
+  <div class="diag-banner fade-up">
+    <i data-lucide="stethoscope"></i>
+    <div class="diag-banner-text">
+      <strong>Diagnóstico gratuito en 24 hrs</strong> — Antes de cualquier cotización analizamos tu situación actual, te decimos qué necesitas y qué no. Sin costo, sin compromiso.
+    </div>
+    <a href="/#contact" class="btn-diag"><i data-lucide="send"></i> Solicitar diagnóstico →</a>
   </div>
 </section>
 
