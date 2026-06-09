@@ -12,13 +12,11 @@ const { authMiddleware, requirePerm } = require('./middleware/auth');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── Middleware ───────────────────────────────────────────
 const _corsOrigins = (process.env.CORS_ORIGIN || 'https://aphernzz.com').split(',').map(s => s.trim());
 app.use(cors({ origin: (origin, cb) => (!origin || _corsOrigins.includes(origin)) ? cb(null, true) : cb(new Error('CORS bloqueado')) }));
 app.use(express.json({ limit: '5mb' }));
-app.use(express.static(path.join(__dirname)));   // sirve el HTML
+app.use(express.static(path.join(__dirname)));
 
-// ─── Pool de conexiones MySQL ─────────────────────────────
 const pool = mysql.createPool({
   host:               process.env.DB_HOST     || process.env.MYSQL_HOST     || 'localhost',
   port:               process.env.DB_PORT     || process.env.MYSQL_PORT     || 3306,
@@ -30,7 +28,6 @@ const pool = mysql.createPool({
   charset:            'utf8mb4',
 });
 
-// ─── Helpers ──────────────────────────────────────────────
 const db = (sql, params) => pool.execute(sql, params);
 
 async function audit(tabla, registro_id, accion, antes, despues, usuario, ip) {
@@ -48,10 +45,6 @@ async function audit(tabla, registro_id, accion, antes, despues, usuario, ip) {
 function nextFolio(prefix, count) {
   return `${prefix}-${String(count + 1).padStart(4, '0')}`;
 }
-
-// ═══════════════════════════════════════════════════════════
-//  AUTH
-// ═══════════════════════════════════════════════════════════
 
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
@@ -84,10 +77,6 @@ app.post('/api/auth/login', async (req, res) => {
                rol: user.rol_nombre, avatar_color: user.avatar_color, permisos }
   });
 });
-
-// ═══════════════════════════════════════════════════════════
-//  CLIENTES
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/clientes', authMiddleware, requirePerm('clientes','ver'), async (req, res) => {
   const { q, segmento, estado } = req.query;
@@ -162,10 +151,6 @@ app.delete('/api/clientes/:id', authMiddleware, requirePerm('clientes','eliminar
   res.json({ ok: true });
 });
 
-// ═══════════════════════════════════════════════════════════
-//  PROSPECTOS
-// ═══════════════════════════════════════════════════════════
-
 app.get('/api/prospectos', authMiddleware, requirePerm('prospectos','ver'), async (req, res) => {
   const { etapa, fuente } = req.query;
   let sql = 'SELECT * FROM prospectos WHERE 1=1';
@@ -226,10 +211,6 @@ app.delete('/api/prospectos/:id', authMiddleware, requirePerm('prospectos','elim
   res.json({ ok: true });
 });
 
-// ═══════════════════════════════════════════════════════════
-//  COTIZACIONES
-// ═══════════════════════════════════════════════════════════
-
 app.get('/api/cotizaciones', authMiddleware, requirePerm('cotizaciones','ver'), async (req, res) => {
   const { estado, q } = req.query;
   let sql = `SELECT c.*, u.nombre AS usuario_nombre
@@ -241,7 +222,6 @@ app.get('/api/cotizaciones', authMiddleware, requirePerm('cotizaciones','ver'), 
   sql += ' ORDER BY c.created_at DESC';
   const [cots] = await db(sql, p);
 
-  // Adjuntar items a cada cotización
   for (const c of cots) {
     const [items] = await db(
       'SELECT * FROM cotizacion_items WHERE cotizacion_id = ? ORDER BY orden, id',
@@ -270,7 +250,6 @@ app.post('/api/cotizaciones', authMiddleware, requirePerm('cotizaciones','crear'
   if (!cliente_nombre) return res.status(400).json({ error: 'El cliente es requerido' });
   if (!items.length)   return res.status(400).json({ error: 'Se requiere al menos un concepto' });
 
-  // Calcular totales
   let subtotal = 0;
   items.forEach(it => {
     const st = Number(it.cantidad)*Number(it.precio_unitario)*(1-Number(it.descuento_pct||0)/100);
@@ -280,7 +259,6 @@ app.post('/api/cotizaciones', authMiddleware, requirePerm('cotizaciones','crear'
   const iva   = subtotal * (iva_pct / 100);
   const total = subtotal + iva;
 
-  // Folio
   const [[{cnt}]] = await db('SELECT COUNT(*) AS cnt FROM cotizaciones');
   const folio = nextFolio('COT', cnt);
 
@@ -339,14 +317,10 @@ app.put('/api/cotizaciones/:id/estado', authMiddleware, requirePerm('cotizacione
 app.delete('/api/cotizaciones/:id', authMiddleware, requirePerm('cotizaciones','eliminar'), async (req, res) => {
   const [[row]] = await db('SELECT * FROM cotizaciones WHERE id = ?', [req.params.id]);
   if (!row) return res.status(404).json({ error: 'No encontrado' });
-  await db('DELETE FROM cotizaciones WHERE id = ?', [req.params.id]);  // items eliminados por CASCADE
+  await db('DELETE FROM cotizaciones WHERE id = ?', [req.params.id]); // items en CASCADE
   await audit('cotizaciones', +req.params.id, 'eliminar', row, null, req.user, req.ip);
   res.json({ ok: true });
 });
-
-// ═══════════════════════════════════════════════════════════
-//  VENTAS
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/ventas', authMiddleware, requirePerm('ventas','ver'), async (req, res) => {
   const [rows] = await db(
@@ -389,10 +363,6 @@ app.put('/api/ventas/:id', authMiddleware, requirePerm('ventas','editar'), async
     { estado: venta.estado }, { estado }, req.user, req.ip);
   res.json({ ok: true });
 });
-
-// ═══════════════════════════════════════════════════════════
-//  FACTURAS
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/facturas', authMiddleware, requirePerm('facturas','ver'), async (req, res) => {
   const [rows] = await db(
@@ -439,10 +409,6 @@ app.put('/api/facturas/:id', authMiddleware, requirePerm('facturas','editar'), a
     { estado: factura.estado }, { estado }, req.user, req.ip);
   res.json({ ok: true });
 });
-
-// ═══════════════════════════════════════════════════════════
-//  ACTIVIDADES
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/actividades', authMiddleware, requirePerm('actividades','ver'), async (req, res) => {
   const { estado, tipo, relacion_tipo, relacion_id } = req.query;
@@ -499,10 +465,6 @@ app.delete('/api/actividades/:id', authMiddleware, requirePerm('actividades','el
   await audit('actividades', +req.params.id, 'eliminar', row, null, req.user, req.ip);
   res.json({ ok: true });
 });
-
-// ═══════════════════════════════════════════════════════════
-//  USUARIOS (solo superadmin / admin con permiso)
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/usuarios', authMiddleware, requirePerm('usuarios','ver'), async (req, res) => {
   const [rows] = await db(
@@ -562,18 +524,10 @@ app.delete('/api/usuarios/:id', authMiddleware, requirePerm('usuarios','eliminar
   res.json({ ok: true });
 });
 
-// ═══════════════════════════════════════════════════════════
-//  ROLES
-// ═══════════════════════════════════════════════════════════
-
 app.get('/api/roles', authMiddleware, async (req, res) => {
   const [rows] = await db('SELECT id, nombre, descripcion FROM roles ORDER BY id');
   res.json(rows);
 });
-
-// ═══════════════════════════════════════════════════════════
-//  HISTORIAL / AUDITORÍA
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/historial/:tabla/:id', authMiddleware, async (req, res) => {
   const [rows] = await db(
@@ -585,10 +539,6 @@ app.get('/api/historial/:tabla/:id', authMiddleware, async (req, res) => {
   );
   res.json(rows);
 });
-
-// ═══════════════════════════════════════════════════════════
-//  DASHBOARD — KPIs
-// ═══════════════════════════════════════════════════════════
 
 app.get('/api/dashboard', authMiddleware, async (req, res) => {
   const [[kClientes]]    = await db("SELECT COUNT(*) AS n FROM clientes WHERE estado='Activo'");
@@ -615,17 +565,14 @@ app.get('/api/dashboard', authMiddleware, async (req, res) => {
   });
 });
 
-// ─── Error handler ─────────────────────────────────────────
 app.use((err, req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: 'Error interno del servidor' });
 });
 
-// ─── Auto-setup DB ─────────────────────────────────────────
 async function initDB() {
   const conn = await pool.getConnection();
   try {
-    // Tablas
     await conn.execute(`CREATE TABLE IF NOT EXISTS roles (
       id TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
       nombre VARCHAR(50) NOT NULL UNIQUE, descripcion VARCHAR(200),
@@ -714,7 +661,6 @@ async function initDB() {
       usuario_id INT UNSIGNED NULL, usuario_nombre VARCHAR(100), ip VARCHAR(45),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP) ENGINE=InnoDB`);
 
-    // Roles
     const roles = [
       ['superadmin','Acceso total','{"clientes":{"ver":true,"crear":true,"editar":true,"eliminar":true},"prospectos":{"ver":true,"crear":true,"editar":true,"eliminar":true},"cotizaciones":{"ver":true,"crear":true,"editar":true,"eliminar":true},"ventas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"facturas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":true},"usuarios":{"ver":true,"crear":true,"editar":true,"eliminar":true},"reportes":{"ver":true}}'],
       ['admin','Administrador sin gestión de usuarios','{"clientes":{"ver":true,"crear":true,"editar":true,"eliminar":true},"prospectos":{"ver":true,"crear":true,"editar":true,"eliminar":true},"cotizaciones":{"ver":true,"crear":true,"editar":true,"eliminar":true},"ventas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"facturas":{"ver":true,"crear":true,"editar":true,"eliminar":true},"actividades":{"ver":true,"crear":true,"editar":true,"eliminar":true},"usuarios":{"ver":false,"crear":false,"editar":false,"eliminar":false},"reportes":{"ver":true}}'],
@@ -728,7 +674,6 @@ async function initDB() {
       );
     }
 
-    // Usuario admin
     const [[exist]] = await conn.execute('SELECT id FROM usuarios WHERE email=?', ['admin@aphernzz.com']);
     if (!exist) {
       const initPass = process.env.ADMIN_INIT_PASSWORD;
@@ -748,7 +693,6 @@ async function initDB() {
   }
 }
 
-// ─── Start ─────────────────────────────────────────────────
 initDB()
   .then(() => app.listen(PORT, () => console.log(`\n  CRM Aphernzz corriendo en http://localhost:${PORT}\n`)))
   .catch(err => { console.error('Error iniciando DB:', err.message); process.exit(1); });

@@ -1,11 +1,4 @@
 <?php
-// ============================================================
-//  CRM Aphernzz — API PHP  (Hostgator / cPanel)
-//  Ruta de llamadas:  /CRM/api.php?_p=/api/...
-//  Credenciales:      definir en CRM/.env (ver .env.example)
-// ============================================================
-
-// ── CARGAR .env (nunca subir .env a git) ─────────────────────
 $_ef = __DIR__ . '/.env';
 if (file_exists($_ef)) {
     foreach (file($_ef, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $_ln) {
@@ -15,7 +8,6 @@ if (file_exists($_ef)) {
     }
 } unset($_ef, $_ln, $_k, $_v);
 
-// ── CREDENCIALES (desde variables de entorno) ────────────────
 define('DB_HOST',    getenv('CRM_DB_HOST')   ?: 'localhost');
 define('DB_USER',    getenv('CRM_DB_USER')   ?: '');
 define('DB_PASS',    getenv('CRM_DB_PASS')   ?: '');
@@ -29,7 +21,6 @@ if (!DB_USER || !DB_PASS || !DB_NAME || !JWT_SECRET) {
     exit;
 }
 
-// ── CORS ─────────────────────────────────────────────────────
 $_allowed = ['https://aphernzz.com', 'https://www.aphernzz.com'];
 $_origin  = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($_origin, $_allowed, true)) {
@@ -43,7 +34,6 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Content-Type: application/json; charset=utf-8');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
-// ── RATE LIMITING (login brute-force) ────────────────────────
 function rateLimitLogin(string $ip): void {
     $key  = sys_get_temp_dir() . '/crmrl_' . md5($ip);
     $now  = time();
@@ -61,7 +51,6 @@ function rateLimitLogin(string $ip): void {
     @file_put_contents($key, json_encode($d), LOCK_EX);
 }
 
-// ── HELPERS ─────────────────────────────────────────────────
 function out($data, $code = 200) {
     http_response_code($code);
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -71,7 +60,6 @@ function err($msg, $code = 400) { out(['error' => $msg], $code); }
 function body() { return json_decode(file_get_contents('php://input'), true) ?? []; }
 function nvl($v, $d = null) { return isset($v) ? $v : $d; }
 
-// ── JWT ─────────────────────────────────────────────────────
 function b64u($s) { return rtrim(strtr(base64_encode($s), '+/', '-_'), '='); }
 function jwtEncode($payload) {
     $h  = b64u(json_encode(['alg'=>'HS256','typ'=>'JWT']));
@@ -92,7 +80,6 @@ function jwtDecode($token) {
     return $data;
 }
 
-// ── PDO ─────────────────────────────────────────────────────
 function db() {
     static $pdo;
     if ($pdo) return $pdo;
@@ -105,7 +92,7 @@ function db() {
              PDO::ATTR_EMULATE_PREPARES   => false]
         );
     } catch (PDOException $e) {
-        error_log('[CRM-DB] ' . $e->getMessage()); // solo en error_log del servidor
+        error_log('[CRM-DB] ' . $e->getMessage());
         err('Error de conexión. Contacta al administrador.', 503);
     }
     return $pdo;
@@ -115,7 +102,6 @@ function row($sql, $p = []) { return q($sql, $p)->fetch() ?: null; }
 function rows($sql, $p = []) { return q($sql, $p)->fetchAll(); }
 function lid() { return (int) db()->lastInsertId(); }
 
-// ── AUTH MIDDLEWARE ──────────────────────────────────────────
 function requireAuth() {
     $h = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
     if (!preg_match('/^Bearer\s+(.+)$/i', $h, $m)) err('Token requerido', 401);
@@ -128,7 +114,6 @@ function requireAuth() {
 }
 function can($u, $mod, $op) { return !empty($u['permisos'][$mod][$op]); }
 
-// ── AUDITORÍA ────────────────────────────────────────────────
 function audit($tabla, $id, $accion, $antes, $despues, $u) {
     try {
         q('INSERT INTO historial_cambios (tabla,registro_id,accion,datos_antes,datos_despues,usuario_id,usuario_nombre,ip) VALUES (?,?,?,?,?,?,?,?)',
@@ -139,23 +124,19 @@ function audit($tabla, $id, $accion, $antes, $despues, $u) {
     } catch (Exception $e) {}
 }
 
-// ── ROUTING ─────────────────────────────────────────────────
 $method = $_SERVER['REQUEST_METHOD'];
 $path   = urldecode($_GET['_p'] ?? '/');
 if (($qi = strpos($path, '?')) !== false) $path = substr($path, 0, $qi);
 $path = rtrim($path, '/') ?: '/';
-$seg    = explode('/', ltrim($path, '/'));  // ['api','clientes','5','accion']
+$seg    = explode('/', ltrim($path, '/'));
 $base   = $seg[1] ?? '';
 $rawSub = $seg[2] ?? '';
 $id     = (is_numeric($rawSub) && $rawSub !== '') ? (int)$rawSub : null;
-$sub    = $rawSub;       // string como 'login','me' o ID numérico
-$action = $seg[3] ?? ''; // 4.º segmento: 'validar','estado', etc.
+$sub    = $rawSub;
+$action = $seg[3] ?? '';
 
-// ============================================================
-//  /api/auth
-// ============================================================
+// /api/auth
 if ($base === 'auth') {
-    // POST /api/auth/login
     if ($sub === 'login' && $method === 'POST') {
         rateLimitLogin($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
         $b = body();
@@ -166,7 +147,6 @@ if ($base === 'auth') {
         $token = jwtEncode(['id'=>$u['id'],'email'=>$u['email'],'rol'=>$u['rol']]);
         out(['token'=>$token,'usuario'=>['id'=>$u['id'],'nombre'=>$u['nombre'],'email'=>$u['email'],'rol'=>$u['rol'],'avatar_color'=>$u['avatar_color'],'permisos'=>$permisos]]);
     }
-    // GET /api/auth/me
     if ($sub === 'me' && $method === 'GET') {
         $u = requireAuth();
         out(['id'=>$u['id'],'nombre'=>$u['nombre'],'email'=>$u['email'],'rol'=>$u['rol'],'avatar_color'=>$u['avatar_color'],'permisos'=>$u['permisos']]);
@@ -174,12 +154,9 @@ if ($base === 'auth') {
     err('Ruta no encontrada', 404);
 }
 
-// ── Todas las rutas siguientes requieren token ───────────────
 $U = requireAuth();
 
-// ============================================================
-//  /api/dashboard
-// ============================================================
+// /api/dashboard
 if ($base === 'dashboard' && $method === 'GET') {
     $clTot    = (int)row('SELECT COUNT(*) c FROM clientes')['c'];
     $clAct    = (int)row('SELECT COUNT(*) c FROM clientes WHERE estado="Activo"')['c'];
@@ -187,13 +164,9 @@ if ($base === 'dashboard' && $method === 'GET') {
     $vMes     = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(CURDATE()) AND YEAR(fecha)=YEAR(CURDATE()) AND estado="Completada"')['t'];
     $vAnt     = (float)row('SELECT COALESCE(SUM(monto),0) t FROM ventas WHERE MONTH(fecha)=MONTH(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND YEAR(fecha)=YEAR(DATE_SUB(CURDATE(),INTERVAL 1 MONTH)) AND estado="Completada"')['t'];
     $crec     = $vAnt > 0 ? round(($vMes - $vAnt) / $vAnt * 100, 1) : 0;
-    // Ventas por mes (últimos 12 meses) → para la gráfica de barras
     $ventasMes = rows('SELECT MONTH(fecha) mes, SUM(monto) total FROM ventas WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH) AND estado="Completada" GROUP BY MONTH(fecha)');
-    // Actividades pendientes próximas → para el timeline del dashboard
     $pendAct  = rows('SELECT titulo, relacion_nombre, fecha, estado, tipo FROM actividades WHERE estado="Pendiente" ORDER BY fecha ASC LIMIT 8');
-    // Cotizaciones recientes → para la lista del dashboard
     $recCot   = rows('SELECT id, folio, cliente_nombre, total, estado, fecha_emision FROM cotizaciones ORDER BY created_at DESC LIMIT 6');
-    // Conversión: cotizaciones aceptadas / total enviadas o más
     $cotTotal = (int)row('SELECT COUNT(*) c FROM cotizaciones')['c'];
     $cotAcept = (int)row('SELECT COUNT(*) c FROM cotizaciones WHERE estado="Aceptada"')['c'];
     $conv     = $cotTotal > 0 ? round($cotAcept / $cotTotal * 100) : 0;
@@ -210,9 +183,7 @@ if ($base === 'dashboard' && $method === 'GET') {
     ]);
 }
 
-// ============================================================
-//  /api/reportes
-// ============================================================
+// /api/reportes
 if ($base === 'reportes' && $method === 'GET') {
     if (!can($U,'reportes','ver')) err('Sin permiso', 403);
     $tipo = $_GET['tipo'] ?? 'ventas';
@@ -231,9 +202,7 @@ if ($base === 'reportes' && $method === 'GET') {
     out([]);
 }
 
-// ============================================================
-//  /api/clientes
-// ============================================================
+// /api/clientes
 if ($base === 'clientes') {
     if (!can($U,'clientes','ver')) err('Sin permiso', 403);
 
@@ -291,9 +260,7 @@ if ($base === 'clientes') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/prospectos
-// ============================================================
+// /api/prospectos
 if ($base === 'prospectos') {
     if (!can($U,'prospectos','ver')) err('Sin permiso', 403);
 
@@ -351,9 +318,7 @@ if ($base === 'prospectos') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/cotizaciones
-// ============================================================
+// /api/cotizaciones
 if ($base === 'cotizaciones') {
     if (!can($U,'cotizaciones','ver')) err('Sin permiso', 403);
 
@@ -378,7 +343,6 @@ if ($base === 'cotizaciones') {
         if (!can($U,'cotizaciones','crear')) err('Sin permiso', 403);
         $b = body();
         if (empty($b['cliente_nombre'])) err('El nombre del cliente es requerido');
-        // Auto-folio
         $ultimo = row('SELECT folio FROM cotizaciones ORDER BY id DESC LIMIT 1');
         $num = $ultimo ? ((int)substr($ultimo['folio'], 3) + 1) : 1;
         $folio = 'COT'.str_pad($num, 5, '0', STR_PAD_LEFT);
@@ -444,16 +408,14 @@ if ($base === 'cotizaciones') {
         if (!can($U,'cotizaciones','eliminar')) err('Sin permiso', 403);
         $a = row('SELECT * FROM cotizaciones WHERE id=?', [$id]);
         if (!$a) err('No encontrado', 404);
-        q('DELETE FROM cotizaciones WHERE id=?', [$id]); // items se borran en CASCADE
+        q('DELETE FROM cotizaciones WHERE id=?', [$id]); // items en CASCADE
         audit('cotizaciones', $id, 'eliminar', $a, null, $U);
         out(['ok'=>true]);
     }
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/ventas
-// ============================================================
+// /api/ventas
 if ($base === 'ventas') {
     if (!can($U,'ventas','ver')) err('Sin permiso', 403);
 
@@ -512,9 +474,7 @@ if ($base === 'ventas') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/facturas
-// ============================================================
+// /api/facturas
 if ($base === 'facturas') {
     if (!can($U,'facturas','ver')) err('Sin permiso', 403);
 
@@ -578,9 +538,7 @@ if ($base === 'facturas') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/actividades
-// ============================================================
+// /api/actividades
 if ($base === 'actividades') {
     if (!can($U,'actividades','ver')) err('Sin permiso', 403);
 
@@ -638,18 +596,14 @@ if ($base === 'actividades') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/roles
-// ============================================================
+// /api/roles
 if ($base === 'roles' && $method === 'GET') {
     $r = rows('SELECT id, nombre, descripcion, permisos FROM roles ORDER BY id');
     foreach ($r as &$row) $row['permisos'] = json_decode($row['permisos'], true) ?? [];
     out($r);
 }
 
-// ============================================================
-//  /api/usuarios
-// ============================================================
+// /api/usuarios
 if ($base === 'usuarios') {
     if (!can($U,'usuarios','ver')) err('Sin permiso', 403);
 
@@ -680,7 +634,6 @@ if ($base === 'usuarios') {
         $a = row('SELECT * FROM usuarios WHERE id=?', [$id]);
         if (!$a) err('No encontrado', 404);
         $b = body();
-        // Check email unique
         if (!empty($b['email']) && $b['email'] !== $a['email']) {
             $existe = row('SELECT id FROM usuarios WHERE email=? AND id!=?', [$b['email'], $id]);
             if ($existe) err('Ya existe un usuario con ese email', 409);
@@ -705,37 +658,27 @@ if ($base === 'usuarios') {
     err('Ruta no encontrada', 404);
 }
 
-// ============================================================
-//  /api/facturas  — estado: validar
-//  Además del CRUD ya existente, intercepta /api/facturas/:id/validar
-// ============================================================
+// /api/facturas/:id/validar
 if ($base === 'facturas' && $id && $action === 'validar' && $method === 'POST') {
-    // Solo admin/superadmin (permisos facturas.editar)
     if (!can($U,'facturas','editar')) err('Sin permiso', 403);
     $f = row('SELECT * FROM facturas WHERE id=?', [$id]);
     if (!$f) err('No encontrada', 404);
-    // Máquina de estados: solo Emitida o Enviada puede validarse
-    $permitidos = ['Emitida','Enviada'];
-    if (!in_array($f['estado'], $permitidos))
+    if (!in_array($f['estado'], ['Emitida','Enviada']))
         err('Solo se puede validar una factura en estado Emitida o Enviada. Estado actual: '.$f['estado'], 409);
     q('UPDATE facturas SET estado="Validada", validado_por=?, validado_at=NOW() WHERE id=?', [$U['id'], $id]);
     audit('facturas', $id, 'cambio_estado', ['estado'=>$f['estado']], ['estado'=>'Validada'], $U);
     out(row('SELECT * FROM facturas WHERE id=?', [$id]));
 }
 
-// ============================================================
-//  /api/pagos
-// ============================================================
+// /api/pagos
 if ($base === 'pagos') {
     if (!can($U,'facturas','ver')) err('Sin permiso', 403);
 
-    // GET /api/pagos?factura_id=X  — historial de pagos de una factura
     if ($method === 'GET' && !$id) {
         if (empty($_GET['factura_id'])) err('Se requiere factura_id', 400);
         out(rows('SELECT p.*, u.nombre AS usuario FROM pagos p LEFT JOIN usuarios u ON u.id=p.usuario_id WHERE p.factura_id=? ORDER BY p.fecha_pago DESC, p.id DESC', [(int)$_GET['factura_id']]));
     }
 
-    // POST /api/pagos  — registrar un pago
     if ($method === 'POST') {
         if (!can($U,'facturas','editar')) err('Sin permiso', 403);
         $b = body();
@@ -743,20 +686,16 @@ if ($base === 'pagos') {
         if (empty($b['monto']) || (float)$b['monto'] <= 0) err('El monto debe ser mayor a 0');
         if (empty($b['metodo_pago'])) err('metodo_pago requerido');
 
-        // ── Gate de integridad 1: la factura debe estar Validada, Enviada o Parcial ──
         $f = row('SELECT * FROM facturas WHERE id=?', [(int)$b['factura_id']]);
         if (!$f) err('Factura no encontrada', 404);
-        $estadosAceptan = ['Validada','Enviada','Parcial'];
-        if (!in_array($f['estado'], $estadosAceptan))
+        if (!in_array($f['estado'], ['Validada','Enviada','Parcial']))
             err('La factura debe estar Validada antes de registrar un pago. Estado actual: '.$f['estado'], 409);
 
-        // ── Gate de integridad 2: el pago no puede exceder el saldo pendiente ──
         $saldo = (float)$f['monto'] - (float)$f['monto_pagado'];
         $monto = (float)$b['monto'];
         if ($monto > $saldo + 0.001)
             err('El monto ('.$monto.') excede el saldo pendiente ('.$saldo.')', 409);
 
-        // Insertar pago (el trigger actualiza factura automáticamente)
         db()->beginTransaction();
         try {
             q('INSERT INTO pagos (factura_id,monto,moneda,tipo_cambio,metodo_pago,referencia,fecha_pago,estado,notas,usuario_id) VALUES (?,?,?,?,?,?,?,?,?,?)',
@@ -776,14 +715,12 @@ if ($base === 'pagos') {
         out(['pago'=>$pago,'factura'=>$facturaActualizada], 201);
     }
 
-    // DELETE /api/pagos/:id  — rechazar/anular pago (el trigger revierte el saldo)
     if ($method === 'DELETE' && $id) {
         if (!can($U,'facturas','eliminar')) err('Sin permiso', 403);
         $p = row('SELECT * FROM pagos WHERE id=?', [$id]);
         if (!$p) err('Pago no encontrado', 404);
         if ($p['estado'] === 'Rechazado') err('El pago ya estaba anulado', 409);
 
-        // Factura no puede estar Cancelada
         $f = row('SELECT estado FROM facturas WHERE id=?', [$p['factura_id']]);
         if ($f['estado'] === 'Cancelada') err('No se puede anular un pago de una factura cancelada', 409);
 
@@ -803,5 +740,4 @@ if ($base === 'pagos') {
     err('Ruta no encontrada', 404);
 }
 
-// ── Fallback ─────────────────────────────────────────────────
 err('Ruta no encontrada', 404);
