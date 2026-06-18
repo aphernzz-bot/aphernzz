@@ -32,6 +32,7 @@ DirectoryIndex index.html
 # ── Rewrite: security + clean URLs ──────────────────────────
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
 
   # Block SQL injection / XSS probes in query string
   RewriteCond %{QUERY_STRING} (union.*select|select.*from|insert.*into|drop\s+table|<script|javascript:|vbscript:|onload=|onerror=|eval\() [NC]
