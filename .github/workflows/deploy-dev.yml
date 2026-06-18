@@ -16,6 +16,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_DEV_DIR }}
+          server-dir: ./dev.aphernzz.com/
           protocol: ftp
           port: 21
