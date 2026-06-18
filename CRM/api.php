@@ -124,6 +124,63 @@ function audit($tabla, $id, $accion, $antes, $despues, $u) {
     } catch (Exception $e) {}
 }
 
+function ensureWAColumns() {
+    static $done = false; if ($done) return; $done = true;
+    try { q("ALTER TABLE prospectos ADD COLUMN mensaje_wa TEXT DEFAULT NULL"); } catch (Exception $e) {}
+    try { q("ALTER TABLE prospectos ADD COLUMN wa_enviado TINYINT(1) NOT NULL DEFAULT 0"); } catch (Exception $e) {}
+}
+
+function claudeMensaje($nombre, $empresa, $ciudad, $fuente) {
+    $key = getenv('ANTHROPIC_API_KEY') ?: getenv('CRM_ANTHROPIC_KEY') ?: '';
+    if (!$key) return null;
+    $empresa = $empresa ?: 'su empresa';
+    $ciudad  = $ciudad  ?: 'su ciudad';
+    $prompt  = "Redacta un mensaje de WhatsApp de presentación comercial, personalizado y profesional (máximo 110 palabras). Datos del prospecto — Nombre: {$nombre}, Empresa: {$empresa}, Ciudad: {$ciudad}, Canal origen: {$fuente}. El mensaje debe: saludar por su nombre, presentar brevemente los servicios de Aphernzz (desarrollo de software, apps y automatización para negocios), conectar con su contexto y terminar con una pregunta para agendar una llamada corta. Responde SOLO con el texto del mensaje, sin comillas ni explicaciones adicionales.";
+    $payload = json_encode(['model'=>'claude-haiku-4-5-20251001','max_tokens'=>280,
+        'messages'=>[['role'=>'user','content'=>$prompt]]]);
+    $ch = curl_init('https://api.anthropic.com/v1/messages');
+    curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_POST=>true,
+        CURLOPT_POSTFIELDS=>$payload,CURLOPT_TIMEOUT=>25,
+        CURLOPT_HTTPHEADER=>['Content-Type: application/json',
+            'x-api-key: '.$key,'anthropic-version: 2023-06-01']]);
+    $res  = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($code !== 200 || !$res) return null;
+    $data = json_decode($res, true);
+    return trim($data['content'][0]['text'] ?? '') ?: null;
+}
+
+function apifyNormaliza(array $raw) {
+    $nombre = $raw['title'] ?? $raw['name'] ?? $raw['fullName']
+           ?? trim(($raw['firstName']??'').' '.($raw['lastName']??'')) ?: null;
+    if (!$nombre) return null;
+    $empresa  = $raw['categoryName'] ?? $raw['company'] ?? $raw['organizationName'] ?? $raw['category'] ?? null;
+    $telefono = $raw['phone'] ?? $raw['phoneNumber'] ?? ($raw['phones'][0] ?? null) ?? null;
+    $celular  = $raw['mobile'] ?? $raw['mobilePhone'] ?? null;
+    $email    = $raw['email'] ?? ($raw['emails'][0] ?? null) ?? null;
+    $ciudad   = $raw['city'] ?? $raw['location'] ?? $raw['address'] ?? null;
+    $website  = $raw['website'] ?? $raw['url'] ?? null;
+    $notas    = '';
+    if ($raw['description'] ?? $raw['biography'] ?? null) $notas .= ($raw['description'] ?? $raw['biography'])."\n";
+    if ($website) $notas .= "Web: {$website}\n";
+    if (isset($raw['rating'])) $notas .= "Rating: {$raw['rating']} ({$raw['reviewsCount']} reseñas)\n";
+    if ($raw['rating'] ?? $raw['placeId'] ?? null) $fuente = 'Google Maps';
+    elseif ($raw['username'] ?? $raw['followersCount'] ?? null) $fuente = 'Instagram';
+    elseif ($raw['headline'] ?? $raw['profileUrl'] ?? null) $fuente = 'LinkedIn';
+    else $fuente = 'Apify';
+    return [
+        'nombre'   => mb_substr(trim($nombre), 0, 150),
+        'empresa'  => $empresa   ? mb_substr(trim($empresa),   0, 150) : null,
+        'telefono' => $telefono  ? mb_substr(preg_replace('/[^\d+\-\s()]/','',$telefono), 0, 30) : null,
+        'celular'  => $celular   ? mb_substr(preg_replace('/[^\d+\-\s()]/','',$celular),  0, 30) : null,
+        'email'    => $email     ? mb_substr(trim($email),     0, 150) : null,
+        'ciudad'   => $ciudad    ? mb_substr(trim($ciudad),    0, 100) : null,
+        'fuente'   => $fuente,
+        'notas'    => trim($notas) ?: null,
+    ];
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 $path   = urldecode($_GET['_p'] ?? '/');
 if (($qi = strpos($path, '?')) !== false) $path = substr($path, 0, $qi);
@@ -315,6 +372,51 @@ if ($base === 'prospectos') {
         audit('prospectos', $id, 'eliminar', $a, null, $U);
         out(['ok'=>true]);
     }
+
+    // POST /api/prospectos/import  — importar array JSON de Apify
+    if ($sub === 'import' && $method === 'POST') {
+        if (!can($U,'prospectos','crear')) err('Sin permiso', 403);
+        $b = body();
+        $items = $b['items'] ?? [];
+        if (!is_array($items) || !count($items)) err('No se recibieron items válidos');
+        ensureWAColumns();
+        $generar = !empty($b['generar_mensajes']);
+        $ins = $dup = $err = 0;
+        foreach ($items as $raw) {
+            $p = apifyNormaliza($raw);
+            if (!$p) { $err++; continue; }
+            if (row('SELECT id FROM prospectos WHERE nombre=? LIMIT 1', [$p['nombre']])) { $dup++; continue; }
+            $msg = $generar ? claudeMensaje($p['nombre'], $p['empresa'], $p['ciudad'], $p['fuente']) : null;
+            q('INSERT INTO prospectos (nombre,empresa,email,telefono,celular,ciudad,fuente,etapa,probabilidad,notas,mensaje_wa,usuario_asignado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+              [$p['nombre'],$p['empresa'],$p['email'],$p['telefono'],$p['celular'],
+               $p['ciudad'],$p['fuente'],'Contacto',20,$p['notas'],$msg,$U['id']]);
+            $ins++;
+        }
+        out(['insertados'=>$ins,'duplicados'=>$dup,'sin_nombre'=>$err]);
+    }
+
+    // GET|POST|PUT /api/prospectos/{id}/mensaje
+    if ($id && $action === 'mensaje') {
+        $p = row('SELECT * FROM prospectos WHERE id=?', [$id]);
+        if (!$p) err('No encontrado', 404);
+        if ($method === 'GET')  out(['mensaje_wa'=>$p['mensaje_wa'],'wa_enviado'=>(bool)($p['wa_enviado']??0)]);
+        if ($method === 'POST') {
+            ensureWAColumns();
+            $msg = claudeMensaje($p['nombre'], $p['empresa'], $p['ciudad'], $p['fuente']);
+            if (!$msg) err('No se pudo generar el mensaje. Verifica ANTHROPIC_API_KEY en el servidor.', 503);
+            q('UPDATE prospectos SET mensaje_wa=? WHERE id=?', [$msg, $id]);
+            out(['mensaje_wa'=>$msg]);
+        }
+        if ($method === 'PUT') {
+            $b = body(); $msg = trim($b['mensaje_wa'] ?? '');
+            if (!$msg) err('Mensaje vacío');
+            ensureWAColumns();
+            $enviado = empty($b['wa_enviado']) ? ($p['wa_enviado']??0) : 1;
+            q('UPDATE prospectos SET mensaje_wa=?,wa_enviado=? WHERE id=?', [$msg, $enviado, $id]);
+            out(['ok'=>true,'mensaje_wa'=>$msg]);
+        }
+    }
+
     err('Ruta no encontrada', 404);
 }
 

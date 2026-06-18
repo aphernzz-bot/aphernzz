@@ -76,6 +76,12 @@
   .prospect-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-md);padding:10px 11px;cursor:grab;user-select:none;transition:box-shadow .12s,opacity .12s}
   .prospect-card:hover{border-color:var(--border-mid);box-shadow:0 2px 8px rgba(0,0,0,.45)}
   .prospect-card.dragging{opacity:.35;cursor:grabbing}
+  .pc-wa-preview{display:none;font-size:11px;color:var(--text-secondary);line-height:1.45;margin-top:6px;padding-top:6px;border-top:0.5px solid var(--border-light);white-space:pre-wrap;word-break:break-word;max-height:56px;overflow:hidden}
+  .wa-badge-sent{display:inline-flex;align-items:center;gap:3px;font-size:10px;color:#25D366;font-weight:500}
+  /* Tab-pills reutilizable */
+  .tab-pills{display:flex;gap:6px;flex-wrap:wrap}
+  .tab-pill{padding:5px 14px;border-radius:20px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:inherit;transition:background .15s,color .15s}
+  .tab-pill.active{background:var(--purple);color:#fff;border-color:var(--purple)}
   /* Modals */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:200}
   .modal{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg);padding:1.5rem;width:480px;max-width:95vw;max-height:88vh;overflow-y:auto}
@@ -85,6 +91,7 @@
   /* Progress */
   .progress-bar{height:6px;background:var(--bg-secondary);border-radius:3px;overflow:hidden;margin-top:4px}
   .progress-fill{height:100%;border-radius:3px;background:var(--purple)}
+  @keyframes spin{to{transform:rotate(360deg)}}
   /* Empty */
   .empty-state{text-align:center;padding:2rem;color:var(--text-secondary)}
   .empty-state i{font-size:32px;display:block;margin-bottom:8px;color:var(--text-tertiary)}
@@ -112,6 +119,20 @@
     .sidebar{position:fixed;left:-220px;top:0;height:100vh;z-index:300;transition:left .25s ease;box-shadow:none}
     .sidebar.open{left:0;box-shadow:4px 0 20px rgba(0,0,0,.6)}
     .main-content{padding:1rem;padding-top:3.5rem}
+    /* ── Kanban móvil ── */
+    #pipeline-board{overflow-x:hidden!important;flex-direction:column;gap:0;padding:0}
+    .pipeline-col{min-width:100%!important;max-width:100%!important;display:none!important}
+    .pipeline-col.etapa-activa{display:flex!important}
+    .kanban-cards{max-height:62vh;overflow-y:auto}
+    #etapa-tabs{display:flex!important;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none}
+    #etapa-tabs::-webkit-scrollbar{display:none}
+    .etapa-tab{flex-shrink:0;padding:6px 13px;border-radius:20px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:inherit;white-space:nowrap;transition:background .15s,color .15s}
+    .etapa-tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+    .prospect-card{cursor:default!important;padding:13px}
+    .prospect-card .pc-wa-preview{display:block}
+    .prospect-card .pc-actions button{min-height:40px;min-width:40px;padding:8px 11px!important;font-size:13px}
+    .pc-mover{display:flex!important}
+    .page-header{flex-wrap:wrap;gap:8px}
   }
 </style>
 </head>
@@ -210,7 +231,14 @@
 
     <!-- PROSPECTOS -->
     <div id="page-prospectos" class="hidden">
-      <div class="page-header"><div class="page-title">Prospectos</div><button class="btn btn-primary btn-sm" onclick="abrirNuevoProspecto()"><span class="material-symbols-outlined">add</span> Nuevo prospecto</button></div>
+      <div class="page-header">
+        <div class="page-title">Prospectos</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm" onclick="abrirImportApify()" title="Importar desde Apify o JSON"><span class="material-symbols-outlined" style="font-size:15px">upload</span> Importar</button>
+          <button class="btn btn-primary btn-sm" onclick="abrirNuevoProspecto()"><span class="material-symbols-outlined">add</span> Nuevo</button>
+        </div>
+      </div>
+      <div id="etapa-tabs" style="display:none"></div>
       <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px" id="pipeline-board"></div>
     </div>
 
@@ -489,6 +517,67 @@
     <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
       <button class="btn btn-sm" onclick="closeModal('modal-prospecto')">Cancelar</button>
       <button class="btn btn-primary btn-sm" onclick="guardarProspecto()">Guardar prospecto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL IMPORTAR APIFY -->
+<div id="modal-import-apify" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-import-apify')">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header"><div class="modal-title">Importar prospectos</div><button class="close-btn" onclick="closeModal('modal-import-apify')">&times;</button></div>
+    <div class="tab-pills" style="margin-bottom:16px" id="import-tabs">
+      <button class="tab-pill active" onclick="setImportTab('json',this)">JSON / Apify Export</button>
+      <button class="tab-pill" onclick="setImportTab('dataset',this)">Dataset ID</button>
+    </div>
+    <div id="import-tab-json">
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">Pega el array JSON que descargaste de Apify (Google Maps, Instagram, LinkedIn) o cualquier lista de contactos.</p>
+      <textarea id="import-json-text" rows="7" placeholder='[{"title":"Clínica del Valle","phone":"4441234567","city":"SLP"}, ...]' style="width:100%;font-family:monospace;font-size:11px;resize:vertical"></textarea>
+      <div id="import-preview" style="font-size:12px;color:var(--text-secondary);margin-top:6px"></div>
+    </div>
+    <div id="import-tab-dataset" class="hidden">
+      <div class="form-group"><label>Dataset ID de Apify</label><input id="import-dataset-id" placeholder="ej: RuXkKCLWFWXs5Rpvx"/></div>
+      <p style="font-size:12px;color:var(--text-secondary)">Requiere que APIFY_TOKEN esté configurado en el servidor.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:0.5px solid var(--border-light)">
+      <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;flex:1">
+        <input type="checkbox" id="import-generar-msg" checked style="width:15px;height:15px"/>
+        Generar mensaje WA con IA por cada prospecto
+      </label>
+      <button class="btn" onclick="closeModal('modal-import-apify')">Cancelar</button>
+      <button class="btn btn-primary" onclick="ejecutarImport()" id="btn-import-exec">Importar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MENSAJE WA -->
+<div id="modal-wa-msg" class="modal-overlay hidden" onclick="if(event.target===this)closeModal('modal-wa-msg')">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="wa-msg-nombre">Mensaje WhatsApp</div>
+        <div style="font-size:11px;color:var(--text-secondary)" id="wa-msg-empresa"></div>
+      </div>
+      <button class="close-btn" onclick="closeModal('modal-wa-msg')">&times;</button>
+    </div>
+    <input type="hidden" id="wa-msg-pid"/>
+    <div id="wa-msg-loading" class="hidden" style="text-align:center;padding:24px 0">
+      <span class="material-symbols-outlined" style="font-size:32px;color:var(--purple);animation:spin 1s linear infinite">autorenew</span>
+      <div style="font-size:13px;color:var(--text-secondary);margin-top:8px">Generando mensaje con IA...</div>
+    </div>
+    <div id="wa-msg-body">
+      <textarea id="wa-msg-texto" rows="7" style="width:100%;font-size:13px;line-height:1.6;resize:vertical" placeholder="El mensaje aparecerá aquí. Puedes editarlo antes de enviar."></textarea>
+      <div id="wa-msg-estado" style="font-size:11px;color:var(--text-secondary);margin-top:4px"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <button class="btn btn-sm" onclick="generarMensajeIA()" id="btn-generar-ia">
+          <span class="material-symbols-outlined" style="font-size:14px">auto_awesome</span> Regenerar IA
+        </button>
+        <button class="btn btn-sm" onclick="guardarMensajeWA()">
+          <span class="material-symbols-outlined" style="font-size:14px">save</span> Guardar
+        </button>
+        <button class="btn btn-sm" onclick="enviarWhatsApp()" style="margin-left:auto;background:rgba(37,211,102,.15);border-color:#25D366;color:#25D366;font-weight:600">
+          <span class="material-symbols-outlined" style="font-size:14px">chat</span> Abrir WhatsApp
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -802,61 +891,195 @@ async function renderPipeline(){
   _drawKanban();
 }
 
+var _mobileEtapa='Contacto';
+function setEtapaTab(e){
+  _mobileEtapa=e;
+  document.querySelectorAll('.pipeline-col').forEach(function(c){c.classList.toggle('etapa-activa',c.dataset.etapa===e);});
+  document.querySelectorAll('.etapa-tab').forEach(function(b){b.classList.toggle('active',b.dataset.etapa===e);});
+}
+
 function _drawKanban(){
   var board=document.getElementById('pipeline-board');board.innerHTML='';
+  var mob=window.innerWidth<=768;
+  var tabs=document.getElementById('etapa-tabs');
+  if(mob&&tabs){
+    tabs.style.display='flex';
+    tabs.innerHTML=etapas.map(function(e){
+      var cnt=DB.prospectos.filter(function(p){return p.etapa===e;}).length;
+      var dot='<span style="width:7px;height:7px;border-radius:50%;background:'+(etapaColors[e]||'#888')+';display:inline-block;margin-right:4px;vertical-align:middle"></span>';
+      return'<button class="etapa-tab'+(e===_mobileEtapa?' active':'')+'" data-etapa="'+e+'" onclick="setEtapaTab(\''+e+'\')">'+dot+e+(cnt?' <b style="opacity:.7;font-weight:400">'+cnt+'</b>':'')+'</button>';
+    }).join('');
+  }else if(tabs){tabs.style.display='none';}
+
   etapas.forEach(function(etapa){
     var items=DB.prospectos.filter(function(p){return p.etapa===etapa;});
     var total=items.reduce(function(s,p){return s+Number(p.valor_estimado||0);},0);
     var col=document.createElement('div');
     col.className='pipeline-col';col.dataset.etapa=etapa;
+    if(mob&&etapa===_mobileEtapa)col.classList.add('etapa-activa');
     var dot='<span style="width:8px;height:8px;border-radius:50%;background:'+(etapaColors[etapa]||'#888')+';display:inline-block;flex-shrink:0"></span>';
     col.innerHTML='<div class="pipeline-col-title"><span style="display:flex;align-items:center;gap:6px">'+dot+etapa+'</span>'
       +'<span style="background:var(--bg-tertiary);border-radius:10px;padding:1px 7px;font-size:10px">'+items.length+'</span></div>'
       +'<div class="kanban-cards" data-etapa="'+etapa+'">'
-      +(items.length?items.map(function(p){return _cardHTML(p);}).join(''):'<div class="kanban-empty">Arrastra aquí</div>')
+      +(items.length?items.map(function(p){return _cardHTML(p,mob);}).join(''):'<div class="kanban-empty">'+(mob?'Sin prospectos aquí':'Arrastra aquí')+'</div>')
       +'</div>'
       +(total>0?'<div style="font-size:11px;color:var(--text-tertiary);margin-top:8px;text-align:right;font-weight:500">'+fmtMoney(total)+'</div>':'');
-
-    // Drop zone
-    var zone=col.querySelector('.kanban-cards');
-    zone.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('drag-over');});
-    zone.addEventListener('dragleave',function(e){if(!col.contains(e.relatedTarget))col.classList.remove('drag-over');});
-    zone.addEventListener('drop',function(e){e.preventDefault();col.classList.remove('drag-over');_dropCard(etapa);});
+    if(!mob){
+      var zone=col.querySelector('.kanban-cards');
+      zone.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('drag-over');});
+      zone.addEventListener('dragleave',function(e){if(!col.contains(e.relatedTarget))col.classList.remove('drag-over');});
+      zone.addEventListener('drop',function(e){e.preventDefault();col.classList.remove('drag-over');_dropCard(etapa);});
+    }
     board.appendChild(col);
   });
-
-  // Drag source on every card
-  board.querySelectorAll('.prospect-card').forEach(function(card){
-    card.addEventListener('dragstart',function(e){
-      _dragPId=parseInt(card.dataset.id);
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed='move';
+  if(!mob){
+    board.querySelectorAll('.prospect-card').forEach(function(card){
+      card.addEventListener('dragstart',function(e){_dragPId=parseInt(card.dataset.id);card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+      card.addEventListener('dragend',function(){card.classList.remove('dragging');board.querySelectorAll('.pipeline-col').forEach(function(c){c.classList.remove('drag-over');});});
     });
-    card.addEventListener('dragend',function(){
-      card.classList.remove('dragging');
-      board.querySelectorAll('.pipeline-col').forEach(function(c){c.classList.remove('drag-over');});
-    });
-  });
+  }
 }
 
-function _cardHTML(p){
+function _cardHTML(p,mob){
   var prob=Number(p.probabilidad||0);
   var probColor=prob>=70?'var(--success)':prob>=40?'#f59e0b':'var(--text-tertiary)';
   var canEdit=USUARIO&&USUARIO.permisos&&USUARIO.permisos.prospectos&&USUARIO.permisos.prospectos.editar;
   var canDel=USUARIO&&USUARIO.permisos&&USUARIO.permisos.prospectos&&USUARIO.permisos.prospectos.eliminar;
-  return'<div class="prospect-card" draggable="true" data-id="'+p.id+'">'
-    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:4px">'
-    +'<div style="font-size:13px;font-weight:500;line-height:1.3;flex:1">'+p.nombre+'</div>'
-    +'<div style="display:flex;gap:2px;flex-shrink:0" draggable="false">'
-    +(canEdit?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();editarProspecto('+p.id+')" title="Editar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px">edit</span></button>':'')
-    +(canDel?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();eliminarProspecto('+p.id+')" title="Eliminar" style="padding:2px 5px"><span class="material-symbols-outlined" style="font-size:13px;color:var(--danger)">delete</span></button>':'')
+  var bSt=mob?'padding:8px 10px':'padding:2px 5px';
+  var iSz=mob?'16px':'13px';
+  var waIcon=p.mensaje_wa
+    ?'<button class="btn btn-sm pc-wa-btn" onclick="event.stopPropagation();verMensajeWA('+p.id+')" title="Ver/Enviar mensaje WA" style="'+bSt+';background:rgba(37,211,102,.12);border-color:#25D366" draggable="false"><span class="material-symbols-outlined" style="font-size:'+iSz+';color:#25D366">chat</span></button>'
+    :'<button class="btn btn-sm pc-wa-btn" onclick="event.stopPropagation();verMensajeWA('+p.id+')" title="Generar mensaje WA" style="'+bSt+'" draggable="false"><span class="material-symbols-outlined" style="font-size:'+iSz+';color:var(--text-tertiary)">chat_bubble_outline</span></button>';
+  var waPreview=mob&&p.mensaje_wa?'<div class="pc-wa-preview">'+p.mensaje_wa.substring(0,120)+(p.mensaje_wa.length>120?'…':'')+'</div>':'';
+  var waSent=p.wa_enviado?'<span class="wa-badge-sent"><span class="material-symbols-outlined" style="font-size:11px">done_all</span>Enviado</span>':'';
+  var moverRow=mob?'<div class="pc-mover" style="display:none;margin-top:10px;align-items:center;gap:8px"><span style="font-size:11px;color:var(--text-secondary);white-space:nowrap">Mover a:</span><select onchange="moverEtapaProspecto('+p.id+',this.value)" style="flex:1;font-size:12px;padding:5px 6px;border-radius:8px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);color:var(--text-primary);font-family:inherit">'+etapas.map(function(e){return'<option value="'+e+'"'+(e===p.etapa?' selected':'')+'>'+e+'</option>';}).join('')+'</select></div>':'';
+  return'<div class="prospect-card"'+(mob?'':' draggable="true"')+' data-id="'+p.id+'">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px">'
+    +'<div style="font-size:13px;font-weight:500;line-height:1.3;flex:1;min-width:0">'+p.nombre+'</div>'
+    +'<div class="pc-actions" style="display:flex;gap:3px;flex-shrink:0" draggable="false">'
+    +waIcon
+    +(canEdit?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();editarProspecto('+p.id+')" title="Editar" style="'+bSt+'"><span class="material-symbols-outlined" style="font-size:'+iSz+'">edit</span></button>':'')
+    +(canDel?'<button class="btn btn-sm" draggable="false" onclick="event.stopPropagation();eliminarProspecto('+p.id+')" title="Eliminar" style="'+bSt+'"><span class="material-symbols-outlined" style="font-size:'+iSz+';color:var(--danger)">delete</span></button>':'')
     +'</div></div>'
-    +(p.empresa?'<div style="font-size:11px;color:var(--text-secondary);margin:3px 0">'+p.empresa+'</div>':'')
-    +(Number(p.valor_estimado)>0?'<div style="font-size:12px;color:var(--purple);font-weight:600;margin-bottom:5px">'+fmtMoney(p.valor_estimado)+'</div>':'')
-    +'<div style="display:flex;justify-content:space-between;align-items:center">'
+    +(p.empresa?'<div style="font-size:11px;color:var(--text-secondary);margin:3px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+p.empresa+'</div>':'')
+    +waPreview
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">'
     +'<span class="badge badge-blue" style="font-size:10px">'+p.fuente+'</span>'
     +(prob>0?'<span style="font-size:10px;color:'+probColor+';font-weight:500">'+prob+'%</span>':'')
-    +'</div></div>';
+    +waSent
+    +'</div>'
+    +moverRow+'</div>';
+}
+
+async function moverEtapaProspecto(id,destino){
+  var p=DB.prospectos.find(function(x){return x.id===id;});
+  if(!p||p.etapa===destino)return;
+  var orig=p.etapa;p.etapa=destino;_mobileEtapa=destino;_drawKanban();
+  var r=await apiFetch('/api/prospectos/'+id,{method:'PUT',body:JSON.stringify({etapa:destino})});
+  if(!r){p.etapa=orig;_mobileEtapa=orig;_drawKanban();}
+}
+
+// ── Importar Apify ────────────────────────────────────────────────────────
+var _importTab='json';
+function abrirImportApify(){
+  document.getElementById('import-json-text').value='';
+  document.getElementById('import-preview').textContent='';
+  document.getElementById('import-dataset-id').value='';
+  setImportTab('json',document.querySelector('#import-tabs .tab-pill'));
+  openModal('modal-import-apify');
+}
+function setImportTab(tab,btn){
+  _importTab=tab;
+  document.getElementById('import-tab-json').classList.toggle('hidden',tab!=='json');
+  document.getElementById('import-tab-dataset').classList.toggle('hidden',tab!=='dataset');
+  document.querySelectorAll('#import-tabs .tab-pill').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+}
+document.addEventListener('DOMContentLoaded',function(){
+  var ta=document.getElementById('import-json-text');
+  if(ta)ta.addEventListener('input',function(){
+    try{var arr=JSON.parse(ta.value.trim());document.getElementById('import-preview').textContent=Array.isArray(arr)?arr.length+' registros detectados':'JSON inválido (debe ser un array)';}
+    catch(e){document.getElementById('import-preview').textContent=ta.value.trim()?'JSON inválido':'';}
+  });
+});
+async function ejecutarImport(){
+  var btn=document.getElementById('btn-import-exec');
+  var generar=document.getElementById('import-generar-msg').checked;
+  var items=[];
+  if(_importTab==='json'){
+    try{items=JSON.parse(document.getElementById('import-json-text').value.trim());}
+    catch(e){alert('El JSON no es válido. Verifica el formato.');return;}
+    if(!Array.isArray(items)||!items.length){alert('No hay items en el JSON.');return;}
+  } else {
+    var dsId=document.getElementById('import-dataset-id').value.trim();
+    if(!dsId){alert('Ingresa el Dataset ID de Apify.');return;}
+    btn.disabled=true;btn.textContent='Descargando...';
+    var ds=await apiFetch('/api/apify/dataset?id='+encodeURIComponent(dsId));
+    btn.disabled=false;btn.textContent='Importar';
+    if(!ds||!ds.items){alert('No se pudo obtener el dataset. Verifica el ID y el token Apify.');return;}
+    items=ds.items;
+  }
+  btn.disabled=true;btn.textContent=generar?'Importando + generando mensajes...':'Importando...';
+  var r=await apiFetch('/api/prospectos/import',{method:'POST',body:JSON.stringify({items:items,generar_mensajes:generar})});
+  btn.disabled=false;btn.textContent='Importar';
+  if(!r)return;
+  closeModal('modal-import-apify');
+  alert('Importación completa:\n✅ '+r.insertados+' prospectos nuevos\n⚠️ '+r.duplicados+' duplicados omitidos'+(r.sin_nombre?' \n❌ '+r.sin_nombre+' sin nombre (omitidos)':''));
+  renderPipeline();
+}
+
+// ── Mensaje WhatsApp ──────────────────────────────────────────────────────
+var _waPid=null;
+function verMensajeWA(id){
+  var p=DB.prospectos.find(function(x){return x.id===id;});if(!p)return;
+  _waPid=id;
+  document.getElementById('wa-msg-pid').value=id;
+  document.getElementById('wa-msg-nombre').textContent=p.nombre;
+  document.getElementById('wa-msg-empresa').textContent=p.empresa||p.ciudad||'';
+  document.getElementById('wa-msg-texto').value=p.mensaje_wa||'';
+  document.getElementById('wa-msg-estado').textContent=p.wa_enviado?'✔ Mensaje enviado previamente':'';
+  document.getElementById('wa-msg-loading').classList.add('hidden');
+  document.getElementById('wa-msg-body').classList.remove('hidden');
+  openModal('modal-wa-msg');
+  if(!p.mensaje_wa)generarMensajeIA();
+}
+async function generarMensajeIA(){
+  var id=_waPid;if(!id)return;
+  document.getElementById('wa-msg-loading').classList.remove('hidden');
+  document.getElementById('wa-msg-body').classList.add('hidden');
+  var r=await apiFetch('/api/prospectos/'+id+'/mensaje',{method:'POST'});
+  document.getElementById('wa-msg-loading').classList.add('hidden');
+  document.getElementById('wa-msg-body').classList.remove('hidden');
+  if(!r)return;
+  document.getElementById('wa-msg-texto').value=r.mensaje_wa||'';
+  var p=DB.prospectos.find(function(x){return x.id===id;});
+  if(p)p.mensaje_wa=r.mensaje_wa;
+}
+async function guardarMensajeWA(){
+  var id=_waPid;if(!id)return;
+  var msg=document.getElementById('wa-msg-texto').value.trim();
+  if(!msg){alert('El mensaje está vacío.');return;}
+  var r=await apiFetch('/api/prospectos/'+id+'/mensaje',{method:'PUT',body:JSON.stringify({mensaje_wa:msg})});
+  if(!r)return;
+  var p=DB.prospectos.find(function(x){return x.id===id;});
+  if(p)p.mensaje_wa=msg;
+  document.getElementById('wa-msg-estado').textContent='Guardado.';
+  _drawKanban();
+}
+function enviarWhatsApp(){
+  var id=_waPid;if(!id)return;
+  var p=DB.prospectos.find(function(x){return x.id===id;});
+  if(!p)return;
+  var msg=document.getElementById('wa-msg-texto').value.trim();
+  if(!msg){alert('Escribe o genera un mensaje primero.');return;}
+  var phone=(p.celular||p.telefono||'').replace(/[^\d+]/g,'');
+  if(!phone){alert('Este prospecto no tiene número de celular registrado.\nAgrégalo en el perfil del prospecto.');return;}
+  if(phone.length===10)phone='52'+phone;
+  var url='https://wa.me/'+phone+'?text='+encodeURIComponent(msg);
+  window.open(url,'_blank');
+  apiFetch('/api/prospectos/'+id+'/mensaje',{method:'PUT',body:JSON.stringify({mensaje_wa:msg,wa_enviado:1})});
+  if(p){p.mensaje_wa=msg;p.wa_enviado=1;}
+  _drawKanban();
 }
 
 async function _dropCard(etapaDestino){
