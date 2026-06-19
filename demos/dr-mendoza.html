@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dr. Miguel Mendoza – Cirujano Vascular y Angiólogo en San Luis Potosí. Especialista en várices, pie diabético, trombosis y circulación. Ultrasonido incluido en consulta." />
+  <meta name="keywords" content="angiólogo, cirujano vascular, várices, pie diabético, trombosis, San Luis Potosí, Dr. Miguel Mendoza" />
+  <title>Dr. Miguel Mendoza | Cirujano Vascular y Angiólogo</title>
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" type="image/png" href="img/favicon-miguel.png" />
+  <link rel="canonical" href="https://aphernzz.com/demos/dr-mendoza" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aphernzz.com/demos/dr-mendoza" />
+  <meta property="og:title" content="Dr. Miguel Mendoza — Cirujano Vascular y Angiólogo | San Luis Potosí" />
+  <meta property="og:description" content="Especialista en circulación, várices, pie diabético y trombosis. Ultrasonido Doppler incluido en cada consulta. Agenda tu cita hoy." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:site_name" content="Aphernzz" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <style>
+    :root {
+      --white: #ffffff;
+      --cream: #F5F0EB;
+      --teal-deep: #0B3B52;
+      --teal-med: #1A7A8A;
+      --teal-light: #DFF0F3;
+      --teal-accent: #1A9AAD;
+      --amber: #C8783A;
+      --amber-light: #FDF0E6;
+      --sage: #6B9E8E;
+      --gray-soft: #8A96A3;
+      --gray-line: #DDE4EC;
+      --text-dark: #111827;
+      --text-mid: #3D4F62;
+      --green-wa: #25D366;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 32px rgba(11,59,82,.08);
+      --shadow-hover: 0 12px 48px rgba(11,59,82,.16);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: var(--font-body); color: var(--text-dark); background: var(--white); line-height: 1.6; overflow-x: hidden; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 5%;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray-line);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(11,59,82,.08); }
+    .nav-logo { display: flex; align-items: center; gap: .7rem; }
+    .nav-logo img { height: 36px; width: auto; }
+    .nav-logo-text {
+      font-family: var(--font-display); font-size: 1.25rem;
+      font-weight: 600; color: var(--teal-deep); letter-spacing: .01em;
+    }
+    .nav-logo-text span { color: var(--teal-accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: .88rem; font-weight: 500;
+      color: var(--text-mid); text-decoration: none;
+      letter-spacing: .02em; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--teal-accent); }
+    .nav-cta {
+      background: var(--amber); color: var(--white) !important;
+      padding: .55rem 1.3rem; border-radius: 50px;
+      font-weight: 600 !important; transition: background .2s, transform .2s !important;
+    }
+    .nav-cta:hover { background: var(--teal-deep) !important; transform: translateY(-1px); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 24px; height: 2px; background: var(--teal-deep); border-radius: 2px; transition: .3s; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      align-items: center; gap: 4rem;
+      padding: 8rem 5% 5rem;
+      background: linear-gradient(135deg, var(--cream) 0%, #C8E8EE 100%);
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(26,154,173,.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-text { position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--teal-light); color: var(--teal-med);
+      padding: .4rem 1rem; border-radius: 50px;
+      font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge::before { content: '●'; font-size: .55rem; color: var(--teal-accent); }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 600; line-height: 1.15;
+      color: var(--teal-deep); margin-bottom: 1.2rem;
+    }
+    h1 em { font-style: italic; color: var(--teal-accent); }
+    .hero-sub {
+      font-size: 1.05rem; color: var(--text-mid);
+      max-width: 480px; margin-bottom: 2.2rem; line-height: 1.7;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .6rem;
+      background: var(--amber); color: var(--white);
+      padding: 1rem 2rem; border-radius: 50px;
+      font-size: .95rem; font-weight: 600; text-decoration: none;
+      box-shadow: 0 6px 24px rgba(200,120,58,.35);
+      transition: all .25s; letter-spacing: .01em;
+    }
+    .btn-primary:hover { background: var(--teal-deep); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(11,59,82,.25); }
+    .btn-primary svg { width: 18px; height: 18px; }
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 2.5rem;
+      padding-top: 2rem; border-top: 1px solid rgba(11,59,82,.12);
+    }
+    .stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--teal-deep); }
+    .stat-label { font-size: .8rem; color: var(--gray-soft); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; }
+
+    .hero-image { position: relative; display: flex; justify-content: center; align-items: flex-end; }
+    .hero-photo-wrap { position: relative; width: 440px; height: 540px; }
+    .hero-photo-bg {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 380px; height: 500px;
+      background: linear-gradient(180deg, var(--teal-light) 0%, #A8D8DF 100%);
+      border-radius: 60% 60% 0 0;
+    }
+    .hero-photo {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 360px; height: 490px; object-fit: cover; object-position: top;
+      border-radius: 55% 55% 0 0; z-index: 1;
+    }
+    .card-float {
+      position: absolute; background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: .9rem 1.2rem; z-index: 2;
+    }
+    .card-float-left { left: 0; top: 40%; }
+    .card-float-right { right: 0; bottom: 15%; }
+    .card-float .cf-label { font-size: .72rem; color: var(--gray-soft); font-weight: 500; }
+    .card-float .cf-val { font-size: 1rem; font-weight: 600; color: var(--teal-deep); }
+    .cf-stars { color: #f5a623; font-size: .85rem; }
+    .ultrasound-badge {
+      position: absolute; top: 18%; right: -10px;
+      background: var(--amber); color: white;
+      padding: .6rem 1rem; border-radius: var(--radius);
+      font-size: .76rem; font-weight: 700; z-index: 2;
+      box-shadow: var(--shadow-hover); text-align: center; max-width: 130px;
+      line-height: 1.3;
+    }
+
+    /* ─── SECTION COMMONS ─── */
+    section { padding: 6rem 5%; }
+    .section-tag {
+      font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--teal-accent); margin-bottom: .8rem;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      font-weight: 600; color: var(--teal-deep); line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-sub { font-size: 1rem; color: var(--text-mid); max-width: 560px; line-height: 1.7; }
+    .container { max-width: 1140px; margin: 0 auto; }
+
+    /* ─── PERFIL ─── */
+    #perfil { background: var(--white); }
+    .perfil-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 5rem; align-items: center; }
+    .perfil-img-wrap { position: relative; }
+    .perfil-img-bg {
+      width: 100%; padding-bottom: 110%;
+      background: linear-gradient(145deg, var(--teal-light), #A8D8DF);
+      border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%;
+      position: relative; overflow: hidden;
+    }
+    .perfil-photo {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; object-fit: cover; z-index: 1;
+    }
+    .perfil-badge-cert {
+      position: absolute; bottom: 20px; right: -20px;
+      background: var(--teal-deep); color: white;
+      padding: .8rem 1.2rem; border-radius: var(--radius);
+      font-size: .8rem; font-weight: 600; box-shadow: var(--shadow-hover); z-index: 10;
+    }
+    .perfil-bio { font-size: .97rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 2rem; }
+    .creds-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+    .cred-item {
+      background: var(--cream); border-radius: var(--radius-sm);
+      padding: 1rem; border-left: 3px solid var(--teal-accent);
+    }
+    .cred-title { font-size: .72rem; color: var(--gray-soft); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+    .cred-val { font-size: .92rem; font-weight: 600; color: var(--teal-deep); margin-top: .2rem; }
+
+    /* ─── SERVICIOS ─── */
+    #servicios { background: var(--cream); }
+    .servicios-header { text-align: center; margin-bottom: 3.5rem; }
+    .servicios-header .section-sub { margin: 0 auto; }
+    .servicios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .servicio-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 2rem 1.5rem; box-shadow: var(--shadow);
+      border: 1px solid var(--gray-line);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .servicio-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+    .serv-icon {
+      width: 52px; height: 52px;
+      background: var(--teal-light); border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+    .serv-icon svg { width: 26px; height: 26px; stroke: var(--teal-accent); fill: none; stroke-width: 1.8; }
+    .serv-icon.amber-icon { background: var(--amber-light); }
+    .serv-icon.amber-icon svg { stroke: var(--amber); }
+    .serv-card-title { font-size: 1rem; font-weight: 600; color: var(--teal-deep); margin-bottom: .6rem; }
+    .serv-card-desc { font-size: .86rem; color: var(--text-mid); line-height: 1.65; }
+    .serv-highlight {
+      display: inline-block; margin-top: .8rem;
+      font-size: .74rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+      color: var(--teal-accent);
+    }
+
+    /* ─── AGENDA ─── */
+    #agenda { background: var(--white); }
+    .agenda-layout { display: grid; grid-template-columns: 1.1fr 1.8fr; gap: 4rem; align-items: start; }
+    .agenda-info .section-sub { margin-bottom: 2rem; }
+    .agenda-features { list-style: none; display: flex; flex-direction: column; gap: .8rem; }
+    .agenda-features li {
+      display: flex; align-items: center; gap: .7rem;
+      font-size: .9rem; color: var(--text-mid); font-weight: 500;
+    }
+    .agenda-features li::before {
+      content: '✓'; width: 22px; height: 22px; flex-shrink: 0;
+      background: var(--teal-light); color: var(--teal-accent);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+    }
+
+    .calendar-widget {
+      background: var(--cream); border-radius: var(--radius);
+      border: 1px solid var(--gray-line); overflow: hidden; box-shadow: var(--shadow);
+    }
+    .cal-header {
+      background: var(--teal-deep); color: white;
+      padding: 1.2rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+    }
+    .cal-month { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; }
+    .cal-nav button {
+      background: rgba(255,255,255,.15); border: none; color: white;
+      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+      font-size: 1rem; transition: background .2s;
+    }
+    .cal-nav button:hover { background: rgba(255,255,255,.3); }
+    .cal-nav { display: flex; gap: .5rem; }
+    .cal-days-header { display: grid; grid-template-columns: repeat(7,1fr); padding: .8rem 1rem .4rem; }
+    .cal-days-header span { text-align: center; font-size: .72rem; font-weight: 700; color: var(--gray-soft); text-transform: uppercase; letter-spacing: .04em; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); padding: .5rem 1rem 1rem; gap: .25rem; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; font-size: .85rem; cursor: pointer;
+      color: var(--text-dark); font-weight: 400; transition: all .15s; position: relative;
+    }
+    .cal-day:hover:not(.empty):not(.past) { background: var(--teal-light); color: var(--teal-accent); }
+    .cal-day.available { font-weight: 600; color: var(--teal-med); }
+    .cal-day.available::after {
+      content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; background: var(--teal-accent); border-radius: 50%;
+    }
+    .cal-day.selected { background: var(--teal-accent); color: white; font-weight: 600; }
+    .cal-day.selected::after { display: none; }
+    .cal-day.today { border: 2px solid var(--teal-accent); }
+    .cal-day.past { color: var(--gray-line); cursor: default; }
+    .cal-day.empty { cursor: default; }
+
+    .time-slots { padding: 1rem 1.5rem 1.5rem; border-top: 1px solid var(--gray-line); }
+    .time-slots-title { font-size: .8rem; font-weight: 700; color: var(--gray-soft); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .8rem; }
+    .slots-grid { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .slot {
+      padding: .4rem .85rem; border: 1.5px solid var(--gray-line);
+      border-radius: 50px; font-size: .8rem; font-weight: 500;
+      cursor: pointer; transition: all .15s; color: var(--text-mid);
+    }
+    .slot:hover { border-color: var(--teal-accent); color: var(--teal-accent); background: var(--teal-light); }
+    .slot.selected { background: var(--teal-accent); border-color: var(--teal-accent); color: white; }
+    .slot.unavailable { color: var(--gray-line); border-color: var(--gray-line); cursor: not-allowed; text-decoration: line-through; }
+    .cal-confirm-btn {
+      display: block; width: calc(100% - 3rem); margin: 1rem 1.5rem 1.5rem;
+      background: var(--amber); color: white;
+      border: none; border-radius: 50px; padding: .9rem;
+      font-size: .92rem; font-weight: 600; cursor: pointer;
+      transition: background .2s, transform .2s; letter-spacing: .01em;
+    }
+    .cal-confirm-btn:hover { background: var(--teal-deep); transform: translateY(-1px); }
+
+    /* ─── TESTIMONIOS ─── */
+    #testimonios { background: var(--teal-deep); }
+    #testimonios .section-tag { color: rgba(255,255,255,.45); }
+    #testimonios h2 { color: white; }
+    .testimonios-header { text-align: center; margin-bottom: 3.5rem; }
+    .testimonios-header .section-sub { color: rgba(255,255,255,.6); margin: 0 auto; }
+    .testimonios-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-bottom: 4rem; }
+    .testim-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: var(--radius); padding: 1.8rem;
+      transition: background .25s;
+    }
+    .testim-card:hover { background: rgba(255,255,255,.1); }
+    .testim-stars { color: #f5c842; font-size: .9rem; margin-bottom: .8rem; }
+    .testim-text { font-size: .93rem; color: rgba(255,255,255,.85); line-height: 1.75; margin-bottom: 1.2rem; font-style: italic; }
+    .testim-author { display: flex; align-items: center; gap: .8rem; }
+    .testim-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-accent), var(--sage));
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; font-weight: 700; color: white;
+    }
+    .testim-name { font-size: .88rem; font-weight: 600; color: white; }
+    .testim-role { font-size: .76rem; color: rgba(255,255,255,.45); }
+    .google-badge {
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius); padding: 1.5rem 2rem;
+      margin-top: 2rem;
+    }
+    .google-badge-text { font-size: 1.4rem; font-weight: 700; color: white; font-family: var(--font-display); }
+    .google-badge-sub { font-size: .8rem; color: rgba(255,255,255,.5); }
+
+    /* ─── UBICACION ─── */
+    #ubicacion { background: var(--cream); }
+    .ubicacion-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start; }
+    .info-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+    .info-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: var(--teal-light); border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .info-icon svg { width: 20px; height: 20px; stroke: var(--teal-accent); fill: none; stroke-width: 2; }
+    .info-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-soft); }
+    .info-val { font-size: .92rem; font-weight: 500; color: var(--text-dark); margin-top: .15rem; line-height: 1.5; }
+    .horario-table { width: 100%; border-collapse: collapse; margin-top: .5rem; }
+    .horario-table tr { border-bottom: 1px solid var(--gray-line); }
+    .horario-table td { padding: .45rem 0; font-size: .88rem; color: var(--text-mid); }
+    .horario-table td:first-child { font-weight: 600; color: var(--text-dark); width: 45%; }
+    .horario-badge {
+      display: inline-block; padding: .15rem .6rem;
+      background: #E6F9EE; color: #1D8348; border-radius: 50px;
+      font-size: .72rem; font-weight: 700;
+    }
+    .horario-badge.closed { background: #fde8e8; color: #c0392b; }
+    .map-frame {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); height: 380px;
+      background: var(--teal-light); position: relative;
+    }
+    #mapa-consultorio { width: 100%; height: 100%; }
+    .map-open-btn {
+      position: absolute; bottom: 14px; right: 14px; z-index: 999;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #fff; color: var(--teal-deep);
+      border: 1.5px solid rgba(11,59,82,.15);
+      border-radius: 999px; padding: .5rem 1rem;
+      font-size: .8rem; font-weight: 600;
+      text-decoration: none; box-shadow: 0 2px 12px rgba(0,0,0,.18);
+      transition: box-shadow .2s, transform .2s;
+    }
+    .map-open-btn:hover { box-shadow: 0 4px 20px rgba(0,0,0,.25); transform: translateY(-1px); }
+    .map-open-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--teal-deep); color: rgba(255,255,255,.5);
+      text-align: center; padding: 2.5rem 5%; font-size: .84rem;
+    }
+    footer a { color: rgba(255,255,255,.65); text-decoration: none; }
+    footer a:hover { color: white; }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: var(--font-display); font-size: 1.2rem; color: white; font-weight: 600; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-copy { border-top: 1px solid rgba(255,255,255,.08); padding-top: 1.5rem; }
+
+    /* ─── WHATSAPP FLOAT ─── */
+    .wa-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      display: flex; align-items: center; gap: .7rem;
+      background: var(--green-wa); color: white;
+      padding: .8rem 1.3rem; border-radius: 50px;
+      text-decoration: none; font-size: .85rem; font-weight: 600;
+      box-shadow: 0 6px 24px rgba(37,211,102,.4);
+      transition: all .25s; white-space: nowrap;
+    }
+    .wa-float:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(37,211,102,.5); }
+    .wa-float svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+
+    /* ─── MODAL ─── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(11,59,82,.7); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: white; border-radius: var(--radius); padding: 2.5rem;
+      max-width: 480px; width: 100%; box-shadow: 0 24px 80px rgba(11,59,82,.3);
+      animation: modalIn .3s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .modal-title { font-family: var(--font-display); font-size: 1.6rem; color: var(--teal-deep); margin-bottom: .5rem; }
+    .modal-sub { font-size: .9rem; color: var(--text-mid); margin-bottom: 1.8rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-size: .8rem; font-weight: 600; color: var(--text-dark); margin-bottom: .35rem; letter-spacing: .02em; }
+    .form-group input, .form-group select {
+      width: 100%; padding: .75rem 1rem;
+      border: 1.5px solid var(--gray-line); border-radius: var(--radius-sm);
+      font-family: var(--font-body); font-size: .9rem; color: var(--text-dark);
+      outline: none; transition: border-color .2s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--teal-accent); }
+    .modal-footer { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .btn-outline {
+      flex: 1; padding: .85rem; border: 1.5px solid var(--gray-line);
+      border-radius: 50px; font-size: .9rem; font-weight: 600; cursor: pointer;
+      background: white; color: var(--text-mid); transition: all .2s;
+    }
+    .btn-outline:hover { border-color: var(--teal-accent); color: var(--teal-accent); }
+    .btn-confirm {
+      flex: 1.5; padding: .85rem; border: none;
+      background: var(--amber); color: white;
+      border-radius: 50px; font-size: .9rem; font-weight: 600; cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-confirm:hover { background: var(--teal-deep); }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .servicios-grid { grid-template-columns: repeat(2,1fr); }
+      .testimonios-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 4%; }
+      .nav-links { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: white; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links li { font-size: 1.1rem; }
+      .hamburger { display: flex; }
+      #hero { grid-template-columns: 1fr; padding: 7rem 4% 4rem; text-align: center; gap: 3rem; }
+      .hero-sub { margin: 0 auto 2rem; }
+      .hero-stats { justify-content: center; }
+      .hero-image { order: -1; }
+      .hero-photo-wrap { width: 280px; height: 340px; }
+      .hero-photo-bg { width: 240px; height: 310px; }
+      .hero-photo { width: 230px; height: 300px; }
+      .card-float-left { left: -10px; }
+      .card-float-right { right: -10px; }
+      .ultrasound-badge { display: none; }
+      .perfil-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .servicios-grid { grid-template-columns: 1fr; }
+      .agenda-layout { grid-template-columns: 1fr; }
+      .testimonios-grid { grid-template-columns: 1fr; }
+      .ubicacion-layout { grid-template-columns: 1fr; }
+      .creds-grid { grid-template-columns: 1fr; }
+      section { padding: 4rem 4%; }
+      .wa-float span { display: none; }
+      .wa-float { padding: .85rem; border-radius: 50%; }
+      .footer-top { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <img src="img/logo-doctor-miguel-01.png" alt="Dr. Miguel Mendoza" />
+    <span class="nav-logo-text">Dr. <span>Miguel</span> Mendoza</span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#perfil">Perfil</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#agenda">Agenda</a></li>
+    <li><a href="#testimonios">Opiniones</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+    <li><a href="#agenda" class="nav-cta">Reservar Cita</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text fade-up">
+    <div class="hero-badge">Cirujano Vascular &nbsp;·&nbsp; Angiólogo Certificado</div>
+    <h1>Tu circulación en <em>las mejores manos</em></h1>
+    <p class="hero-sub">Especialista en el tratamiento de várices, pie diabético, trombosis y enfermedades circulatorias. Ultrasonido Doppler incluido en cada consulta.</p>
+    <a href="#agenda" class="btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agenda tu Cita Hoy
+    </a>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">5,000+</div>
+        <div class="stat-label">Opiniones Google</div>
+      </div>
+      <div>
+        <div class="stat-num">4.9★</div>
+        <div class="stat-label">Calificación</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Trato personalizado</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-image fade-up" style="transition-delay:.15s">
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-bg"></div>
+      <img src="img/doctor-miguel.jpg" alt="Dr. Miguel Mendoza – Cirujano Vascular" class="hero-photo" />
+      <div class="card-float card-float-left">
+        <div class="cf-label">Valoración en Google</div>
+        <div class="cf-stars">★★★★★</div>
+        <div class="cf-val">4.9 / 5.0</div>
+      </div>
+      <div class="card-float card-float-right">
+        <div class="cf-label">Próxima disponibilidad</div>
+        <div class="cf-val" style="color:var(--teal-accent)">Hoy mismo</div>
+      </div>
+      <div class="ultrasound-badge">
+        🔊 Ultrasonido<br>incluido en<br>consulta
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFIL -->
+<section id="perfil">
+  <div class="container">
+    <div class="perfil-grid fade-up">
+      <div class="perfil-img-wrap">
+        <div class="perfil-img-bg">
+          <img src="img/doctor-miguel.jpg" alt="Dr. Miguel Mendoza" class="perfil-photo" />
+        </div>
+        <div class="perfil-badge-cert">Cirujano Vascular<br>Certificado</div>
+      </div>
+      <div class="perfil-content">
+        <div class="section-tag">Acerca del Doctor</div>
+        <h2>Dr. Miguel Mendoza</h2>
+        <p class="perfil-bio">
+          Médico Cirujano Vascular y Angiólogo con amplia experiencia en el diagnóstico y tratamiento de enfermedades del sistema circulatorio. Especializado en el manejo integral de várices, trombosis venosa, pie diabético y arteriopatías periféricas.<br><br>
+          Cada consulta incluye un <strong>ultrasonido Doppler vascular</strong> como parte de la exploración completa, garantizando un diagnóstico preciso y un tratamiento individualizado para cada paciente.
+        </p>
+        <div class="creds-grid">
+          <div class="cred-item">
+            <div class="cred-title">Especialidad</div>
+            <div class="cred-val">Cirugía Vascular y Angiología</div>
+          </div>
+          <div class="cred-item">
+            <div class="cred-title">Ultrasonido</div>
+            <div class="cred-val">Incluido en consulta</div>
+          </div>
+          <div class="cred-item">
+            <div class="cred-title">Sede</div>
+            <div class="cred-val">San Luis Potosí, S.L.P.</div>
+          </div>
+          <div class="cred-item">
+            <div class="cred-title">Enfoque</div>
+            <div class="cred-val">Tratamiento individualizado</div>
+          </div>
+        </div>
+        <a href="https://wa.me/524447138417?text=Hola%20Dr.%20Miguel%2C%20me%20gustar%C3%ADa%20agendar%20una%20consulta" class="btn-primary" target="_blank" rel="noopener">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Contactar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="container">
+    <div class="servicios-header fade-up">
+      <div class="section-tag">Especialidades</div>
+      <h2>Tratamientos vasculares <em>a tu medida</em></h2>
+      <p class="section-sub">Cada tratamiento es diseñado de forma individual. Nos especializamos en los problemas más complejos del sistema circulatorio.</p>
+    </div>
+    <div class="servicios-grid fade-up">
+      <div class="servicio-card">
+        <div class="serv-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+        </div>
+        <div class="serv-card-title">Várices y Venas Varicosas</div>
+        <div class="serv-card-desc">Diagnóstico y tratamiento de várices con técnicas mínimamente invasivas, mejorando la estética y la salud venosa de tus piernas.</div>
+      </div>
+      <div class="servicio-card">
+        <div class="serv-icon amber-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <div class="serv-card-title">Pie Diabético</div>
+        <div class="serv-card-desc">Atención especializada en lesiones vasculares del pie diabético, previniendo complicaciones y preservando la movilidad del paciente.</div>
+      </div>
+      <div class="servicio-card">
+        <div class="serv-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+        </div>
+        <div class="serv-card-title">Trombosis Venosa</div>
+        <div class="serv-card-desc">Diagnóstico y manejo de trombosis venosa profunda (TVP) y superficial, con seguimiento y tratamiento anticoagulante personalizado.</div>
+      </div>
+      <div class="servicio-card">
+        <div class="serv-icon amber-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="serv-card-title">Mala Circulación</div>
+        <div class="serv-card-desc">Evaluación y tratamiento de arteriopatías periféricas, insuficiencia venosa crónica y otros trastornos de la circulación sanguínea.</div>
+      </div>
+      <div class="servicio-card">
+        <div class="serv-icon">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="serv-card-title">Catéter Vascular</div>
+        <div class="serv-card-desc">Colocación y manejo de catéteres de hemodiálisis y quimioterapia, realizados con técnica precisa y mínimo riesgo.</div>
+      </div>
+      <div class="servicio-card" style="border-color: var(--teal-accent); background: var(--teal-light);">
+        <div class="serv-icon" style="background: white;">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="serv-card-title">Ultrasonido Doppler</div>
+        <div class="serv-card-desc">Estudio de imagen vascular incluido sin costo adicional en cada consulta, permitiendo una exploración completa y diagnóstico preciso al momento.</div>
+        <span class="serv-highlight">✓ Incluido en consulta</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENDA -->
+<section id="agenda">
+  <div class="container">
+    <div class="agenda-layout fade-up">
+      <div class="agenda-info">
+        <div class="section-tag">Citas</div>
+        <h2>Agenda tu <em>consulta</em></h2>
+        <p class="section-sub">Selecciona el día y horario que más te convenga. También puedes contactarnos directamente por WhatsApp.</p>
+        <ul class="agenda-features" style="margin-top:1.5rem">
+          <li>Ultrasonido Doppler incluido en consulta</li>
+          <li>Atención personalizada y sin prisa</li>
+          <li>Diagnóstico el mismo día</li>
+          <li>Horario extendido hasta las 9 p.m.</li>
+          <li>Confirmación inmediata por WhatsApp</li>
+        </ul>
+      </div>
+      <div class="calendar-widget">
+        <div class="cal-header">
+          <span class="cal-month" id="calMonth"></span>
+          <div class="cal-nav">
+            <button id="calPrev">&#8249;</button>
+            <button id="calNext">&#8250;</button>
+          </div>
+        </div>
+        <div class="cal-days-header">
+          <span>Do</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="time-slots">
+          <div class="time-slots-title">Horarios disponibles</div>
+          <div class="slots-grid" id="slotsGrid"></div>
+        </div>
+        <button class="cal-confirm-btn" id="calConfirmBtn">Confirmar cita por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section id="testimonios">
+  <div class="container">
+    <div class="testimonios-header fade-up">
+      <div class="section-tag">Opiniones</div>
+      <h2>Lo que dicen nuestros pacientes</h2>
+      <p class="section-sub">Más de 5,000 opiniones en Google avalan la calidad de atención del Dr. Mendoza.</p>
+    </div>
+    <div class="testimonios-grid fade-up">
+      <div class="testim-card">
+        <div class="testim-stars">★★★★★</div>
+        <p class="testim-text">"Excelente atención, buen trato y muy acertado en sus diagnósticos. Me diagnosticó correctamente cuando otros no habían podido."</p>
+        <div class="testim-author">
+          <div class="testim-avatar">OA</div>
+          <div>
+            <div class="testim-name">Oliver Acosta</div>
+            <div class="testim-role">Paciente verificado · Google</div>
+          </div>
+        </div>
+      </div>
+      <div class="testim-card">
+        <div class="testim-stars">★★★★★</div>
+        <p class="testim-text">"Fui muy bien atendida por el doctor, estoy muy satisfecha por la consulta. El ultrasonido incluido me pareció muy conveniente."</p>
+        <div class="testim-author">
+          <div class="testim-avatar">RM</div>
+          <div>
+            <div class="testim-name">Rosy Mendoza</div>
+            <div class="testim-role">Paciente verificada · Google</div>
+          </div>
+        </div>
+      </div>
+      <div class="testim-card">
+        <div class="testim-stars">★★★★★</div>
+        <p class="testim-text">"Excelente servicio, buena accesibilidad y atención a los pacientes. El doctor explica todo con detalle y sin prisa."</p>
+        <div class="testim-author">
+          <div class="testim-avatar">CP</div>
+          <div>
+            <div class="testim-name">César Palafox</div>
+            <div class="testim-role">Paciente verificado · Google</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="google-badge fade-up">
+      <svg width="32" height="32" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.1 29.2 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.2 2.7l5.7-5.7C33.2 7.1 28.8 5 24 5 13.5 5 5 13.5 5 24s8.5 19 19 19 19-8.5 19-19c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c2.8 0 5.3 1 7.2 2.7l5.7-5.7C33.2 7.1 28.8 5 24 5 16.3 5 9.7 9.4 6.3 14.7z"/><path fill="#4CAF50" d="M24 43c4.7 0 9-1.8 12.2-4.7l-5.6-4.7C28.9 35 26.6 36 24 36c-5.2 0-9.6-3-11.3-7.4l-6.6 5.1C9.4 39.2 16.2 43 24 43z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.9 2.4-2.5 4.5-4.5 6l5.6 4.7C36 39.1 43 34 43 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+      <div>
+        <div class="google-badge-text">5,089 opiniones · 4.9★</div>
+        <div class="google-badge-sub">Calificación en Google Maps</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UBICACION -->
+<section id="ubicacion">
+  <div class="container">
+    <div class="fade-up" style="margin-bottom:3rem">
+      <div class="section-tag">Consultorio</div>
+      <h2>¿Dónde encontrarnos?</h2>
+    </div>
+    <div class="ubicacion-layout fade-up">
+      <div class="ubicacion-info">
+        <div class="info-item">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="info-label">Dirección</div>
+            <div class="info-val">Tequisquiapan, C.P. 78250<br>San Luis Potosí, S.L.P.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="info-label">Teléfono</div>
+            <div class="info-val"><a href="tel:4447138417" style="color:var(--teal-accent);text-decoration:none;font-weight:600">444 713 8417</a></div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="info-label">Horario</div>
+            <table class="horario-table">
+              <tr><td>Lunes – Viernes</td><td>9:00 – 21:00 <span class="horario-badge">Abierto</span></td></tr>
+              <tr><td>Sábado</td><td>9:00 – 15:00 <span class="horario-badge">Abierto</span></td></tr>
+              <tr><td>Domingo</td><td><span class="horario-badge closed">Cerrado</span></td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon" style="background:var(--amber-light)">
+            <svg viewBox="0 0 24 24" style="stroke:var(--amber)"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div>
+            <div class="info-label">Citas por WhatsApp</div>
+            <div class="info-val">
+              <a href="https://wa.me/524447138417?text=Hola%20Dr.%20Miguel%2C%20me%20gustar%C3%ADa%20agendar%20una%20consulta" target="_blank" rel="noopener" style="color:var(--amber);text-decoration:none;font-weight:600">Enviar mensaje →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="map-frame">
+        <div id="mapa-consultorio"></div>
+        <a href="https://maps.google.com/?q=Tequisquiapan+San+Luis+Potosi+Mexico" target="_blank" rel="noopener" class="map-open-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Abrir en Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-logo">Dr. Miguel Mendoza · Cirujano Vascular</div>
+      <div class="footer-links">
+        <a href="#perfil">Perfil</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#agenda">Agenda</a>
+        <a href="#ubicacion">Ubicación</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <p>© 2025 Dr. Miguel Mendoza · Cirujano Vascular y Angiólogo · San Luis Potosí, S.L.P.</p>
+      <p style="margin-top:.5rem">Sitio desarrollado por <a href="https://aphernzz.com" target="_blank" rel="noopener">Aphernzz</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/524447138417?text=Hola%20Dr.%20Miguel%2C%20me%20gustar%C3%ADa%20agendar%20una%20consulta" class="wa-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span>Agendar cita</span>
+</a>
+
+<!-- MODAL CONFIRMACIÓN -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-title">Confirmar cita</div>
+    <p class="modal-sub">Completa tus datos y te redirigiremos a WhatsApp para confirmar tu cita con el Dr. Mendoza.</p>
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="formNombre" placeholder="Tu nombre" />
+    </div>
+    <div class="form-group">
+      <label>Motivo de consulta</label>
+      <select id="formMotivo">
+        <option value="">Selecciona...</option>
+        <option>Várices / Venas varicosas</option>
+        <option>Pie diabético</option>
+        <option>Trombosis venosa</option>
+        <option>Mala circulación</option>
+        <option>Catéter vascular</option>
+        <option>Revisión general / Ultrasonido</option>
+        <option>Otro</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" id="modalClose">Cancelar</button>
+      <button class="btn-confirm" id="modalConfirm">Ir a WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+  // ─── NAV SCROLL
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ─── HAMBURGER
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // ─── FADE UP
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // ─── CALENDAR
+  const SLOTS = ['09:00','10:00','11:00','12:00','13:00','15:00','16:00','17:00','18:00','19:00','20:00'];
+  const UNAVAILABLE = [1, 4, 7];
+  let calDate = new Date();
+  let selectedDay = null, selectedSlot = null;
+
+  function renderCal() {
+    const grid = document.getElementById('calGrid');
+    const monthEl = document.getElementById('calMonth');
+    const year = calDate.getFullYear(), month = calDate.getMonth();
+    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    monthEl.textContent = `${months[month]} ${year}`;
+    const first = new Date(year, month, 1).getDay();
+    const days = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    grid.innerHTML = '';
+    for (let i = 0; i < first; i++) { const d = document.createElement('div'); d.className = 'cal-day empty'; grid.appendChild(d); }
+    for (let d = 1; d <= days; d++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day';
+      el.textContent = d;
+      const thisDate = new Date(year, month, d);
+      const dow = thisDate.getDay();
+      if (thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+        el.classList.add('past');
+      } else if (dow === 0) {
+        el.classList.add('past');
+      } else {
+        if (!UNAVAILABLE.includes(d)) el.classList.add('available');
+        if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) el.classList.add('today');
+        if (d === selectedDay) el.classList.add('selected');
+        el.addEventListener('click', () => { selectedDay = d; renderCal(); renderSlots(); });
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  function renderSlots() {
+    const grid = document.getElementById('slotsGrid');
+    grid.innerHTML = '';
+    SLOTS.forEach((s, i) => {
+      const el = document.createElement('div');
+      el.className = 'slot' + (i % 3 === 2 ? ' unavailable' : '');
+      el.textContent = s;
+      if (s === selectedSlot) el.classList.add('selected');
+      if (!el.classList.contains('unavailable')) {
+        el.addEventListener('click', () => { selectedSlot = s; renderSlots(); });
+      }
+      grid.appendChild(el);
+    });
+  }
+
+  document.getElementById('calPrev').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() - 1); selectedDay = null; renderCal(); renderSlots();
+  });
+  document.getElementById('calNext').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() + 1); selectedDay = null; renderCal(); renderSlots();
+  });
+
+  document.getElementById('calConfirmBtn').addEventListener('click', () => {
+    document.getElementById('modalOverlay').classList.add('open');
+  });
+  document.getElementById('modalClose').addEventListener('click', () => {
+    document.getElementById('modalOverlay').classList.remove('open');
+  });
+  document.getElementById('modalConfirm').addEventListener('click', () => {
+    const nombre = document.getElementById('formNombre').value || 'Paciente';
+    const motivo = document.getElementById('formMotivo').value || 'consulta';
+    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const fecha = selectedDay ? `${selectedDay} de ${months[calDate.getMonth()]} ${calDate.getFullYear()}` : 'una fecha próxima';
+    const hora = selectedSlot || '';
+    const msg = encodeURIComponent(`Hola Dr. Miguel, me llamo ${nombre} y quisiera agendar una cita por ${motivo} para el ${fecha}${hora ? ' a las ' + hora : ''}. ¿Tiene disponibilidad?`);
+    window.open(`https://wa.me/524447138417?text=${msg}`, '_blank');
+    document.getElementById('modalOverlay').classList.remove('open');
+  });
+
+  renderCal();
+  renderSlots();
+
+  // ─── MAP
+  const map = L.map('mapa-consultorio', { zoomControl: true, scrollWheelZoom: false }).setView([22.1565, -100.9855], 15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors', maxZoom: 19
+  }).addTo(map);
+  const icon = L.divIcon({
+    className: '',
+    html: `<div style="background:#1A9AAD;width:44px;height:44px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid white;box-shadow:0 4px 16px rgba(0,0,0,.3)"></div>`,
+    iconSize: [44, 44], iconAnchor: [22, 44]
+  });
+  L.marker([22.1565, -100.9855], { icon }).addTo(map)
+    .bindPopup('<strong>Dr. Miguel Mendoza</strong><br>Cirujano Vascular · Tequisquiapan<br>San Luis Potosí').openPopup();
+</script>
+</body>
+</html>
