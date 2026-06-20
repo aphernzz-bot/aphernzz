@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: #FBF7F6; color: #2A1F1E; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+</style>
+</helmet>
+
+<!-- NAV -->
+<nav style="position:fixed;top:0;left:0;right:0;z-index:100;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 60px;background:{{ navBg }};box-shadow:{{ navShadow }};transition:background 0.4s,box-shadow 0.4s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)">
+  
+  <a href="#inicio" style="display:flex;align-items:center;gap:12px;color:#2A1F1E;text-decoration:none">
+    
+    <img src="favicon-miguel.png" alt="Logotipo Dr. Miguel Mendoza" style="height:46px;width:auto;object-fit:contain;flex-shrink:0">
+    
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:17px;letter-spacing:-0.3px;line-height:1.2;color:#2A1F1E">Dr. Miguel Mendoza</div>
+      <div style="font-size:10px;letter-spacing:2px;color:#C05A56;font-weight:700;line-height:1.2">CIRUJANO VASCULAR</div>
+    </div>
+  </a>
+
+  <div style="display:flex;align-items:center;gap:2px;background:rgba(237,213,211,0.5);border-radius:50px;padding:5px">
+    <a href="#inicio" style="padding:9px 20px;border-radius:50px;font-size:14px;font-weight:600;color:#2A1F1E;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.08);text-decoration:none">Inicio</a>
+    <a href="#sobre-mi" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Sobre mí</a>
+    <a href="#servicios" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Servicios</a>
+    <a href="#articulos" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Blog</a>
+  </div>
+
+  <a href="#cita" style="display:inline-flex;align-items:center;gap:8px;background:#C05A56;color:white;padding:14px 26px;border-radius:50px;font-size:14px;font-weight:600;box-shadow:0 4px 18px rgba(192,90,86,0.35);text-decoration:none">
+    Contactar
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+  </a>
+  
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section id="inicio" style="min-height:100vh;background:linear-gradient(145deg,#EDE0DF 0%,#F3E9E8 30%,#F8F3F2 60%,#FBF7F6 100%);display:flex;flex-direction:column;position:relative;overflow:hidden">
+
+  <div style="position:absolute;right:0;top:0;bottom:0;width:55%;opacity:0.05;pointer-events:none">
+    <svg width="100%" height="100%" viewBox="0 0 700 900" fill="none" preserveAspectRatio="xMidYMid slice">
+      <path d="M350 -50 Q320 100 350 280 Q380 460 350 640 Q320 820 350 980" stroke="#8B3E3B" stroke-width="80" stroke-linecap="round"/>
+      <path d="M350 280 Q240 360 180 500" stroke="#8B3E3B" stroke-width="55" stroke-linecap="round"/>
+      <path d="M350 280 Q460 340 520 480" stroke="#8B3E3B" stroke-width="55" stroke-linecap="round"/>
+      <path d="M180 500 Q130 600 100 720" stroke="#8B3E3B" stroke-width="35" stroke-linecap="round"/>
+      <path d="M520 480 Q560 590 580 700" stroke="#8B3E3B" stroke-width="35" stroke-linecap="round"/>
+      <path d="M180 500 Q200 620 230 740" stroke="#8B3E3B" stroke-width="22" stroke-linecap="round"/>
+      <path d="M520 480 Q490 610 470 730" stroke="#8B3E3B" stroke-width="22" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:30px;padding:96px 60px 0;position:relative;z-index:1;width:100%;max-width:1200px;margin:0 auto">
+
+    <div style="flex:1;max-width:360px;padding-bottom:72px;animation:fadeUp 0.9s ease both;display:flex;flex-direction:column;align-items:center;text-align:center">
+      
+      <div style="background:white;border-radius:24px;padding:28px 32px;box-shadow:0 10px 48px rgba(192,90,86,0.14);margin-bottom:28px;animation:float 5s ease-in-out infinite;display:flex;flex-direction:column;align-items:center">
+        <div style="font-family:'DM Serif Display',serif;font-size:58px;color:#C05A56;line-height:1;letter-spacing:-2px">15+</div>
+        <div style="font-size:16px;font-weight:600;color:#2A1F1E;margin-top:6px">Años de Experiencia</div>
+        <div style="width:36px;height:2px;background:#EDD5D3;margin:14px 0"></div>
+        <div style="font-size:13px;color:#7D6564;line-height:1.65">Atención especializada en enfermedades vasculares desde 2009.</div>
+      </div>
+
+      <p style="font-size:15px;color:#7D6564;line-height:1.7;margin-bottom:28px;max-width:300px">Recomendado por los principales hospitales y clínicas de San Luis Potosí.</p>
+
+      <a href="#cita" style="display:inline-flex;align-items:center;gap:10px;background:#C05A56;color:white;padding:17px 32px;border-radius:50px;font-size:15px;font-weight:600;box-shadow:0 8px 28px rgba(192,90,86,0.38)">
+        Agendar Consulta
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+      </a>
+    </div>
+
+    <div style="flex:none;width:450px;display:flex;justify-content:center;align-items:flex-end;position:relative">
+      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:400px;height:260px;background:radial-gradient(ellipse,rgba(192,90,86,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none"></div>
+      
+      <div style="width:450px;height:510px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden">
+        <img src="doctor-miguel.png" 
+             style="width:450px; height:510px; object-fit:cover;
+                    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+                    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);">
+      </div>
+    </div>
+
+    <div style="flex:1;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px;padding-bottom:72px;animation:fadeUp 0.9s 0.18s ease both;opacity:0;animation-fill-mode:forwards">
+      
+      <div style="background:white;border-radius:24px;padding:24px 28px;box-shadow:0 10px 48px rgba(192,90,86,0.14);width:100%;animation:float 5s 1.8s ease-in-out infinite;display:flex;flex-direction:column;align-items:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px;text-align:left">
+          <div style="display:flex">
+            <div style="width:32px;height:32px;border-radius:50%;background:#EDD5D3;border:3px solid white;flex-shrink:0;margin-right:-9px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#C05A56;font-weight:700">M</div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#C05A56;border:3px solid white;flex-shrink:0;margin-right:-9px;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:700">C</div>
+            <div style="width:32px;height:32px;border-radius:50%;background:#7D3E3B;border:3px solid white;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:white;font-weight:700">L</div>
+          </div>
+          <div>
+            <div style="font-family:'DM Serif Display',serif;font-size:30px;color:#C05A56;line-height:1;letter-spacing:-1px">2,000+</div>
+            <div style="font-size:12px;color:#7D6564;margin-top:2px">Pacientes atendidos</div>
+          </div>
+        </div>
+        <div style="width:100%;height:1px;background:#F0E3E2;margin-bottom:12px"></div>
+        <div style="font-size:13px;color:#7D6564;line-height:1.55">Doppler incluido · Diagnóstico el mismo día</div>
+      </div>
+
+      <div style="background:rgba(245,236,235,0.75);border:1.5px solid #EDD5D3;border-radius:20px;padding:20px 24px;width:100%;text-align:center">
+        <div style="font-size:10px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:10px">FORMACIÓN</div>
+        <div style="font-size:14px;color:#2A1F1E;line-height:1.75;font-weight:500">
+          Cirugía General y Vascular<br>
+          Angiólogo Certificado<br>
+          Especialista en Doppler Vascular
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:44px 60px 80px;position:relative;z-index:1">
+    <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(237,213,211,0.6);border-radius:50px;padding:7px 18px;margin-bottom:18px">
+      <div style="width:5px;height:5px;border-radius:50%;background:#C05A56;animation:pulse 2s ease-in-out infinite"></div>
+      <span style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#8B3E3B">CIRUJANO VASCULAR · ANGIÓLOGO · SAN LUIS POTOSÍ</span>
+    </div>
+    <h1 style="font-family:'DM Serif Display',serif;font-size:clamp(50px,5.5vw,82px);color:#2A1F1E;letter-spacing:-2.5px;line-height:1.05;text-wrap:balance">
+      <em style="color:#C05A56;font-style:italic">Dr. Miguel</em><br>Mendoza Vásquez
+    </h1>
+  </div>
+
+  <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0.4;pointer-events:none">
+    <div style="font-size:10px;letter-spacing:2.5px;color:#7D6564;font-weight:600">SCROLL</div>
+    <div style="width:1px;height:36px;background:linear-gradient(to bottom,#C05A56,transparent)"></div>
+  </div>
+  
+</section>
+<!-- ═══════════════════════ SERVICES ═══════════════════════ -->
+<section id="servicios" style="background:white;padding:104px 60px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">ESPECIALIDADES</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(40px,4vw,58px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1">Mis Servicios</h2>
+    </div>
+    <a href="#cita" style="display:inline-flex;align-items:center;gap:8px;background:#C05A56;color:white;padding:14px 24px;border-radius:50px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(192,90,86,0.3);white-space:nowrap;text-decoration:none">
+      Más información
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+    </a>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round"><path d="M3 12 C5.5 7 8 17 10.5 12 C13 7 15.5 17 18 12"/><path d="M3 16 C5.5 11 8 21 10.5 16 C13 11 15.5 21 18 16" stroke-opacity="0.35"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Várices y Venas Varicosas</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Diagnóstico y tratamiento mínimamente invasivo. Escleroterapia y cirugía de varices con resultados duraderos.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://plus.unsplash.com/premium_photo-1719449334348-4bebe854ce9b?q=80&w=1164&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Tratamiento de várices" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 L5 12 L7 5 L9 19 L11 5 L13 19 L15 12 L18 12"/><path d="M18 12 L21 12" stroke-opacity="0.35"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Ultrasonido Doppler Vascular</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Evaluación precisa del flujo sanguíneo en arterias y venas. Diagnóstico completo el mismo día de consulta.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://images.unsplash.com/photo-1691933880096-4046bc9e2fa0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ultrasonido doppler" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 9 L15 15 M9 15 L15 9"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Trombosis Venosa Profunda</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Diagnóstico oportuno y manejo del síndrome postrombótico. Prevención de complicaciones graves.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://images.unsplash.com/photo-1693156919776-d7008f361aa3?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Consulta médica para trombosis" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round"><path d="M12 3 L12 12 M12 12 L6 20 M12 12 L18 20 M5 7 L19 7"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Cirugía Arterial</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Tratamiento de enfermedades oclusivas arteriales y aneurismas periféricos con técnicas de vanguardia.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cirugía y quirófano profesional" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round"><path d="M12 2 C8 6 5 10 5 14 a7 7 0 0 0 14 0 C19 10 16 6 12 2Z"/><path d="M9 14 Q12 12 15 14" stroke-opacity="0.5"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Escleroterapia</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Eliminación de arañas vasculares y venas pequeñas mediante inyecciones esclerosantes. Procedimiento ambulatorio.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://images.unsplash.com/photo-1733685372553-784c3099ce64?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Procedimiento clínico ambulatorio" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="padding:28px 28px 20px">
+        <div style="width:46px;height:46px;border-radius:14px;background:#F5ECEB;display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2" stroke-linecap="round"><path d="M6 18 C4 18 3 16 3 14 L3 10 C3 7 5.5 4.5 8.5 3.5 L13 3.5 C16 3.5 18 5.5 18 8.5 L16 11 L18 13.5 C19 15.5 18 18 16 18 Z"/><path d="M8.5 9.5 L8.5 9.5 M12.5 9 L12.5 9" stroke-width="2.5"/></svg>
+        </div>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:21px;color:#2A1F1E;margin-bottom:10px;line-height:1.3">Pie Diabético Vascular</h3>
+        <p style="font-size:13.5px;color:#7D6564;line-height:1.65">Evaluación y cuidado vascular especializado para prevenir y tratar complicaciones del pie diabético.</p>
+        <div style="margin-top:20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;color:#C05A56;font-weight:600">Ver más</span>
+          <div style="width:36px;height:36px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(192,90,86,0.15)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+        </div>
+      </div>
+      <img src="https://plus.unsplash.com/premium_photo-1661284944715-a7d45a66a1c5?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Cuidado médico y prevención" style="width:100%;height:160px;object-fit:cover">
+    </div>
+
+  </div>
+</section>
+<!-- ═══════════════════════ ABOUT ═══════════════════════ -->
+<section id="sobre-mi" style="background:linear-gradient(135deg,#F5ECEB 0%,#FBF7F6 100%);padding:104px 60px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto">
+    <div style="position:relative">
+      
+      <img src="drmiguel.jfif" alt="Dr. Miguel Mendoza Vásquez" style="width:100%; height:auto; border-radius:24px; object-fit:cover; box-shadow:0 12px 40px rgba(42,31,30,0.08);">
+      
+      <div style="position:absolute;bottom:-20px;right:-20px;background:#C05A56;color:white;border-radius:20px;padding:18px 22px;box-shadow:0 8px 32px rgba(192,90,86,0.38)">
+        <div style="font-family:'DM Serif Display',serif;font-size:34px;line-height:1;letter-spacing:-1px">15+</div>
+        <div style="font-size:11px;font-weight:500;opacity:0.9;margin-top:2px">Años de exp.</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:16px">SOBRE MÍ</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(34px,3.5vw,50px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1.15;margin-bottom:22px">Cirujano dedicado a la salud <em style="color:#C05A56">vascular</em></h2>
+      <p style="font-size:15.5px;color:#7D6564;line-height:1.8;margin-bottom:18px">Soy el Dr. Miguel Mendoza Vásquez, Cirujano Vascular y Angiólogo con más de 15 años de experiencia en el diagnóstico y tratamiento de enfermedades del sistema circulatorio.</p>
+      <p style="font-size:15.5px;color:#7D6564;line-height:1.8;margin-bottom:36px">Mi enfoque se centra en brindar atención personalizada con diagnóstico preciso el mismo día, usando tecnología Doppler de última generación.</p>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#F5ECEB;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <span style="font-size:15px;color:#2A1F1E;font-weight:500">Especialidad en Cirugía General y Vascular</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#F5ECEB;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <span style="font-size:15px;color:#2A1F1E;font-weight:500">Certificado en Angiólogía y Ultrasonido Doppler</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#F5ECEB;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <span style="font-size:15px;color:#2A1F1E;font-weight:500">Maestría en Cirugía · UASLP</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#F5ECEB;flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <span style="font-size:15px;color:#2A1F1E;font-weight:500">Miembro del Consejo Mexicano de Cirugía Vascular</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
+<section id="testimonios" style="background:white;padding:104px 60px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:56px">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">PACIENTES</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(34px,4vw,52px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1.15">Confiados por Pacientes,<br>Guiados por el Cuidado</h2>
+    </div>
+    <div style="display:flex;gap:10px;flex-shrink:0">
+      <button style="width:52px;height:52px;border-radius:50%;border:2px solid #EDD5D3;background:#FBF7F6;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#7D6564">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button style="width:52px;height:52px;border-radius:50%;border:none;background:#C05A56;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+    <div style="background:#FBF7F6;border-radius:24px;padding:36px;border:1.5px solid #EDD5D3">
+      <div style="display:flex;gap:4px;margin-bottom:20px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p style="font-size:15.5px;color:#2A1F1E;line-height:1.75;margin-bottom:28px;font-style:italic">"Acudí con el Dr. Miguel por un problema de várices que me causaba mucha pesadez y dolor en las piernas. Desde la primera consulta me dio mucha confianza y la escleroterapia fue un éxito. Mi calidad de vida mejoró increíblemente."</p>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:50%;background:#EDD5D3;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#C05A56;flex-shrink:0">A</div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#2A1F1E">Ana Martínez</div>
+          <div style="font-size:13px;color:#7D6564">Paciente de Escleroterapia</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;padding:36px;border:1.5px solid #EDD5D3">
+      <div style="display:flex;gap:4px;margin-bottom:20px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <p style="font-size:15.5px;color:#2A1F1E;line-height:1.75;margin-bottom:28px;font-style:italic">"El trato humano y el nivel de profesionalismo del doctor es inmejorable. Me realizó un ultrasonido Doppler en la misma consulta y me explicó mi diagnóstico a detalle. Muy recomendado para cualquier problema de circulación."</p>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:50%;background:#EDD5D3;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#C05A56;flex-shrink:0">J</div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#2A1F1E">José Luis Ramírez</div>
+          <div style="font-size:13px;color:#7D6564">Paciente de Ultrasonido Doppler</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ ARTICLES ═══════════════════════ -->
+<!-- <section id="articulos" style="background:linear-gradient(135deg,#F5ECEB 0%,#FBF7F6 100%);padding:104px 60px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">BLOG</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(40px,4vw,58px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1">Artículos de Salud</h2>
+    </div>
+    <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:#C05A56;color:white;padding:14px 24px;border-radius:50px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(192,90,86,0.3);white-space:nowrap">
+      Ver todos
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+    </a>
+  </div>
+  <p style="font-size:15px;color:#7D6564;margin-bottom:48px">Información y consejos del Dr. Mendoza para cuidar tu salud vascular.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+    <!-- A1 -->
+ <!--    <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
+      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: artículo médico</span></div>
+      <div style="padding:24px">
+        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Vascular</span>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">¿Cuándo debo consultar a un Cirujano Vascular?</h3>
+        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
+        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>15 Jun, 2026</span><span>·</span><span>4 min de lectura</span></div>
+      </div>
+    </div>
+
+    <!-- A2 -->
+   <!--  <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
+      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: várices</span></div>
+      <div style="padding:24px">
+        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Vascular</span>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">Várices: síntomas, causas y tratamientos modernos</h3>
+        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
+        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>2 May, 2026</span><span>·</span><span>5 min de lectura</span></div>
+      </div>
+    </div>
+
+    <!-- A3 -->
+   <!--  <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
+      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: prevención vascular</span></div>
+      <div style="padding:24px">
+        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Salud</span>
+        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">Cómo prevenir la Trombosis Venosa Profunda</h3>
+        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
+        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>18 Abr, 2026</span><span>·</span><span>6 min de lectura</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ APPOINTMENT ═══════════════════════ -->
+<section id="cita" style="background:white;padding:104px 60px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;max-width:1200px;margin:0 auto">
+
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:16px">AGENDA TU CONSULTA</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(34px,3.5vw,50px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1.15;margin-bottom:12px">Agenda tu <em style="color:#C05A56;font-style:italic">consulta</em> hoy</h2>
+      <p style="font-size:15px;color:#7D6564;line-height:1.75;margin-bottom:36px">Selecciona un horario y confirma tu cita directamente por WhatsApp para una atención inmediata.</p>
+
+      <div style="background:#F5ECEB;border-radius:16px;padding:20px 24px;display:flex;flex-direction:column;gap:13px">
+        <div style="display:flex;align-items:center;gap:12px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.1 11.91 19.79 19.79 0 01.06 3.27 2 2 0 012.03 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.38-.37a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><span style="font-size:15px;color:#2A1F1E;font-weight:500">444 713 8417</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg><span style="font-size:15px;color:#2A1F1E;font-weight:500">Tequisquiapan, San Luis Potosí</span></div>
+      </div>
+    </div>
+
+    <div style="background:#FBF7F6;border-radius:24px;border:1.5px solid #EDD5D3;padding:40px;text-align:center">
+      <h3 style="font-family:'DM Serif Display',serif;font-size:22px;color:#2A1F1E;margin-bottom:20px">Horarios Disponibles</h3>
+      <p style="font-size:14px;color:#7D6564;margin-bottom:25px">Haz clic abajo para agendar tu cita por WhatsApp:</p>
+      
+      <a href="https://wa.me/524447138417?text=Hola,%20me%20gustaría%20agendar%20una%20consulta." 
+         style="display:inline-block;padding:16px 32px;background:#C05A56;color:white;text-decoration:none;border-radius:50px;font-weight:600;font-size:15px;box-shadow:0 4px 12px rgba(192,90,86,0.3)">
+         Agendar vía WhatsApp
+      </a>
+      
+      <div style="margin-top:30px;font-size:12px;color:#B39B99;border-top:1px solid #EDD5D3;padding-top:20px">
+        Atención de Lunes a Viernes<br>9:00 AM - 9:00 PM
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
+<section id="contacto" style="background:#242222;padding:104px 60px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;max-width:1200px;margin:0 auto">
+
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#e5e5e5;margin-bottom:16px">CONSULTORIO</div>
+      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(34px,3.5vw,50px);color:white;letter-spacing:-1.5px;line-height:1.15;margin-bottom:40px">¿Dónde <em style="color:#e5e5e5;font-style:italic">encontrarnos?</em></h2>
+
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <div style="display:flex;gap:16px">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(192,90,86,0.15);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#7D6564;margin-bottom:6px">DIRECCIÓN</div><div style="font-size:15px;color:white;line-height:1.65">Tequisquiapan, C.P. 78250<br>San Luis Potosí, S.L.P.</div></div>
+        </div>
+
+        <div style="display:flex;gap:16px">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(192,90,86,0.15);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.1 11.91 19.79 19.79 0 01.06 3.27 2 2 0 012.03 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.38-.37a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div><div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#7D6564;margin-bottom:6px">TELÉFONO</div><a href="tel:4447138417" style="font-size:20px;color:#e5e5e5;font-weight:600">444 713 8417</a></div>
+        </div>
+
+        <div style="display:flex;gap:16px">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(192,90,86,0.15);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C05A56" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div style="flex:1">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#7D6564;margin-bottom:12px">HORARIO</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,0.07)"><span style="font-size:14px;color:white;font-weight:500">Lunes – Viernes</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:white">9:00 – 21:00</span><span style="background:#1A7A4A;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px">Abierto</span></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,0.07)"><span style="font-size:14px;color:white;font-weight:500">Sábado</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;color:white">9:00 – 15:00</span><span style="background:#1A7A4A;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px">Abierto</span></div></div>
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;color:white;font-weight:500">Domingo</span><span style="background:#7D3E3B;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px">Cerrado</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:16px">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,0.1);flex-shrink:0;display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>
+          <div><div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#7D6564;margin-bottom:6px">CITAS WHATSAPP</div><a href="https://wa.me/524447138417" target="_blank" style="font-size:15px;color:#25D366;font-weight:500">Enviar mensaje →</a></div>
+        </div>
+      </div>
+    </div>
+  
+
+<!-- Google Maps -->
+<div style="border-radius:24px;overflow:hidden;height:480px;">
+  <iframe
+    src="https://www.google.com/maps?q=Tequisquiapan%20San%20Luis%20Potosi&output=embed"
+    width="100%"
+    height="100%"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+</div>
+</section>
+<!-- FOOTER -->
+<footer style="background:#160D0C;padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+  <div>
+    <div style="font-family:'DM Serif Display',serif;font-size:17px;color:white;margin-bottom:4px">Dr. Miguel Mendoza Vásquez</div>
+    <div style="font-size:12px;color:#5A4040">Cirujano Vascular y Angiólogo · San Luis Potosí</div>
+  </div>
+  <div style="font-size:12px;color:#5A4040">© 2026 · Todos los derechos reservados · Desarrollado con ♥ por Aphernzz</div>
+  <div style="display:flex;gap:18px;align-items:center">
+    <a href="tel:4447138417" style="font-size:13px;color:#C05A56;font-weight:500">444 713 8417</a>
+    <span style="color:#2E1C1B">·</span>
+    <a href="https://wa.me/524447138417" style="font-size:13px;color:#25D366;font-weight:500">WhatsApp</a>
+  </div>
+</footer>
+
+<!-- WhatsApp FAB -->
+<a href="https://wa.me/524447138417" target="_blank" style="position:fixed;bottom:30px;right:30px;z-index:200;background:#25D366;color:white;border-radius:50px;padding:14px 22px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;box-shadow:0 8px 28px rgba(37,211,102,0.45)">
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  Agendar cita
+</a>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    tIdx: 0,
+    selDay: null,
+    selTime: null,
+    calM: 5,
+    calY: 2026,
+    navScrolled: false,
+  };
+
+  _T = [
+    { name: 'María L.', role: 'Paciente', initial: 'M', n: 5,
+      text: 'El Dr. Mendoza me explicó todo con mucha claridad. Mis várices desaparecieron y me recuperé muy rápido. Lo recomiendo ampliamente a toda mi familia.' },
+    { name: 'Carlos R.', role: 'Paciente', initial: 'C', n: 5,
+      text: 'Excelente médico, muy profesional y atento. El ultrasonido Doppler fue rápido y sin dolor. Me dio mucha tranquilidad en el diagnóstico desde el primer momento.' },
+    { name: 'Laura S.', role: 'Paciente', initial: 'L', n: 5,
+      text: 'Llevaba años sufriendo de várices y gracias al Dr. Mendoza pude operarme sin miedo. La atención personalizada marcó toda la diferencia en mi recuperación.' },
+    { name: 'Roberto G.', role: 'Paciente', initial: 'R', n: 4,
+      text: 'El diagnóstico fue el mismo día y me explicaron todo perfectamente. Un médico que realmente escucha a sus pacientes con mucha paciencia y dedicación.' },
+  ];
+
+  _avail = [22, 23, 24, 25, 26, 27, 29, 30];
+  _times = ['09:00', '10:00', '11:00', '12:00', '15:00', '16:00', '18:00', '19:00', '20:00'];
+  _months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  _hdrs = ['Do','Lu','Ma','Mi','Ju','Vi','Sá'];
+
+  componentDidMount() {
+    const fn = () => this.setState({ navScrolled: window.scrollY > 60 });
+    window.addEventListener('scroll', fn);
+    this._off = () => window.removeEventListener('scroll', fn);
+  }
+  componentWillUnmount() { this._off && this._off(); }
+
+  _stars(n) {
+    return [1,2,3,4,5].map(i => ({ fill: i <= n ? '#C05A56' : '#EDD5D3' }));
+  }
+
+  renderVals() {
+    const { tIdx, selDay, selTime, calM, calY, navScrolled } = this.state;
+    const tLen = this._T.length;
+    const t1r = this._T[tIdx % tLen];
+    const t2r = this._T[(tIdx + 1) % tLen];
+
+    // Calendar
+    const now = new Date();
+    const todayD = now.getDate();
+    const isCurM = calM === now.getMonth() && calY === now.getFullYear();
+    const daysInM = new Date(calY, calM + 1, 0).getDate();
+    const firstWD = new Date(calY, calM, 1).getDay();
+
+    const cells = [];
+    for (let i = 0; i < 42; i++) {
+      const d = i - firstWD + 1;
+      if (d < 1 || d > daysInM) {
+        cells.push({ label: '', cursor: 'default', bg: 'transparent', color: 'transparent', fw: '400', border: '2px solid transparent', dot: 'transparent', onClick: null });
+      } else {
+        const isPast = isCurM && d < todayD;
+        const isToday = isCurM && d === todayD;
+        const isAvail = isCurM && this._avail.includes(d) && !isPast;
+        const isSel = selDay === d;
+        cells.push({
+          label: String(d),
+          cursor: isAvail ? 'pointer' : 'default',
+          bg: isSel ? '#C05A56' : 'transparent',
+          color: isSel ? '#FFFFFF' : isPast ? '#C0ACAB' : isToday ? '#C05A56' : isAvail ? '#2A1F1E' : '#B0A4A3',
+          fw: (isAvail || isToday || isSel) ? '600' : '400',
+          border: isSel ? '2px solid #C05A56' : isToday ? '2px solid #C05A56' : isAvail ? '2px solid #EDD5D3' : '2px solid transparent',
+          dot: isAvail && !isSel ? '#C05A56' : 'transparent',
+          onClick: isAvail ? () => this.setState({ selDay: d, selTime: null }) : null,
+        });
+      }
+    }
+
+    const slots = this._times.map(t => ({
+      time: t,
+      bg: selTime === t ? '#C05A56' : 'white',
+      color: selTime === t ? 'white' : '#2A1F1E',
+      border: selTime === t ? '2px solid #C05A56' : '2px solid #EDD5D3',
+      onClick: () => this.setState({ selTime: t }),
+    }));
+
+    const canBook = !!(selDay && selTime);
+
+    return {
+      navBg: navScrolled ? 'rgba(251,247,246,0.96)' : 'rgba(251,247,246,0)',
+      navShadow: navScrolled ? '0 2px 24px rgba(42,31,30,0.09)' : 'none',
+
+      t1: { ...t1r, stars: this._stars(t1r.n) },
+      t2: { ...t2r, stars: this._stars(t2r.n) },
+      prevT: () => this.setState(s => ({ tIdx: (s.tIdx - 1 + tLen) % tLen })),
+      nextT: () => this.setState(s => ({ tIdx: (s.tIdx + 1) % tLen })),
+
+      calMonthLabel: this._months[calM] + ' ' + calY,
+      calPrev: () => this.setState(s => ({
+        calM: s.calM === 0 ? 11 : s.calM - 1,
+        calY: s.calM === 0 ? s.calY - 1 : s.calY,
+        selDay: null, selTime: null,
+      })),
+      calNext: () => this.setState(s => ({
+        calM: s.calM === 11 ? 0 : s.calM + 1,
+        calY: s.calM === 11 ? s.calY + 1 : s.calY,
+        selDay: null, selTime: null,
+      })),
+      dayHdrs: this._hdrs,
+      cells,
+
+      hasSelDay: !!selDay,
+      hasNoSelDay: !selDay,
+      selDayLabel: selDay ? selDay + ' de ' + this._months[calM] : '',
+      slots,
+
+      canBook,
+      bookLabel: canBook
+        ? 'Confirmar: ' + selDay + ' de ' + this._months[calM] + ', ' + selTime
+        : 'Selecciona fecha y hora',
+      bookBg: canBook ? '#C05A56' : '#EDD5D3',
+      bookColor: canBook ? 'white' : '#7D6564',
+    };
+  }
+}
+</script>
+</body>
+</html>
