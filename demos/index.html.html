@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  
+  <title>Dr. Miguel Mendoza | Cirujano Vascular y Angiólogo en San Luis Potosí</title>
+  <meta name="description" content="El Dr. Miguel Mendoza es un cirujano vascular y angiólogo certificado con más de 15 años de experiencia. Especialista en várices, ultrasonido doppler y trombosis en San Luis Potosí.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://tudominio.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tudominio.com/">
+  <meta property="og:title" content="Dr. Miguel Mendoza | Cirujano Vascular">
+  <meta property="og:description" content="Especialista en diagnóstico y tratamiento de enfermedades vasculares. Agenda tu consulta el mismo día.">
+  <meta property="og:image" content="https://tudominio.com/assets/doctor-miguel.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Physician",
+    "name": "Dr. Miguel Mendoza",
+    "description": "Cirujano Vascular y Angiólogo certificado.",
+    "medicalSpecialty": "Vascular Surgery",
+    "image": "https://tudominio.com/assets/doctor-miguel.png",
+    "telephone": "+52-444-713-8417",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Tequisquiapan",
+      "addressLocality": "San Luis Potosí",
+      "addressRegion": "S.L.P.",
+      "postalCode": "78250",
+      "addressCountry": "MX"
+    },
+    "url": "https://tudominio.com/"
+  }
+  </script>
+</head>
+<body>
+
+  <header id="navbar" role="banner">
+    <a href="#inicio" class="nav-logo" aria-label="Ir al inicio">
+      <img src="assets/favicon-miguel.png" alt="Logotipo Dr. Miguel Mendoza" width="46" height="46" decoding="async">
+      <div class="logo-text-wrapper">
+        <span class="logo-title">Dr. Miguel Mendoza</span>
+        <span class="logo-subtitle">CIRUJANO VASCULAR</span>
+      </div>
+    </a>
+
+    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav-links">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M3 12h18M3 6h18M3 18h18"/>
+      </svg>
+    </button>
+
+    <nav id="nav-links" class="nav-links" aria-label="Navegación principal">
+      <a href="#inicio" class="active">Inicio</a>
+      <a href="#sobre-mi">Sobre mí</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <a href="#contacto" class="btn btn-nav" aria-label="Contactar para agendar cita">
+      Contactar
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+    </a>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero-section" aria-label="Sección de presentación">
+      <div class="hero-container">
+        <div class="hero-left">
+          <div class="card card-experience">
+            <span class="exp-number">15+</span>
+            <h1 class="exp-title">Años de Experiencia</h1>
+            <hr class="divider" aria-hidden="true">
+            <p class="exp-text">Atención especializada en enfermedades vasculares desde 2009.</p>
+          </div>
+          <p class="hero-sub">Recomendado por los principales hospitales y clínicas de San Luis Potosí.</p>
+          <a href="#contacto" class="btn btn-hero" aria-label="Agendar Consulta">
+            Agendar Consulta
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </a>
+        </div>
+
+        <div class="hero-center">
+          <img src="assets/doctor-miguel.png" alt="Retrato profesional del Dr. Miguel Mendoza" class="doctor-img" width="400" height="480" fetchpriority="high">
+        </div>
+
+        <div class="hero-right">
+          <div class="card card-patients">
+            <div class="patients-info">
+              <span class="patient-count">2,000+</span>
+              <span class="patient-sub">Pacientes atendidos</span>
+            </div>
+            <hr class="divider" aria-hidden="true">
+            <p class="card-detail">Doppler incluido · Diagnóstico el mismo día</p>
+          </div>
+          <div class="badge-education">
+            <span class="badge-title">FORMACIÓN</span>
+            <p>Cirugía General y Vascular<br>Angiólogo Certificado<br>Especialista en Doppler Vascular</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicios" class="services-section" aria-labelledby="services-title">
+      <div class="section-header">
+        <span class="section-tag">ESPECIALIDADES</span>
+        <h2 id="services-title">Mis Servicios</h2>
+      </div>
+
+      <div class="services-grid">
+        <article class="service-card">
+          <div class="service-content">
+            <div class="service-icon" aria-hidden="true">🩸</div>
+            <h3>Várices y Venas Varicosas</h3>
+            <p>Diagnóstico y tratamiento mínimamente invasivo. Escleroterapia y cirugía de varices.</p>
+          </div>
+          <img src="https://images.unsplash.com/photo-1561541262-9906ede3d338?q=80&w=687" alt="Tratamiento clínico de várices" width="687" height="160" loading="lazy" decoding="async">
+        </article>
+        
+        <article class="service-card">
+          <div class="service-content">
+            <div class="service-icon" aria-hidden="true">🖥️</div>
+            <h3>Ultrasonido Doppler</h3>
+            <p>Evaluación precisa del flujo sanguíneo. Diagnóstico completo el mismo día de consulta.</p>
+          </div>
+          <img src="https://images.unsplash.com/photo-1691933880096-4046bc9e2fa0?q=80&w=687" alt="Equipo de ultrasonido doppler" width="687" height="160" loading="lazy" decoding="async">
+        </article>
+        
+        <article class="service-card">
+          <div class="service-content">
+            <div class="service-icon" aria-hidden="true">🩺</div>
+            <h3>Trombosis Venosa</h3>
+            <p>Diagnóstico oportuno y manejo del síndrome postrombótico. Prevención de complicaciones.</p>
+          </div>
+          <img src="https://images.unsplash.com/photo-1693156919776-d7008f361aa3?q=80&w=687" alt="Consulta médica para trombosis" width="687" height="160" loading="lazy" decoding="async">
+        </article>
+      </div>
+    </section>
+
+    <section id="contacto" class="contact-section" aria-labelledby="contact-title">
+      <div class="contact-container">
+        <div class="contact-info">
+          <span class="section-tag-light">CONSULTORIO</span>
+          <h2 id="contact-title">¿Dónde encontrarnos?</h2>
+          
+          <address class="address-container">
+            <div class="info-item">
+              <span class="info-label">DIRECCIÓN</span>
+              <p>Tequisquiapan, C.P. 78250<br>San Luis Potosí, S.L.P.</p>
+            </div>
+            <div class="info-item">
+              <span class="info-label">TELÉFONO</span>
+              <a href="tel:+524447138417" class="phone-link" aria-label="Llamar al consultorio al 444 713 8417">444 713 8417</a>
+            </div>
+            <div class="info-item">
+              <span class="info-label">WHATSAPP</span>
+              <a href="https://wa.me/524447138417" target="_blank" rel="noopener noreferrer" class="whatsapp-link" aria-label="Enviar mensaje por WhatsApp">Enviar mensaje →</a>
+            </div>
+          </address>
+        </div>
+
+        <div id="map" aria-label="Mapa interactivo de la ubicación del consultorio" role="region"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="footer-content">
+      <div>
+        <div class="footer-title">Dr. Miguel Mendoza</div>
+        <div class="footer-sub">Cirujano Vascular y Angiólogo · San Luis Potosí</div>
+      </div>
+      <div class="footer-copy">© 2026 · Todos los derechos reservados</div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

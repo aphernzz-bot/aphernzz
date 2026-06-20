@@ -14,42 +14,407 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; background: #FBF7F6; color: #2A1F1E; -webkit-font-smoothing: antialiased; }
+body { font-family: 'DM Sans', sans-serif; background: #FBF7F6; color: #2A1F1E; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { text-decoration: none; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* Clases CSS para adaptabilidad responsiva */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  background: var(--nav-bg);
+  box-shadow: var(--nav-shadow);
+  transition: background 0.4s, box-shadow 0.4s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(237, 213, 211, 0.5);
+  border-radius: 50px;
+  padding: 5px;
+}
+.nav-btn-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #C05A56;
+  color: white;
+  padding: 14px 26px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(192, 90, 86, 0.35);
+  text-decoration: none;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+.nav-btn-contact:hover {
+  background: #a94b48;
+  transform: translateY(-2px);
+}
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #2A1F1E;
+}
+.mobile-menu-dropdown {
+  position: fixed;
+  top: 76px;
+  left: 0;
+  right: 0;
+  background: #FBF7F6;
+  border-bottom: 1.5px solid #EDD5D3;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 16px;
+  transform: translateY(-120%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 99;
+  box-shadow: 0 10px 30px rgba(42, 31, 30, 0.08);
+}
+.mobile-menu-dropdown.active {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+.mobile-menu-dropdown a {
+  font-size: 16px;
+  font-weight: 600;
+  color: #7D6564;
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: background 0.2s, color 0.2s;
+  text-align: center;
+}
+.mobile-menu-dropdown a:hover, .mobile-menu-dropdown a.active {
+  background: #EDD5D3;
+  color: #2A1F1E;
+}
+.mobile-menu-dropdown a.mobile-contact-btn {
+  background: #C05A56;
+  color: white;
+  margin-top: 8px;
+}
+.mobile-menu-dropdown a.mobile-contact-btn:hover {
+  background: #a94b48;
+}
+
+.hero-container {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 30px;
+  padding: 96px 60px 0;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero-left-col, .hero-right-col {
+  flex: 1;
+  max-width: 360px;
+  padding-bottom: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hero-center-col {
+  flex: none;
+  width: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+}
+.doctor-img-wrapper {
+  width: 450px;
+  height: 510px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.doctor-img-wrapper img {
+  width: 450px;
+  height: 510px;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+}
+.hero-heading-section {
+  text-align: center;
+  padding: 44px 60px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.section-container {
+  background: white;
+  padding: 104px 60px;
+}
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 56px;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.about-section {
+  background: linear-gradient(135deg,#F5ECEB 0%,#FBF7F6 100%);
+  padding: 104px 60px;
+}
+.about-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.about-image-wrapper {
+  position: relative;
+}
+
+.testimonials-section {
+  background: white;
+  padding: 104px 60px;
+}
+.testimonials-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 56px;
+}
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.appointment-section {
+  background: white;
+  padding: 104px 60px;
+}
+.appointment-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-section {
+  background: #242222;
+  padding: 104px 60px;
+}
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-container {
+  background: #160D0C;
+  padding: 36px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+@media (max-width: 992px) {
+  .navbar {
+    padding: 0 24px;
+  }
+  .nav-links {
+    display: none;
+  }
+  .nav-btn-contact {
+    display: none;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .hero-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 24px 0;
+    gap: 40px;
+  }
+  .hero-left-col, .hero-right-col {
+    max-width: 100%;
+    padding-bottom: 24px;
+    width: 100%;
+  }
+  .hero-center-col {
+    width: 100%;
+    max-width: 380px;
+    order: -1; /* Muestra la imagen arriba en tablets/móviles */
+  }
+  .doctor-img-wrapper, .doctor-img-wrapper img {
+    width: 100%;
+    height: 420px;
+  }
+  
+  .section-container {
+    padding: 64px 24px;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .about-section {
+    padding: 64px 24px;
+  }
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .testimonials-section {
+    padding: 64px 24px;
+  }
+  .testimonials-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .appointment-section {
+    padding: 64px 24px;
+  }
+  .appointment-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .contact-section {
+    padding: 64px 24px;
+  }
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    padding: 96px 16px 0;
+    gap: 30px;
+  }
+  .hero-center-col {
+    max-width: 300px;
+  }
+  .doctor-img-wrapper, .doctor-img-wrapper img {
+    height: 340px;
+  }
+  .hero-heading-section {
+    padding: 30px 20px 60px;
+  }
+  
+  .footer-container {
+    padding: 36px 24px;
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section-container, .about-section, .testimonials-section, .appointment-section, .contact-section {
+    padding: 60px 16px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .about-image-wrapper {
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+}
 </style>
 </helmet>
 
-<!-- NAV -->
-<nav style="position:fixed;top:0;left:0;right:0;z-index:100;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 60px;background:{{ navBg }};box-shadow:{{ navShadow }};transition:background 0.4s,box-shadow 0.4s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)">
+<nav class="navbar" style="--nav-bg: {{ navBg }}; --nav-shadow: {{ navShadow }};">
   
   <a href="#inicio" style="display:flex;align-items:center;gap:12px;color:#2A1F1E;text-decoration:none">
-    
     <img src="favicon-miguel.png" alt="Logotipo Dr. Miguel Mendoza" style="height:46px;width:auto;object-fit:contain;flex-shrink:0">
-    
     <div>
       <div style="font-family:'DM Serif Display',serif;font-size:17px;letter-spacing:-0.3px;line-height:1.2;color:#2A1F1E">Dr. Miguel Mendoza</div>
       <div style="font-size:10px;letter-spacing:2px;color:#C05A56;font-weight:700;line-height:1.2">CIRUJANO VASCULAR</div>
     </div>
   </a>
 
-  <div style="display:flex;align-items:center;gap:2px;background:rgba(237,213,211,0.5);border-radius:50px;padding:5px">
+  <div class="nav-links">
     <a href="#inicio" style="padding:9px 20px;border-radius:50px;font-size:14px;font-weight:600;color:#2A1F1E;background:white;box-shadow:0 1px 4px rgba(0,0,0,0.08);text-decoration:none">Inicio</a>
     <a href="#sobre-mi" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Sobre mí</a>
     <a href="#servicios" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Servicios</a>
     <a href="#articulos" style="padding:9px 20px;border-radius:50px;font-size:14px;color:#7D6564;text-decoration:none">Blog</a>
   </div>
 
-  <a href="#cita" style="display:inline-flex;align-items:center;gap:8px;background:#C05A56;color:white;padding:14px 26px;border-radius:50px;font-size:14px;font-weight:600;box-shadow:0 4px 18px rgba(192,90,86,0.35);text-decoration:none">
+  <a href="#cita" class="nav-btn-contact">
     Contactar
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
   </a>
+
+  <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menú de navegación" aria-expanded="false">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
   
 </nav>
 
-<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<div id="mobile-menu-dropdown" class="mobile-menu-dropdown">
+  <a href="#inicio">Inicio</a>
+  <a href="#sobre-mi">Sobre mí</a>
+  <a href="#servicios">Servicios</a>
+  <a href="#articulos">Blog</a>
+  <a href="#cita" class="mobile-contact-btn">Contactar</a>
+</div>
+
 <section id="inicio" style="min-height:100vh;background:linear-gradient(145deg,#EDE0DF 0%,#F3E9E8 30%,#F8F3F2 60%,#FBF7F6 100%);display:flex;flex-direction:column;position:relative;overflow:hidden">
 
   <div style="position:absolute;right:0;top:0;bottom:0;width:55%;opacity:0.05;pointer-events:none">
@@ -64,9 +429,9 @@ a { text-decoration: none; }
     </svg>
   </div>
 
-  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:30px;padding:96px 60px 0;position:relative;z-index:1;width:100%;max-width:1200px;margin:0 auto">
+  <div class="hero-container">
 
-    <div style="flex:1;max-width:360px;padding-bottom:72px;animation:fadeUp 0.9s ease both;display:flex;flex-direction:column;align-items:center;text-align:center">
+    <div class="hero-left-col" style="animation:fadeUp 0.9s ease both">
       
       <div style="background:white;border-radius:24px;padding:28px 32px;box-shadow:0 10px 48px rgba(192,90,86,0.14);margin-bottom:28px;animation:float 5s ease-in-out infinite;display:flex;flex-direction:column;align-items:center">
         <div style="font-family:'DM Serif Display',serif;font-size:58px;color:#C05A56;line-height:1;letter-spacing:-2px">15+</div>
@@ -83,18 +448,15 @@ a { text-decoration: none; }
       </a>
     </div>
 
-    <div style="flex:none;width:450px;display:flex;justify-content:center;align-items:flex-end;position:relative">
-      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:400px;height:260px;background:radial-gradient(ellipse,rgba(192,90,86,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none"></div>
+    <div class="hero-center-col">
+      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:400px;height:260px;background:radial-gradient(ellipse,rgba(192,90,86,0.08) 0%,transparent 70%);border-radius:50%;pointer-events:none"></div>
       
-      <div style="width:450px;height:510px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden">
-        <img src="doctor-miguel.png" 
-             style="width:450px; height:510px; object-fit:cover;
-                    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-                    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);">
+      <div class="doctor-img-wrapper">
+        <img src="doctor-miguel.png" alt="Dr. Miguel Mendoza">
       </div>
     </div>
 
-    <div style="flex:1;max-width:360px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px;padding-bottom:72px;animation:fadeUp 0.9s 0.18s ease both;opacity:0;animation-fill-mode:forwards">
+    <div class="hero-right-col" style="animation:fadeUp 0.9s 0.18s ease both;opacity:0;animation-fill-mode:forwards">
       
       <div style="background:white;border-radius:24px;padding:24px 28px;box-shadow:0 10px 48px rgba(192,90,86,0.14);width:100%;animation:float 5s 1.8s ease-in-out infinite;display:flex;flex-direction:column;align-items:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px;text-align:left">
@@ -124,7 +486,7 @@ a { text-decoration: none; }
     </div>
   </div>
 
-  <div style="text-align:center;padding:44px 60px 80px;position:relative;z-index:1">
+  <div class="hero-heading-section">
     <div style="display:inline-flex;align-items:center;gap:10px;background:rgba(237,213,211,0.6);border-radius:50px;padding:7px 18px;margin-bottom:18px">
       <div style="width:5px;height:5px;border-radius:50%;background:#C05A56;animation:pulse 2s ease-in-out infinite"></div>
       <span style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#8B3E3B">CIRUJANO VASCULAR · ANGIÓLOGO · SAN LUIS POTOSÍ</span>
@@ -140,9 +502,8 @@ a { text-decoration: none; }
   </div>
   
 </section>
-<!-- ═══════════════════════ SERVICES ═══════════════════════ -->
-<section id="servicios" style="background:white;padding:104px 60px">
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px">
+<section id="servicios" class="section-container">
+  <div class="section-header">
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">ESPECIALIDADES</div>
       <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(40px,4vw,58px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1">Mis Servicios</h2>
@@ -153,7 +514,7 @@ a { text-decoration: none; }
     </a>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+  <div class="services-grid">
 
     <div style="background:#FBF7F6;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3;display:flex;flex-direction:column;justify-content:space-between">
       <div style="padding:28px 28px 20px">
@@ -247,13 +608,11 @@ a { text-decoration: none; }
 
   </div>
 </section>
-<!-- ═══════════════════════ ABOUT ═══════════════════════ -->
-<section id="sobre-mi" style="background:linear-gradient(135deg,#F5ECEB 0%,#FBF7F6 100%);padding:104px 60px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto">
-    <div style="position:relative">
+<section id="sobre-mi" class="about-section">
+  <div class="about-container">
+    <div class="about-image-wrapper">
       
-      <img src="drmiguel.jfif" alt="Dr. Miguel Mendoza
-      " style="width:100%; height:auto; border-radius:24px; object-fit:cover; box-shadow:0 12px 40px rgba(42,31,30,0.08);">
+      <img src="drmiguel.jfif" alt="Dr. Miguel Mendoza" style="width:100%; height:auto; border-radius:24px; object-fit:cover; box-shadow:0 12px 40px rgba(42,31,30,0.08);">
       
       <div style="position:absolute;bottom:-20px;right:-20px;background:#C05A56;color:white;border-radius:20px;padding:18px 22px;box-shadow:0 8px 32px rgba(192,90,86,0.38)">
         <div style="font-family:'DM Serif Display',serif;font-size:34px;line-height:1;letter-spacing:-1px">15+</div>
@@ -289,9 +648,8 @@ a { text-decoration: none; }
   </div>
 </section>
 
-<!-- ═══════════════════════ TESTIMONIALS ═══════════════════════ -->
-<section id="testimonios" style="background:white;padding:104px 60px">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:56px">
+<section id="testimonios" class="testimonials-section">
+  <div class="testimonials-header">
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">PACIENTES</div>
       <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(34px,4vw,52px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1.15">Confiados por Pacientes,<br>Guiados por el Cuidado</h2>
@@ -306,7 +664,7 @@ a { text-decoration: none; }
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px">
+  <div class="testimonials-grid">
     <div style="background:#FBF7F6;border-radius:24px;padding:36px;border:1.5px solid #EDD5D3">
       <div style="display:flex;gap:4px;margin-bottom:20px">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="#C05A56"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -345,59 +703,8 @@ a { text-decoration: none; }
   </div>
 </section>
 
-<!-- ═══════════════════════ ARTICLES ═══════════════════════ -->
-<!-- <section id="articulos" style="background:linear-gradient(135deg,#F5ECEB 0%,#FBF7F6 100%);padding:104px 60px">
-  <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px">
-    <div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:14px">BLOG</div>
-      <h2 style="font-family:'DM Serif Display',serif;font-size:clamp(40px,4vw,58px);color:#2A1F1E;letter-spacing:-1.5px;line-height:1">Artículos de Salud</h2>
-    </div>
-    <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:#C05A56;color:white;padding:14px 24px;border-radius:50px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(192,90,86,0.3);white-space:nowrap">
-      Ver todos
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-    </a>
-  </div>
-  <p style="font-size:15px;color:#7D6564;margin-bottom:48px">Información y consejos del Dr. Mendoza para cuidar tu salud vascular.</p>
-
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
-    <!-- A1 -->
- <!--    <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
-      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: artículo médico</span></div>
-      <div style="padding:24px">
-        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Vascular</span>
-        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">¿Cuándo debo consultar a un Cirujano Vascular?</h3>
-        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
-        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>15 Jun, 2026</span><span>·</span><span>4 min de lectura</span></div>
-      </div>
-    </div>
-
-    <!-- A2 -->
-   <!--  <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
-      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: várices</span></div>
-      <div style="padding:24px">
-        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Vascular</span>
-        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">Várices: síntomas, causas y tratamientos modernos</h3>
-        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
-        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>2 May, 2026</span><span>·</span><span>5 min de lectura</span></div>
-      </div>
-    </div>
-
-    <!-- A3 -->
-   <!--  <div style="background:white;border-radius:24px;overflow:hidden;border:1.5px solid #EDD5D3">
-      <div style="height:195px;background:repeating-linear-gradient(135deg,#EDD5D3,#EDD5D3 8px,#E0C4C2 8px,#E0C4C2 16px);display:flex;align-items:center;justify-content:center"><span style="font-size:10px;font-family:monospace;color:#B39B99;text-align:center">imagen: prevención vascular</span></div>
-      <div style="padding:24px">
-        <span style="display:inline-block;background:#F5ECEB;color:#C05A56;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;margin-bottom:14px">Salud</span>
-        <h3 style="font-family:'DM Serif Display',serif;font-size:19px;color:#2A1F1E;line-height:1.35;margin-bottom:10px">Cómo prevenir la Trombosis Venosa Profunda</h3>
-        <div style="width:100%;height:1px;background:#F0E3E2;margin:14px 0"></div>
-        <div style="display:flex;gap:8px;font-size:13px;color:#7D6564"><span>18 Abr, 2026</span><span>·</span><span>6 min de lectura</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════ APPOINTMENT ═══════════════════════ -->
-<section id="cita" style="background:white;padding:104px 60px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;max-width:1200px;margin:0 auto">
+<section id="cita" class="appointment-section">
+  <div class="appointment-container">
 
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#C05A56;margin-bottom:16px">AGENDA TU CONSULTA</div>
@@ -426,9 +733,8 @@ a { text-decoration: none; }
   </div>
 </section>
 
-<!-- ═══════════════════════ CONTACT ═══════════════════════ -->
-<section id="contacto" style="background:#242222;padding:104px 60px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;max-width:1200px;margin:0 auto">
+<section id="contacto" class="contact-section">
+  <div class="contact-container">
 
     <div>
       <div style="font-size:11px;font-weight:700;letter-spacing:2.5px;color:#e5e5e5;margin-bottom:16px">CONSULTORIO</div>
@@ -465,22 +771,21 @@ a { text-decoration: none; }
     </div>
   
 
-<!-- Google Maps -->
-<div style="border-radius:24px;overflow:hidden;height:480px;">
-  <iframe
-    src="https://www.google.com/maps?q=Tequisquiapan%20San%20Luis%20Potosi&output=embed"
-    width="100%"
-    height="100%"
-    style="border:0;"
-    allowfullscreen=""
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade">
-  </iframe>
-</div>
-</div>
+    <div style="border-radius:24px;overflow:hidden;height:480px;">
+      <iframe
+        src="https://www.google.com/maps?q=Tequisquiapan%20San%20Luis%20Potosi&output=embed"
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </div>
 </section>
-<!-- FOOTER -->
-<footer style="background:#160D0C;padding:36px 60px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+
+<footer class="footer-container">
   <div>
     <div style="font-family:'DM Serif Display',serif;font-size:17px;color:white;margin-bottom:4px">Dr. Miguel Mendoza</div>
     <div style="font-size:12px;color:#5A4040">Cirujano Vascular y Angiólogo · San Luis Potosí</div>
@@ -493,7 +798,6 @@ a { text-decoration: none; }
   </div>
 </footer>
 
-<!-- WhatsApp FAB -->
 <a href="https://wa.me/524447138417" target="_blank" style="position:fixed;bottom:30px;right:30px;z-index:200;background:#25D366;color:white;border-radius:50px;padding:14px 22px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;box-shadow:0 8px 28px rgba(37,211,102,0.45)">
   <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
   Agendar cita
@@ -620,6 +924,42 @@ class Component extends DCLogic {
     };
   }
 }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const dropdown = document.getElementById('mobile-menu-dropdown');
+  const dropdownLinks = dropdown.querySelectorAll('a');
+
+  if (menuBtn && dropdown) {
+    const toggleMenu = () => {
+      const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !isExpanded);
+      dropdown.classList.toggle('active');
+    };
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    // Close menu when clicking a link
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        menuBtn.setAttribute('aria-expanded', 'false');
+        dropdown.classList.remove('active');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (dropdown.classList.contains('active') && !dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+        menuBtn.setAttribute('aria-expanded', 'false');
+        dropdown.classList.remove('active');
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>

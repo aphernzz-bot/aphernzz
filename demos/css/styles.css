@@ -1,0 +1,220 @@
+/* =========================================
+   VARIABLES & GLOBALES
+   ========================================= */
+:root {
+  /* Paleta Médica Gris/Azul Pizarra */
+  --color-primary: #334155;     /* Gris Pizarra Oscuro (Botones, acentos fuertes) */
+  --color-primary-hover: #1e293b; /* Hover de botones */
+  --color-text-main: #0f172a;   /* Texto principal muy oscuro */
+  --color-text-mutted: #475569; /* Texto secundario gris medio */
+  --color-bg-light: #f8fafc;    /* Fondo general muy claro */
+  --color-bg-card: #ffffff;     /* Fondo de tarjetas */
+  --color-border: #cbd5e1;      /* Bordes sutiles */
+  --color-bg-dark: #0f172a;     /* Fondo sección contacto */
+  --color-whatsapp: #10b981;    /* Verde suave médico para WP */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { 
+  font-family: 'DM Sans', sans-serif; 
+  background: var(--color-bg-light); 
+  color: var(--color-text-main); 
+  -webkit-font-smoothing: antialiased; 
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+a { text-decoration: none; color: inherit; }
+a:focus-visible, button:focus-visible { 
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+}
+hr { border: none; }
+
+/* =========================================
+   TIPOGRAFÍA
+   ========================================= */
+h1, h2 { 
+  font-family: 'DM Serif Display', serif; 
+  color: var(--color-text-main); 
+  letter-spacing: -1.5px; 
+  line-height: 1.1; 
+}
+h1 { font-size: 16px; /* Ajuste para el card de experiencia que funciona como h1 por SEO */ margin-top: 6px; }
+h2 { font-size: clamp(34px, 4vw, 58px); margin: 10px 0 30px 0; }
+h3 { font-family: 'DM Serif Display', serif; font-size: 21px; margin-bottom: 10px; line-height: 1.3; }
+
+/* =========================================
+   COMPONENTES Y UTILIDADES
+   ========================================= */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; 
+  background: var(--color-primary); color: #ffffff; 
+  padding: 14px 26px; border-radius: 50px; font-size: 14px;
+  font-weight: 600; box-shadow: 0 4px 18px rgba(51, 65, 85, 0.25); 
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:hover { 
+  background: var(--color-primary-hover);
+  transform: translateY(-2px); 
+  box-shadow: 0 6px 22px rgba(51, 65, 85, 0.35); 
+}
+.btn:active { transform: translateY(0); }
+.btn-hero { padding: 17px 32px; font-size: 15px; }
+
+.card { 
+  background: var(--color-bg-card); border-radius: 24px; 
+  padding: 28px 32px; box-shadow: 0 10px 48px rgba(15, 23, 42, 0.08); 
+  text-align: center; 
+}
+.divider { width: 36px; height: 2px; background: var(--color-border); margin: 14px auto; }
+.section-tag { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: var(--color-primary); }
+.section-tag-light { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: #94a3b8; }
+
+/* =========================================
+   NAVEGACIÓN
+   ========================================= */
+#navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 76px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 60px; background: transparent; transition: all 0.4s ease;
+}
+#navbar.scrolled { 
+  background: rgba(248, 250, 252, 0.96); 
+  box-shadow: 0 2px 24px rgba(15, 23, 42, 0.06); 
+  backdrop-filter: blur(10px); 
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo img { height: 46px; width: auto; object-fit: contain; }
+.logo-text-wrapper { display: flex; flex-direction: column; }
+.logo-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--color-text-main); }
+.logo-subtitle { font-size: 10px; letter-spacing: 2px; color: var(--color-primary); font-weight: 700; }
+
+.nav-links { 
+  display: flex; align-items: center; gap: 2px; 
+  background: rgba(203, 213, 225, 0.4); border-radius: 50px; padding: 5px; 
+}
+.nav-links a { 
+  padding: 9px 20px; border-radius: 50px; font-size: 14px; 
+  color: var(--color-text-mutted); transition: 0.3s ease; font-weight: 500;
+}
+.nav-links a.active, .nav-links a:hover, .nav-links a:focus-visible { 
+  background: var(--color-bg-card); color: var(--color-text-main); 
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); 
+}
+.mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 5px; color: var(--color-text-main); }
+
+/* =========================================
+   HERO SECTION
+   ========================================= */
+.hero-section {
+  min-height: 100vh; padding-top: 100px; padding-bottom: 40px;
+  background: linear-gradient(145deg, #e2e8f0 0%, #f1f5f9 30%, #f8fafc 100%);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.hero-container { display: flex; align-items: flex-end; justify-content: center; gap: 30px; width: 100%; max-width: 1200px; padding: 0 60px; }
+.hero-left, .hero-right { flex: 1; max-width: 360px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.exp-number { font-family: 'DM Serif Display', serif; font-size: 58px; color: var(--color-primary); line-height: 1; display: block;}
+.exp-text, .hero-sub { font-size: 14px; color: var(--color-text-mutted); line-height: 1.6; margin-bottom: 24px; }
+.patient-count { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--color-primary); line-height: 1; display: block;}
+.patient-sub { font-size: 12px; color: var(--color-text-mutted); margin-top: 4px; display: block;}
+.card-detail { font-size: 13px; color: var(--color-text-mutted); }
+.doctor-img { 
+  width: 400px; height: 480px; object-fit: cover; 
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%); 
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%); 
+}
+.badge-education { 
+  background: rgba(241, 245, 249, 0.85); border: 1.5px solid var(--color-border); 
+  border-radius: 20px; padding: 20px; width: 100%; text-align: center; margin-top: 20px; 
+}
+.badge-title { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; color: var(--color-primary); display: block; margin-bottom: 10px; }
+.badge-education p { font-size: 14px; color: var(--color-text-main); line-height: 1.75; font-weight: 500; }
+
+/* =========================================
+   SERVICIOS
+   ========================================= */
+.services-section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.service-card { 
+  background: var(--color-bg-card); border-radius: 24px; overflow: hidden; 
+  border: 1px solid var(--color-border); display: flex; flex-direction: column; 
+  justify-content: space-between; transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+.service-card:hover, .service-card:focus-within { 
+  transform: translateY(-5px); box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); 
+}
+.service-content { padding: 28px; }
+.service-icon { 
+  width: 46px; height: 46px; border-radius: 14px; background: var(--color-bg-light); 
+  display: flex; align-items: center; justify-content: center; margin-bottom: 18px; font-size: 24px; 
+}
+.service-card p { font-size: 14px; color: var(--color-text-mutted); line-height: 1.65; }
+.service-card img { width: 100%; height: 160px; object-fit: cover; }
+
+/* =========================================
+   CONTACTO Y MAPA
+   ========================================= */
+.contact-section { background: var(--color-bg-dark); padding: 100px 60px; }
+.contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; max-width: 1200px; margin: 0 auto; }
+.contact-info { color: #f8fafc; }
+.contact-info h2 { color: #ffffff; }
+.address-container { font-style: normal; }
+.info-item { margin-bottom: 24px; display: flex; flex-direction: column; gap: 6px; }
+.info-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #94a3b8; }
+.info-item p { font-size: 15px; color: #f1f5f9; line-height: 1.65; }
+.phone-link { font-size: 20px; color: #ffffff; font-weight: 600; width: fit-content; }
+.whatsapp-link { font-size: 15px; color: var(--color-whatsapp); font-weight: 500; width: fit-content; }
+.phone-link:hover, .whatsapp-link:hover { text-decoration: underline; }
+#map { border-radius: 24px; height: 400px; width: 100%; border: 1px solid #334155; }
+
+/* =========================================
+   FOOTER
+   ========================================= */
+footer { background: #020617; padding: 36px 60px; }
+.footer-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+.footer-title { font-family: 'DM Serif Display', serif; font-size: 17px; color: #f8fafc; margin-bottom: 4px; }
+.footer-sub, .footer-copy { font-size: 12px; color: #94a3b8; }
+
+/* =========================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================= */
+@media (max-width: 992px) {
+  .hero-container { flex-direction: column; align-items: center; }
+  .hero-left, .hero-right { max-width: 100%; }
+  .hero-right { display: flex; flex-direction: row; gap: 20px; align-items: stretch; }
+  .badge-education { margin-top: 0; display: flex; flex-direction: column; justify-content: center; }
+  .contact-container { grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  #navbar { padding: 0 20px; }
+  .btn-nav { display: none; }
+  .mobile-menu-btn { display: block; }
+  
+  .nav-links { 
+    position: absolute; top: 76px; left: 0; width: 100%; 
+    background: var(--color-bg-light); flex-direction: column; padding: 20px; 
+    border-radius: 0 0 20px 20px; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+    transform: translateY(-150%); opacity: 0; visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  .nav-links.active { transform: translateY(0); opacity: 1; visibility: visible; }
+  .nav-links a { width: 100%; text-align: center; padding: 15px; font-size: 16px; }
+
+  .hero-section { padding-top: 100px; padding-bottom: 40px; }
+  .hero-container { padding: 0 20px; }
+  .hero-right { flex-direction: column; }
+  .doctor-img { width: 100%; max-width: 320px; height: 380px; }
+
+  .services-section, .contact-section { padding: 60px 20px; }
+  footer { padding: 30px 20px; text-align: center; }
+  .footer-content { flex-direction: column; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  h2 { font-size: 32px; }
+  .exp-number { font-size: 48px; }
+  .patient-count { font-size: 26px; }
+  #map { height: 300px; }
+}
